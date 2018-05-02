@@ -6,11 +6,23 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="bungee" />
         <module name="commons" />
+        <module name="plugin" />
+        <module name="spigot" />
+        <module name="v1_12_R1" />
+        <module name="v1_8_R3" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="commons" target="1.5" />
+      <module name="bungee" target="1.8" />
+      <module name="commons" target="1.8" />
+      <module name="commons-parent" target="1.5" />
+      <module name="plugin" target="1.8" />
+      <module name="spigot" target="1.8" />
+      <module name="spigot-parent" target="1.5" />
+      <module name="v1_12_R1" target="1.8" />
+      <module name="v1_8_R3" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

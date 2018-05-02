@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <artifactId>commons-parent</artifactId>
         <groupId>io.prodity</groupId>
+        <artifactId>commons-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
