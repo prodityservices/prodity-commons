@@ -1,2 +1,2 @@
-# prodity-utilities
-Prodity Services - Utilities Plugin
+# prodity-commons
+Prodity Services - Commons Plugin
