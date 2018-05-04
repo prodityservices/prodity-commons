@@ -9,7 +9,6 @@
         <module name="bungee" />
         <module name="commons" />
         <module name="plugin" />
-        <module name="spigot" />
         <module name="v1_12_R1" />
         <module name="v1_8_R3" />
       </profile>

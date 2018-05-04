@@ -118,6 +118,11 @@
                 <version>1.12-SNAPSHOT</version>
             </dependency>
             <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>1.21</version>
+            </dependency>
+            <dependency>
                 <groupId>io.prodity</groupId>
                 <artifactId>commons</artifactId>
                 <version>${project.version}</version>

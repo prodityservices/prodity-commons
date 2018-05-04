@@ -49,5 +49,6 @@
     <orderEntry type="library" name="Maven: co.aikar:Table:1.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: co.aikar:DelegatingMap:1.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: co.aikar:locales:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.21" level="project" />
   </component>
 </module>
