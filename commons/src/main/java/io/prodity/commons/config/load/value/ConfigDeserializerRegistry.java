@@ -15,28 +15,25 @@ public class ConfigDeserializerRegistry {
         return new ConfigDeserializerRegistry();
     }
 
-    public static ConfigDeserializerRegistry createWithDefaults() {
-        //TODO
-        return null;
-    }
-
     private final Map<Class<?>, ConfigDeserializer<?>> deserializers;
 
     protected ConfigDeserializerRegistry() {
         this.deserializers = Maps.newConcurrentMap();
     }
 
-    public void registerAll(@Nonnull ConfigDeserializerRegistry registry) {
+    @Nonnull
+    public ConfigDeserializerRegistry registerAll(@Nonnull ConfigDeserializerRegistry registry) {
         Preconditions.checkNotNull(registry, "registry");
         this.deserializers.putAll(registry.deserializers);
+        return this;
     }
 
     @Nonnull
-    public <T> Optional<ConfigDeserializer<T>> register(@Nonnull ConfigDeserializer<T> deserializer) {
+    public <T> ConfigDeserializerRegistry register(@Nonnull ConfigDeserializer<T> deserializer) {
         Preconditions.checkNotNull(deserializer, "deserializer");
 
-        final ConfigDeserializer<T> existing = (ConfigDeserializer<T>) this.deserializers.put(deserializer.getTypeClass(), deserializer);
-        return Optional.ofNullable(existing);
+        this.deserializers.put(deserializer.getTypeClass(), deserializer);
+        return this;
     }
 
     @Nonnull

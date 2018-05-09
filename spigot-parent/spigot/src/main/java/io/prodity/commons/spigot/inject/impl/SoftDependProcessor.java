@@ -19,12 +19,12 @@ public class SoftDependProcessor extends AnnotationProcessor<SoftDepend> {
 
     @Override
     protected DescriptorImpl doProcess(DescriptorImpl descriptor, SoftDepend value) {
-        return isSatisfied(value) ? descriptor : null;
+        return this.isSatisfied(value) ? descriptor : null;
     }
 
     private boolean isSatisfied(SoftDepend depend) {
         for (String plugin : depend.value()) {
-            if (pluginManager.getPlugin(plugin) == null) {
+            if (this.pluginManager.getPlugin(plugin) == null) {
                 return false;
             }
         }

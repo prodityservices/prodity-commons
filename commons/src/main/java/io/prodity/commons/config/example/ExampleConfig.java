@@ -18,7 +18,7 @@ public class ExampleConfig {
 
     @ConfigPath(value = "test.string")
     @Required
-    @ConfigDefault(TestDefaultSupplier.class)
+    @ConfigDefault(ExampleConfig.TestDefaultSupplier.class)
     @Colorize
     private String testColorizedString;
 

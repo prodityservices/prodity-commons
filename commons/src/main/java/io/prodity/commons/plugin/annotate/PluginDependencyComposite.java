@@ -41,11 +41,11 @@ public @interface PluginDependencyComposite {
                 }
 
                 if (!dependencies.isEmpty()) {
-                    data.set(dependsKey, Serializer.blockAndJoin(dependencies));
+                    data.set(dependsKey, PluginDependencyComposite.Serializer.blockAndJoin(dependencies));
                 }
 
                 if (!softDependencies.isEmpty()) {
-                    data.set(softDependsKey, Serializer.blockAndJoin(softDependencies));
+                    data.set(softDependsKey, PluginDependencyComposite.Serializer.blockAndJoin(softDependencies));
                 }
             };
         }

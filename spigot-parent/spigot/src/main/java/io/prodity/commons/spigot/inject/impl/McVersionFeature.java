@@ -11,7 +11,7 @@ public class McVersionFeature implements InjectionFeature {
 
     @Override
     public void preLoad(ProdityPlugin plugin) {
-        bind(plugin, binder -> {
+        this.bind(plugin, binder -> {
             binder.bind(McVersionProcessor.class).to(DescriptorProcessor.class);
         });
     }

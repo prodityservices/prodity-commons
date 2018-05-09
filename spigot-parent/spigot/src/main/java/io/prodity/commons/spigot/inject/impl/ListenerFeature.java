@@ -9,7 +9,7 @@ public class ListenerFeature implements InjectionFeature {
 
     @Override
     public void postLoad(ProdityPlugin plugin) {
-        bind(plugin, binder -> {
+        this.bind(plugin, binder -> {
             binder.bind(DefaultFilter.class).to(ListenerFilter.class).ranked(-1);
             binder.bind(ListenerRegistration.class)
                 .to(InstanceLifecycleListener.class)

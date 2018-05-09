@@ -10,33 +10,33 @@ import org.glassfish.hk2.extras.ExtrasUtilities;
 
 public class PluginBridge {
 
-    private static List<ProdityPlugin> links = new LinkedList<>();
+    private static final List<ProdityPlugin> links = new LinkedList<>();
 
     public static void bridge(ProdityPlugin plugin) {
-        if (links.isEmpty()) {
-            links.add(plugin);
+        if (PluginBridge.links.isEmpty()) {
+            PluginBridge.links.add(plugin);
         } else {
-            ProdityPlugin tail = links.get(links.size() - 1);
-            links.add(plugin);
-            bidirectionalBridge(tail.getPluginRoot(), plugin.getPluginRoot());
+            ProdityPlugin tail = PluginBridge.links.get(PluginBridge.links.size() - 1);
+            PluginBridge.links.add(plugin);
+            PluginBridge.bidirectionalBridge(tail.getPluginRoot(), plugin.getPluginRoot());
         }
     }
 
     public static void unbridge(ProdityPlugin plugin) {
-        int index = links.indexOf(plugin);
+        int index = PluginBridge.links.indexOf(plugin);
         if (index != -1) {
-            ProdityPlugin previous = index == 0 ? null : links.get(index - 1);
-            ProdityPlugin next = index == links.size() - 1 ? null : links.get(index + 1);
+            ProdityPlugin previous = index == 0 ? null : PluginBridge.links.get(index - 1);
+            ProdityPlugin next = index == PluginBridge.links.size() - 1 ? null : PluginBridge.links.get(index + 1);
             if (previous != null && next != null) {
-                bidirectionalBridge(previous.getPluginRoot(), next.getPluginRoot());
+                PluginBridge.bidirectionalBridge(previous.getPluginRoot(), next.getPluginRoot());
             }
             if (previous != null) {
-                removeBidirectional(previous.getPluginRoot(), plugin.getPluginRoot());
+                PluginBridge.removeBidirectional(previous.getPluginRoot(), plugin.getPluginRoot());
             }
             if (next != null) {
-                removeBidirectional(next.getPluginRoot(), plugin.getPluginRoot());
+                PluginBridge.removeBidirectional(next.getPluginRoot(), plugin.getPluginRoot());
             }
-            links.remove(index);
+            PluginBridge.links.remove(index);
         }
     }
 
@@ -51,12 +51,11 @@ public class PluginBridge {
     }
 
     public static List<InjectionFeature> findExternalFeaturesFor(ProdityPlugin plugin) {
-        if (links.isEmpty()) {
+        if (PluginBridge.links.isEmpty()) {
             return Collections.emptyList();
         } else {
-            ProdityPlugin head = links.get(0);
+            ProdityPlugin head = PluginBridge.links.get(0);
 
-            //noinspection unchecked
             return (List<InjectionFeature>) head.getServices().getAllServices(new InjectionFeatureFilter(plugin));
         }
     }

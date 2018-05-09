@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import javax.annotation.Nonnull;
@@ -22,7 +21,6 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import javax.tools.Diagnostic.Kind;
 import javax.tools.FileObject;
 import javax.tools.StandardLocation;
 import org.yaml.snakeyaml.Yaml;
@@ -89,18 +87,18 @@ public abstract class PluginProcessor extends AbstractProcessor {
         final Properties properties = new Properties();
         final FileObject fileObject = this.processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", this.propertiesFileName);
         if (fileObject == null) {
-            this.processingEnv.getMessager().printMessage(Kind.ERROR, "COULD NOT FIND fileObject.");
+            this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "COULD NOT FIND fileObject.");
         }
         try (InputStream inputStream = fileObject.openInputStream()) {
             if (inputStream == null) {
-                this.processingEnv.getMessager().printMessage(Kind.ERROR, "COULD NOT FIND RESORUCE.");
+                this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "COULD NOT FIND RESORUCE.");
             }
             properties.load(inputStream);
         }
 
         final Map<String, String> replacements = Maps.newHashMap();
 
-        for (Entry<Object, Object> entry : properties.entrySet()) {
+        for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             final String key = this.surroundReplacement(entry.getKey().toString());
             final String value = entry.getValue().toString();
             replacements.put(key, value);
@@ -123,9 +121,9 @@ public abstract class PluginProcessor extends AbstractProcessor {
             return;
         }
 
-        for (Entry<String, String> valueEntry : values.entrySet()) {
+        for (Map.Entry<String, String> valueEntry : values.entrySet()) {
             String value = valueEntry.getValue();
-            for (Entry<String, String> replacementEntry : replacements.entrySet()) {
+            for (Map.Entry<String, String> replacementEntry : replacements.entrySet()) {
                 value = value.replace(replacementEntry.getKey(), replacementEntry.getValue());
             }
             valueEntry.setValue(value);

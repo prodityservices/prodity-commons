@@ -30,44 +30,45 @@ public class ListenerRegistration implements InstanceLifecycleListener, PluginLi
         this.filter = filter;
     }
 
+    @Override
     public Filter getFilter() {
-        return InjectUtils.filterByPlugin(plugin);
+        return InjectUtils.filterByPlugin(this.plugin);
     }
 
     @Override
     public void lifecycleEvent(InstanceLifecycleEvent event) {
         Object potentialListener = event.getLifecycleObject();
         if (event.getEventType() == InstanceLifecycleEventType.POST_PRODUCTION) {
-            if (potentialListener instanceof Listener && filter.shouldRegister(potentialListener)) {
-                if (registered.add(event.getActiveDescriptor())) {
+            if (potentialListener instanceof Listener && this.filter.shouldRegister(potentialListener)) {
+                if (this.registered.add(event.getActiveDescriptor())) {
                     Listener listener = (Listener) event.getLifecycleObject();
-                    if (plugin.isEnabled()) {
-                        register(listener);
+                    if (this.plugin.isEnabled()) {
+                        this.register(listener);
                     } else {
-                        initializedBeforePlugin.add(listener);
+                        this.initializedBeforePlugin.add(listener);
                     }
                 }
             }
         } else if (event.getEventType() == InstanceLifecycleEventType.PRE_DESTRUCTION) {
-            if (registered.remove(event.getActiveDescriptor())) {
+            if (this.registered.remove(event.getActiveDescriptor())) {
                 HandlerList.unregisterAll((Listener) event.getLifecycleObject());
             }
         }
     }
 
     private void register(Listener listener) {
-        plugin.getServer().getPluginManager().registerEvents(listener, plugin);
+        this.plugin.getServer().getPluginManager().registerEvents(listener, this.plugin);
     }
 
     @Override
     public void onEnable(ProdityPlugin plugin) {
-        initializedBeforePlugin.forEach(this::register);
-        initializedBeforePlugin.clear();
+        this.initializedBeforePlugin.forEach(this::register);
+        this.initializedBeforePlugin.clear();
     }
 
     @Override
     public void onDisable(ProdityPlugin plugin) {
         // Let bukkit unregister them
-        registered.clear();
+        this.registered.clear();
     }
 }

@@ -12,7 +12,6 @@ import io.prodity.commons.repository.registry.RepositoryRegistry;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
@@ -142,7 +141,7 @@ public class ConfigValueResolver {
             return colorizedObjects;
         } else if (object instanceof Map) {
             final Map<Object, Object> colorizedObjects = Maps.newHashMap();
-            for (Entry<?, ?> entry : ((Map<?, ?>) object).entrySet()) {
+            for (Map.Entry<?, ?> entry : ((Map<?, ?>) object).entrySet()) {
                 final Object key = entry.getKey();
                 final Object newValue = this.colorizeObject(entry.getValue());
                 colorizedObjects.put(key, newValue);

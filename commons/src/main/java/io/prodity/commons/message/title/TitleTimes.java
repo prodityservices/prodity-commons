@@ -10,17 +10,17 @@ public class TitleTimes {
         private int stayTicks;
         private int fadeOutTicks;
 
-        public Builder setFadeInTicks(int fadeInTicks) {
+        public TitleTimes.Builder setFadeInTicks(int fadeInTicks) {
             this.fadeInTicks = fadeInTicks;
             return this;
         }
 
-        public Builder setStayTicks(int stayTicks) {
+        public TitleTimes.Builder setStayTicks(int stayTicks) {
             this.stayTicks = stayTicks;
             return this;
         }
 
-        public Builder setFadeOutTicks(int fadeOutTicks) {
+        public TitleTimes.Builder setFadeOutTicks(int fadeOutTicks) {
             this.fadeOutTicks = fadeOutTicks;
             return this;
         }

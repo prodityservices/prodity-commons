@@ -30,8 +30,8 @@ public class InjectionFeatureFilter implements IndexedFilter {
         if (d.getDescriptorVisibility() == DescriptorVisibility.NORMAL) {
             String creator = InjectUtils.getOwner(d);
             if (creator != null) {
-                return plugin.getSoftDependencies().contains(creator)
-                    || plugin.getDependencies().contains(creator);
+                return this.plugin.getSoftDependencies().contains(creator)
+                    || this.plugin.getDependencies().contains(creator);
             }
         }
         return false;

@@ -18,7 +18,8 @@ public class PluginSerializerMap {
         }
 
         @Nonnull
-        public <T extends Annotation> Builder put(@Nonnull Class<T> annotation, @Nonnull PluginSerializer<T> serializer) {
+        public <T extends Annotation> PluginSerializerMap.Builder put(@Nonnull Class<T> annotation,
+            @Nonnull PluginSerializer<T> serializer) {
             Preconditions.checkNotNull(annotation, "annotation");
             Preconditions.checkNotNull(serializer, "serializer");
             this.mapBuilder.put(annotation, serializer);

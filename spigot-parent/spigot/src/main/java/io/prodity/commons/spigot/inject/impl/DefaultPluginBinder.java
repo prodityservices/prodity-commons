@@ -25,22 +25,23 @@ public class DefaultPluginBinder<T extends SpigotInjectedPlugin> extends PluginB
         this.pluginType = pluginType;
     }
 
+    @Override
     protected void configure() {
-        bind(plugin).named(plugin.getName())
-            .to(pluginType)
+        this.bind(this.plugin).named(this.plugin.getName())
+            .to(this.pluginType)
             .to(SpigotInjectedPlugin.class)
             .to(JavaPlugin.class)
             .to(Plugin.class);
-        bind(plugin.getLogger()).to(Logger.class);
-        bind(Bukkit.getServer()).to(Server.class);
-        bind(Bukkit.getPluginManager()).to(PluginManager.class);
-        bind(Bukkit.getMessenger()).to(Messenger.class);
-        bind(Bukkit.getScheduler()).to(BukkitScheduler.class);
+        this.bind(this.plugin.getLogger()).to(Logger.class);
+        this.bind(Bukkit.getServer()).to(Server.class);
+        this.bind(Bukkit.getPluginManager()).to(PluginManager.class);
+        this.bind(Bukkit.getMessenger()).to(Messenger.class);
+        this.bind(Bukkit.getScheduler()).to(BukkitScheduler.class);
     }
 
 
     public static DefaultPluginBinder<?> createFor(SpigotInjectedPlugin plugin) {
-        return doCreate(plugin.getClass(), plugin);
+        return DefaultPluginBinder.doCreate(plugin.getClass(), plugin);
     }
 
     private static <T extends SpigotInjectedPlugin> DefaultPluginBinder doCreate(Class<T> tClass, JavaPlugin plugin) {

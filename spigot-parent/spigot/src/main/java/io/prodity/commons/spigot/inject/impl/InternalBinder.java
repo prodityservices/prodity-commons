@@ -17,7 +17,7 @@ public class InternalBinder extends PluginBinder {
 
     @Override
     protected void configure() {
-        addCoreFeatures(ListenerFeature.class, ExportFeature.class, SoftDependFeature.class,
+        this.addCoreFeatures(ListenerFeature.class, ExportFeature.class, SoftDependFeature.class,
             McVersionFeature.class, TaskFeature.class);
     }
 
@@ -25,7 +25,7 @@ public class InternalBinder extends PluginBinder {
     @SafeVarargs
     private final void addCoreFeatures(Class<? extends InjectionFeature>... classes) {
         for (Class<?> clazz : classes) {
-            bind(clazz).to(InjectionFeature.class)
+            this.bind(clazz).to(InjectionFeature.class)
                 .withVisibility(DescriptorVisibility.NORMAL);
         }
     }

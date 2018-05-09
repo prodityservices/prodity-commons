@@ -1,8 +1,8 @@
 package io.prodity.commons.pair;
 
 import com.google.common.base.Preconditions;
-import java.util.AbstractMap.SimpleEntry;
-import java.util.Map.Entry;
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import javax.annotation.Nonnull;
@@ -24,8 +24,8 @@ public interface Pair<K, V> {
     }
 
     @Nonnull
-    default Entry<K, V> toMapEntry() {
-        return new SimpleEntry<>(this.getKey(), this.getValue());
+    default Map.Entry<K, V> toMapEntry() {
+        return new AbstractMap.SimpleEntry<>(this.getKey(), this.getValue());
     }
 
 }

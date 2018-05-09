@@ -32,37 +32,37 @@ public abstract class PluginBinder implements Binder {
     }
 
     public final <T> BindingBuilder<T> bind(Class<T> serviceType) {
-        return resetBuilder(AbstractBindingBuilder.create(serviceType, true));
+        return this.resetBuilder(AbstractBindingBuilder.create(serviceType, true));
     }
 
     public final <T> BindingBuilder<T> bind(TypeLiteral<T> serviceType) {
-        return resetBuilder(AbstractBindingBuilder.create(serviceType, true));
+        return this.resetBuilder(AbstractBindingBuilder.create(serviceType, true));
     }
 
     public final <T> BindingBuilder<T> bind(Type type) {
-        return resetBuilder(AbstractBindingBuilder.create(type, true));
+        return this.resetBuilder(AbstractBindingBuilder.create(type, true));
 
     }
 
     public final <T> BindingBuilder<T> bind(T service) {
-        return resetBuilder(AbstractBindingBuilder.create(service));
+        return this.resetBuilder(AbstractBindingBuilder.create(service));
     }
 
     private <T> AbstractBindingBuilder<T> resetBuilder(AbstractBindingBuilder<T> newBuilder) {
-        if (current != null) {
-            current.complete(config, className -> {
+        if (this.current != null) {
+            this.current.complete(this.config, className -> {
                 try {
-                    return getClass().getClassLoader().loadClass(className);
+                    return this.getClass().getClassLoader().loadClass(className);
                 } catch (ClassNotFoundException e) {
                     throw new MultiException(e);
                 }
             });
         }
 
-        current = newBuilder;
+        this.current = newBuilder;
 
         if (newBuilder != null) {
-            newBuilder.withMetadata(Export.PLUGIN_META_KEY, plugin.getName());
+            newBuilder.withMetadata(Export.PLUGIN_META_KEY, this.plugin.getName());
             newBuilder.withVisibility(DescriptorVisibility.LOCAL);
             newBuilder.in(Singleton.class);
         }
@@ -77,10 +77,10 @@ public abstract class PluginBinder implements Binder {
 
         this.config = config;
         try {
-            configure();
+            this.configure();
         } finally {
-            if (current != null) {
-                resetBuilder(null);
+            if (this.current != null) {
+                this.resetBuilder(null);
             }
             this.config = null;
         }

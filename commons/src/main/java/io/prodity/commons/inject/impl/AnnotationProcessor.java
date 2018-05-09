@@ -19,11 +19,11 @@ public abstract class AnnotationProcessor<T extends Annotation> implements Descr
         if (descriptorImpl.getDescriptorType() == DescriptorType.CLASS) {
             try {
                 Class<?> clazz = Class.forName(descriptorImpl.getImplementation());
-                T annotation = clazz.getAnnotation(tClass);
+                T annotation = clazz.getAnnotation(this.tClass);
                 if (annotation != null) {
-                    return doProcess(descriptorImpl, annotation);
+                    return this.doProcess(descriptorImpl, annotation);
                 } else {
-                    return notPresent(descriptorImpl);
+                    return this.notPresent(descriptorImpl);
                 }
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();

@@ -19,14 +19,14 @@ public class ExportPostProcessor extends AnnotationProcessor<Export> {
     @Override
     protected DescriptorImpl doProcess(DescriptorImpl descriptor, Export value) {
         descriptor.setDescriptorVisibility(DescriptorVisibility.NORMAL);
-        descriptor.addMetadata(Export.PLUGIN_META_KEY, plugin.getName());
+        descriptor.addMetadata(Export.PLUGIN_META_KEY, this.plugin.getName());
         return descriptor;
     }
 
     @Override
     protected DescriptorImpl notPresent(DescriptorImpl descriptor) {
         descriptor.setDescriptorVisibility(DescriptorVisibility.LOCAL);
-        descriptor.addMetadata(Export.PLUGIN_META_KEY, plugin.getName());
+        descriptor.addMetadata(Export.PLUGIN_META_KEY, this.plugin.getName());
         return descriptor;
     }
 }

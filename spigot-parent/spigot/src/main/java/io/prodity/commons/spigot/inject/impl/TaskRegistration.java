@@ -23,7 +23,7 @@ import org.glassfish.hk2.api.InstanceLifecycleListener;
 
 public class TaskRegistration implements InstanceLifecycleListener, PluginLifecycleListener {
 
-    private final Multimap<ActiveDescriptor<?>, DiscoveredTask> tasks = HashMultimap.create();
+    private final Multimap<ActiveDescriptor<?>, TaskRegistration.DiscoveredTask> tasks = HashMultimap.create();
     private final SpigotInjectedPlugin plugin;
 
     @Inject
@@ -33,16 +33,16 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
 
     @Override
     public Filter getFilter() {
-        return InjectUtils.filterByPlugin(plugin);
+        return InjectUtils.filterByPlugin(this.plugin);
     }
 
     @Override
     public void lifecycleEvent(InstanceLifecycleEvent lifecycleEvent) {
-        if (lifecycleEvent.getEventType() == InstanceLifecycleEventType.POST_PRODUCTION && !tasks
+        if (lifecycleEvent.getEventType() == InstanceLifecycleEventType.POST_PRODUCTION && !this.tasks
             .containsKey(lifecycleEvent.getActiveDescriptor())) {
             addAllTasks(lifecycleEvent.getActiveDescriptor(), lifecycleEvent.getLifecycleObject());
         } else if (lifecycleEvent.getEventType() == InstanceLifecycleEventType.PRE_DESTRUCTION) {
-            for (DiscoveredTask task : tasks.removeAll(lifecycleEvent.getActiveDescriptor())) {
+            for (TaskRegistration.DiscoveredTask task : this.tasks.removeAll(lifecycleEvent.getActiveDescriptor())) {
                 if (!task.isCancelled()) {
                     task.cancel();
                 }
@@ -52,15 +52,15 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
 
     private void addAllTasks(ActiveDescriptor<?> descriptor, Object instance) {
         findTasks(instance).forEach(task -> {
-            if (plugin.isEnabled()) {
+            if (this.plugin.isEnabled()) {
                 task.start();
             }
-            tasks.put(descriptor, task);
+            this.tasks.put(descriptor, task);
         });
     }
 
-    private List<DiscoveredTask> findTasks(Object object) {
-        List<DiscoveredTask> tasks = new ArrayList<>();
+    private List<TaskRegistration.DiscoveredTask> findTasks(Object object) {
+        List<TaskRegistration.DiscoveredTask> tasks = new ArrayList<>();
         Class<?> clazz = object.getClass();
         do {
             addMethods(clazz, object, tasks);
@@ -69,11 +69,11 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
         return tasks;
     }
 
-    private void addMethods(Class<?> clazz, Object instance, List<DiscoveredTask> to) {
+    private void addMethods(Class<?> clazz, Object instance, List<TaskRegistration.DiscoveredTask> to) {
         for (Method method : clazz.getDeclaredMethods()) {
             Task task = checkValid(method);
             if (task != null) {
-                to.add(new DiscoveredTask(instance, method, task));
+                to.add(new TaskRegistration.DiscoveredTask(instance, method, task));
             }
         }
     }
@@ -89,7 +89,7 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
 
     @Override
     public void onEnable(ProdityPlugin plugin) {
-        for (DiscoveredTask task : this.tasks.values()) {
+        for (TaskRegistration.DiscoveredTask task : this.tasks.values()) {
             if (!task.wasScheduled()) {
                 task.start();
             }
@@ -98,7 +98,7 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
 
     @Override
     public void onDisable(ProdityPlugin plugin) {
-        tasks.clear();
+        this.tasks.clear();
     }
 
     private class DiscoveredTask implements Runnable {
@@ -115,37 +115,38 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
         }
 
         public BukkitTask start() {
-            Validate.isTrue(task == null, "Attempted to start a running task.");
-            long periodInTicks = taskInfo.unit().toTicks(taskInfo.period());
-            if (taskInfo.async()) {
-                task = Bukkit.getScheduler().runTaskTimer(plugin, this, periodInTicks, periodInTicks);
+            Validate.isTrue(this.task == null, "Attempted to start a running task.");
+            long periodInTicks = this.taskInfo.unit().toTicks(this.taskInfo.period());
+            if (this.taskInfo.async()) {
+                this.task = Bukkit.getScheduler().runTaskTimer(TaskRegistration.this.plugin, this, periodInTicks, periodInTicks);
             } else {
-                task = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, this, periodInTicks, periodInTicks);
+                this.task = Bukkit.getScheduler()
+                    .runTaskTimerAsynchronously(TaskRegistration.this.plugin, this, periodInTicks, periodInTicks);
             }
-            return task;
+            return this.task;
         }
 
         public void cancel() {
-            if (task != null) {
-                task.cancel();
+            if (this.task != null) {
+                this.task.cancel();
             }
         }
 
         public boolean wasScheduled() {
-            return task != null;
+            return this.task != null;
         }
 
         public boolean isCancelled() {
-            return task != null && !task.isCancelled();
+            return this.task != null && !this.task.isCancelled();
         }
 
         @Override
         public void run() {
             try {
-                method.invoke(instance);
+                this.method.invoke(this.instance);
             } catch (Exception e) {
                 e.printStackTrace();
-                if (taskInfo.cancelOnError()) {
+                if (this.taskInfo.cancelOnError()) {
                     this.task.cancel();
                 }
             }
@@ -154,10 +155,10 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
         @Override
         public String toString() {
             return "DiscoveredTask{" +
-                "instance=" + instance +
-                ", method=" + method +
-                ", taskInfo=" + taskInfo +
-                ", task=" + task +
+                "instance=" + this.instance +
+                ", method=" + this.method +
+                ", taskInfo=" + this.taskInfo +
+                ", task=" + this.task +
                 '}';
         }
     }

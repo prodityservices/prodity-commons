@@ -43,14 +43,14 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
     public final void onLoad() {
         this.softDependencies = ImmutableSet.copyOf(this.getDescription().getSoftDepend());
         this.dependencies = ImmutableSet.copyOf(this.getDescription().getDepend());
-        this.pluginRoot = ServiceLocatorFactory.getInstance().create(getName());
-        this.serviceLocator = initialize(pluginRoot);
-        injectionFeatures = findFeatures();
-        injectionFeatures.forEach(f -> f.preLoad(this));
-        if (!loadDescriptors()) {
+        this.pluginRoot = ServiceLocatorFactory.getInstance().create(this.getName());
+        this.serviceLocator = this.initialize(this.pluginRoot);
+        this.injectionFeatures = this.findFeatures();
+        this.injectionFeatures.forEach(f -> f.preLoad(this));
+        if (!this.loadDescriptors()) {
             return;
         }
-        injectionFeatures.forEach(f -> f.postLoad(this));
+        this.injectionFeatures.forEach(f -> f.postLoad(this));
         PluginBridge.bridge(this);
     }
 
@@ -65,11 +65,12 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
         DynamicConfigurationService dcs = this.serviceLocator.getService(DynamicConfigurationService.class);
         try {
             dcs.getPopulator()
-                .populate(new ClasspathDescriptorFileFinder(getClass().getClassLoader()), processors.toArray(new DescriptorProcessor[0]));
+                .populate(new ClasspathDescriptorFileFinder(this.getClass().getClassLoader()),
+                    processors.toArray(new DescriptorProcessor[0]));
         } catch (IOException e) {
             e.printStackTrace();
-            getLogger().severe("Failed to load injection inhabitants file.");
-            getLogger().severe("Disabling...");
+            this.getLogger().severe("Failed to load injection inhabitants file.");
+            this.getLogger().severe("Disabling...");
             return false;
         }
         return true;
@@ -106,13 +107,13 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
 
     @Override
     public final void onEnable() {
-        if (serviceLocator != null) {
-            injectionFeatures.forEach(f -> f.preEnable(this));
-            serviceLocator.inject(this);
-            serviceLocator.postConstruct(this);
-            serviceLocator.getAllServices(Eager.class);
-            serviceLocator.getAllServices(PluginLifecycleListener.class).forEach(l -> l.onEnable(this));
-            injectionFeatures.forEach(f -> f.postEnable(this));
+        if (this.serviceLocator != null) {
+            this.injectionFeatures.forEach(f -> f.preEnable(this));
+            this.serviceLocator.inject(this);
+            this.serviceLocator.postConstruct(this);
+            this.serviceLocator.getAllServices(Eager.class);
+            this.serviceLocator.getAllServices(PluginLifecycleListener.class).forEach(l -> l.onEnable(this));
+            this.injectionFeatures.forEach(f -> f.postEnable(this));
         } else {
             Bukkit.getPluginManager().disablePlugin(this);
         }
@@ -120,14 +121,14 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
 
     @Override
     public final void onDisable() {
-        if (serviceLocator != null) {
-            injectionFeatures.forEach(f -> f.preDisable(this));
-            serviceLocator.getAllServices(PluginLifecycleListener.class).forEach(l -> l.onDisable(this));
-            serviceLocator.preDestroy(this);
+        if (this.serviceLocator != null) {
+            this.injectionFeatures.forEach(f -> f.preDisable(this));
+            this.serviceLocator.getAllServices(PluginLifecycleListener.class).forEach(l -> l.onDisable(this));
+            this.serviceLocator.preDestroy(this);
             PluginBridge.unbridge(this);
-            serviceLocator.shutdown();
-            serviceLocator = null;
-            pluginRoot = null;
+            this.serviceLocator.shutdown();
+            this.serviceLocator = null;
+            this.pluginRoot = null;
         }
     }
 
@@ -139,7 +140,7 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
      */
     @Override
     public final ServiceLocator getServices() {
-        return serviceLocator;
+        return this.serviceLocator;
     }
 
     /**
@@ -153,17 +154,17 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
      */
     @Override
     public final ServiceLocator getPluginRoot() {
-        return pluginRoot;
+        return this.pluginRoot;
     }
 
     @Override
     public Set<String> getDependencies() {
-        return dependencies;
+        return this.dependencies;
     }
 
     @Override
     public Set<String> getSoftDependencies() {
-        return softDependencies;
+        return this.softDependencies;
     }
 
 }

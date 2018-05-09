@@ -12,7 +12,7 @@ public class McVersionProcessor extends AnnotationProcessor<McVersion> {
 
     @Override
     protected DescriptorImpl doProcess(DescriptorImpl descriptor, McVersion value) {
-        return isSatisfied(value) ? descriptor : null;
+        return this.isSatisfied(value) ? descriptor : null;
     }
 
     private boolean isSatisfied(McVersion version) {

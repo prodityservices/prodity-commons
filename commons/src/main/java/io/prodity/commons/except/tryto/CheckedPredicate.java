@@ -13,7 +13,7 @@ public interface CheckedPredicate<T, E extends Throwable> {
     interface GenericCheckedPredicate<T> extends CheckedPredicate<T, Throwable> {
 
         @Override
-        default GenericCheckedPredicate<T> negate() {
+        default CheckedPredicate.GenericCheckedPredicate<T> negate() {
             return (value) -> !this.test(value);
         }
 

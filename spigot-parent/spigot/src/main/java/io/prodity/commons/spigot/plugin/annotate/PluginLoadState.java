@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 @Retention(RetentionPolicy.SOURCE)
 public @interface PluginLoadState {
 
-    LoadState value();
+    PluginLoadState.LoadState value();
 
     enum LoadState {
 
@@ -27,8 +27,8 @@ public @interface PluginLoadState {
         @Nonnull
         public static PluginSerializer<PluginLoadState> create() {
             return (annotation, data) -> {
-                final LoadState loadState = annotation.value();
-                data.set(Serializer.KEY, loadState.name());
+                final PluginLoadState.LoadState loadState = annotation.value();
+                data.set(PluginLoadState.Serializer.KEY, loadState.name());
             };
         }
 

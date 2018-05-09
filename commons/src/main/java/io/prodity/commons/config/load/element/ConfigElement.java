@@ -49,6 +49,7 @@ public class ConfigElement {
         return !element.isAnnotationPresent(ConfigIgnore.class);
     }
 
+    private final Class<?> type;
     private final String path;
     private final boolean required;
     private final NamedAnnotatedElement element;
@@ -56,15 +57,22 @@ public class ConfigElement {
     private final String repositoryName;
     private final Class<? extends Supplier<?>> defaultSupplier;
 
-    public ConfigElement(@Nonnull NamedAnnotatedElement element) {
+    public ConfigElement(@Nonnull Class<?> type, @Nonnull NamedAnnotatedElement element) {
+        Preconditions.checkNotNull(type, "type");
         Preconditions.checkNotNull(element, "element");
 
+        this.type = type;
         this.element = element;
         this.path = ConfigElement.resolvePath(element);
         this.required = ConfigElement.resolveRequired(element);
         this.colorized = ConfigElement.resolveColorized(element);
         this.repositoryName = ConfigElement.resolveRepositoryName(element);
         this.defaultSupplier = ConfigElement.resolveDefaultSupplier(element);
+    }
+
+    @Nonnull
+    public Class<?> getType() {
+        return this.type;
     }
 
     @Nonnull

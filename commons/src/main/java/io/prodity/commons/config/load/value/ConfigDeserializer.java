@@ -4,10 +4,21 @@ import com.google.common.base.Preconditions;
 import io.prodity.commons.config.except.ConfigLoadException;
 import io.prodity.commons.config.load.ConfigLoadContext;
 import io.prodity.commons.except.tryto.Try;
+import java.util.function.Function;
 import javax.annotation.Nonnull;
 import ninja.leaping.configurate.ConfigurationNode;
 
 public abstract class ConfigDeserializer<T> {
+
+    public static <T> ConfigDeserializer<T> create(@Nonnull Class<T> typeClass, @Nonnull Function<ConfigurationNode, T> deserializer) {
+        Preconditions.checkNotNull(deserializer, "deserializer");
+        return new ConfigDeserializer<T>(typeClass) {
+            @Override
+            T deserialize(ConfigurationNode node) {
+                return deserializer.apply(node);
+            }
+        };
+    }
 
     private final Class<T> typeClass;
 

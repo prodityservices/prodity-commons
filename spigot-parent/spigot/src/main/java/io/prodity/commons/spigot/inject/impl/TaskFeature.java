@@ -9,7 +9,7 @@ public class TaskFeature implements InjectionFeature {
 
     @Override
     public void preLoad(ProdityPlugin plugin) {
-        bind(plugin, binder -> {
+        this.bind(plugin, binder -> {
             binder.bind(TaskRegistration.class)
                 .to(PluginLifecycleListener.class)
                 .to(InstanceLifecycleListener.class);

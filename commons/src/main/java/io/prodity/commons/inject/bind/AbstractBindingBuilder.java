@@ -72,7 +72,7 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
     /**
      * Contracts the service should be bound to.
      */
-    Set<Type> contracts = new HashSet<Type>();
+    Set<Type> contracts = new HashSet<>();
     /**
      * Bound service loader.
      */
@@ -80,11 +80,11 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
     /**
      * Binding metadata (e.g. useful for filtering).
      */
-    final MultiMap<String, String> metadata = new MultiMap<String, String>();
+    final MultiMap<String, String> metadata = new MultiMap<>();
     /**
      * Qualifiers (other than @Named).
      */
-    Set<Annotation> qualifiers = new HashSet<Annotation>();
+    Set<Annotation> qualifiers = new HashSet<>();
     /**
      * Binding scope as annotation
      */
@@ -139,19 +139,19 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
 
     @Override
     public AbstractBindingBuilder<T> to(Class<? super T> contract) {
-        contracts.add(contract);
+        this.contracts.add(contract);
         return this;
     }
 
     @Override
     public AbstractBindingBuilder<T> to(TypeLiteral<?> contract) {
-        contracts.add(contract.getType());
+        this.contracts.add(contract.getType());
         return this;
     }
 
     @Override
     public AbstractBindingBuilder<T> to(Type contract) {
-        contracts.add(contract);
+        this.contracts.add(contract);
         return this;
     }
 
@@ -220,6 +220,7 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
         return this;
     }
 
+    @Override
     public AbstractBindingBuilder<T> asType(Type t) {
         this.implementationType = t;
         return this;
@@ -242,7 +243,7 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
         public ClassBasedBindingBuilder(Class<T> service, Type serviceContractType) {
             this.service = service;
             if (serviceContractType != null) {
-                super.contracts.add(serviceContractType);
+                this.contracts.add(serviceContractType);
             }
         }
 
@@ -252,50 +253,50 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
                 this.loader = defaultLoader;
             }
 
-            ActiveDescriptorBuilder builder = BuilderHelper.activeLink(service)
-                .named(name)
+            ActiveDescriptorBuilder builder = BuilderHelper.activeLink(this.service)
+                .named(this.name)
                 .andLoadWith(this.loader)
                 .analyzeWith(this.analyzer);
 
-            if (scopeAnnotation != null) {
-                builder.in(scopeAnnotation);
+            if (this.scopeAnnotation != null) {
+                builder.in(this.scopeAnnotation);
             }
-            if (scope != null) {
-                builder.in(scope);
-            }
-
-            if (ranked != null) {
-                builder.ofRank(ranked);
+            if (this.scope != null) {
+                builder.in(this.scope);
             }
 
-            for (String key : metadata.keySet()) {
-                for (String value : metadata.get(key)) {
+            if (this.ranked != null) {
+                builder.ofRank(this.ranked);
+            }
+
+            for (String key : this.metadata.keySet()) {
+                for (String value : this.metadata.get(key)) {
                     builder.has(key, value);
                 }
             }
 
-            for (Annotation annotation : qualifiers) {
+            for (Annotation annotation : this.qualifiers) {
                 builder.qualifiedBy(annotation);
             }
 
-            for (Type contract : contracts) {
+            for (Type contract : this.contracts) {
                 builder.to(contract);
             }
 
-            if (proxiable != null) {
-                builder.proxy(proxiable);
+            if (this.proxiable != null) {
+                builder.proxy(this.proxiable);
             }
 
-            if (proxyForSameScope != null) {
-                builder.proxyForSameScope(proxyForSameScope);
+            if (this.proxyForSameScope != null) {
+                builder.proxyForSameScope(this.proxyForSameScope);
             }
 
-            if (implementationType != null) {
-                builder.asType(implementationType);
+            if (this.implementationType != null) {
+                builder.asType(this.implementationType);
             }
 
-            if (visibility != null) {
-                builder.visibility(visibility);
+            if (this.visibility != null) {
+                builder.visibility(this.visibility);
             }
 
             configuration.bind(builder.build(), false);
@@ -318,43 +319,43 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
             if (this.loader == null) {
                 this.loader = defaultLoader;
             }
-            AbstractActiveDescriptor<?> descriptor = BuilderHelper.createConstantDescriptor(service);
-            descriptor.setName(name);
+            AbstractActiveDescriptor<?> descriptor = BuilderHelper.createConstantDescriptor(this.service);
+            descriptor.setName(this.name);
             descriptor.setLoader(this.loader);
             descriptor.setClassAnalysisName(this.analyzer);
 
-            if (scope != null) {
-                descriptor.setScope(scope.getName());
+            if (this.scope != null) {
+                descriptor.setScope(this.scope.getName());
             }
 
-            if (ranked != null) {
-                descriptor.setRanking(ranked);
+            if (this.ranked != null) {
+                descriptor.setRanking(this.ranked);
             }
 
-            for (String key : metadata.keySet()) {
-                for (String value : metadata.get(key)) {
+            for (String key : this.metadata.keySet()) {
+                for (String value : this.metadata.get(key)) {
                     descriptor.addMetadata(key, value);
                 }
             }
 
-            for (Annotation annotation : qualifiers) {
+            for (Annotation annotation : this.qualifiers) {
                 descriptor.addQualifierAnnotation(annotation);
             }
 
-            for (Type contract : contracts) {
+            for (Type contract : this.contracts) {
                 descriptor.addContractType(contract);
             }
 
-            if (proxiable != null) {
-                descriptor.setProxiable(proxiable);
+            if (this.proxiable != null) {
+                descriptor.setProxiable(this.proxiable);
             }
 
-            if (proxyForSameScope != null) {
-                descriptor.setProxyForSameScope(proxyForSameScope);
+            if (this.proxyForSameScope != null) {
+                descriptor.setProxyForSameScope(this.proxyForSameScope);
             }
 
-            if (visibility != null) {
-                descriptor.setDescriptorVisibility(visibility);
+            if (this.visibility != null) {
+                descriptor.setDescriptorVisibility(this.visibility);
             }
 
             configuration.bind(descriptor, false);
@@ -375,52 +376,52 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
                 this.loader = defaultLoader;
             }
 
-            AbstractActiveDescriptor<?> factoryContractDescriptor = BuilderHelper.createConstantDescriptor(factory);
-            factoryContractDescriptor.addContractType(factory.getClass());
+            AbstractActiveDescriptor<?> factoryContractDescriptor = BuilderHelper.createConstantDescriptor(this.factory);
+            factoryContractDescriptor.addContractType(this.factory.getClass());
             factoryContractDescriptor.setLoader(this.loader);
 
-            ActiveDescriptorBuilder descriptorBuilder = BuilderHelper.activeLink(factory.getClass())
-                .named(name)
+            ActiveDescriptorBuilder descriptorBuilder = BuilderHelper.activeLink(this.factory.getClass())
+                .named(this.name)
                 .andLoadWith(this.loader)
                 .analyzeWith(this.analyzer);
 
-            if (scope != null) {
-                descriptorBuilder.in(scope);
+            if (this.scope != null) {
+                descriptorBuilder.in(this.scope);
             }
 
-            if (ranked != null) {
-                descriptorBuilder.ofRank(ranked);
+            if (this.ranked != null) {
+                descriptorBuilder.ofRank(this.ranked);
             }
 
-            for (Annotation qualifier : qualifiers) {
+            for (Annotation qualifier : this.qualifiers) {
                 factoryContractDescriptor.addQualifierAnnotation(qualifier);
                 descriptorBuilder.qualifiedBy(qualifier);
             }
 
-            for (Type contract : contracts) {
+            for (Type contract : this.contracts) {
                 factoryContractDescriptor.addContractType(new ParameterizedTypeImpl(Factory.class, contract));
                 descriptorBuilder.to(contract);
             }
 
-            Set<String> keys = metadata.keySet();
+            Set<String> keys = this.metadata.keySet();
             for (String key : keys) {
-                List<String> values = metadata.get(key);
+                List<String> values = this.metadata.get(key);
                 for (String value : values) {
                     factoryContractDescriptor.addMetadata(key, value);
                     descriptorBuilder.has(key, value);
                 }
             }
 
-            if (proxiable != null) {
-                descriptorBuilder.proxy(proxiable);
+            if (this.proxiable != null) {
+                descriptorBuilder.proxy(this.proxiable);
             }
 
-            if (proxyForSameScope != null) {
-                descriptorBuilder.proxyForSameScope(proxyForSameScope);
+            if (this.proxyForSameScope != null) {
+                descriptorBuilder.proxyForSameScope(this.proxyForSameScope);
             }
 
-            if (visibility != null) {
-                descriptorBuilder.visibility(visibility);
+            if (this.visibility != null) {
+                descriptorBuilder.visibility(this.visibility);
             }
 
             configuration.bind(new FactoryDescriptorsImpl(
@@ -445,59 +446,59 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
                 this.loader = defaultLoader;
             }
 
-            ActiveDescriptorBuilder factoryDescriptorBuilder = BuilderHelper.activeLink(factoryClass)
-                .named(name)
+            ActiveDescriptorBuilder factoryDescriptorBuilder = BuilderHelper.activeLink(this.factoryClass)
+                .named(this.name)
                 .andLoadWith(this.loader)
                 .analyzeWith(this.analyzer);
 
-            if (factoryScope != null) {
-                factoryDescriptorBuilder.in(factoryScope);
+            if (this.factoryScope != null) {
+                factoryDescriptorBuilder.in(this.factoryScope);
             }
 
-            ActiveDescriptorBuilder descriptorBuilder = BuilderHelper.activeLink(factoryClass)
-                .named(name)
+            ActiveDescriptorBuilder descriptorBuilder = BuilderHelper.activeLink(this.factoryClass)
+                .named(this.name)
                 .andLoadWith(this.loader)
                 .analyzeWith(this.analyzer);
 
-            if (scope != null) {
-                descriptorBuilder.in(scope);
+            if (this.scope != null) {
+                descriptorBuilder.in(this.scope);
             }
 
-            if (ranked != null) {
+            if (this.ranked != null) {
 //                factoryContractDescriptor.ofRank(factoryRank);
-                descriptorBuilder.ofRank(ranked);
+                descriptorBuilder.ofRank(this.ranked);
             }
 
-            for (Annotation qualifier : qualifiers) {
+            for (Annotation qualifier : this.qualifiers) {
                 factoryDescriptorBuilder.qualifiedBy(qualifier);
                 descriptorBuilder.qualifiedBy(qualifier);
             }
 
-            for (Type contract : contracts) {
+            for (Type contract : this.contracts) {
                 factoryDescriptorBuilder.to(new ParameterizedTypeImpl(Factory.class, contract));
                 descriptorBuilder.to(contract);
             }
 
-            Set<String> keys = metadata.keySet();
+            Set<String> keys = this.metadata.keySet();
             for (String key : keys) {
-                List<String> values = metadata.get(key);
+                List<String> values = this.metadata.get(key);
                 for (String value : values) {
                     factoryDescriptorBuilder.has(key, value);
                     descriptorBuilder.has(key, value);
                 }
             }
 
-            if (proxiable != null) {
-                descriptorBuilder.proxy(proxiable);
+            if (this.proxiable != null) {
+                descriptorBuilder.proxy(this.proxiable);
             }
 
-            if (proxyForSameScope != null) {
-                descriptorBuilder.proxyForSameScope(proxyForSameScope);
+            if (this.proxyForSameScope != null) {
+                descriptorBuilder.proxyForSameScope(this.proxyForSameScope);
             }
 
-            if (visibility != null) {
-                factoryDescriptorBuilder.visibility(visibility);
-                descriptorBuilder.visibility(visibility);
+            if (this.visibility != null) {
+                factoryDescriptorBuilder.visibility(this.visibility);
+                descriptorBuilder.visibility(this.visibility);
             }
 
             configuration.bind(new FactoryDescriptorsImpl(
@@ -516,7 +517,7 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
      * @return initialized binding builder.
      */
     static <T> AbstractBindingBuilder<T> create(Class<T> serviceType, boolean bindAsContract) {
-        return new ClassBasedBindingBuilder<T>(serviceType, bindAsContract ? serviceType : null);
+        return new AbstractBindingBuilder.ClassBasedBindingBuilder<>(serviceType, bindAsContract ? serviceType : null);
     }
 
     /**
@@ -527,9 +528,8 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
      * @param bindAsContract if {@code true}, the service class will be bound as one of the contracts.
      * @return initialized binding builder.
      */
-    @SuppressWarnings("unchecked")
     static <T> AbstractBindingBuilder<T> create(Type serviceType, boolean bindAsContract) {
-        return new ClassBasedBindingBuilder<T>(
+        return new AbstractBindingBuilder.ClassBasedBindingBuilder<>(
             (Class<T>) ReflectionHelper.getRawClass(serviceType), bindAsContract ? serviceType : null).asType(serviceType);
     }
 
@@ -543,7 +543,8 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
      */
     static <T> AbstractBindingBuilder<T> create(TypeLiteral<T> serviceType, boolean bindAsContract) {
         Type type = serviceType.getType();
-        return new ClassBasedBindingBuilder<T>(serviceType.getRawType(), bindAsContract ? serviceType.getType() : null).asType(type);
+        return new AbstractBindingBuilder.ClassBasedBindingBuilder<>(serviceType.getRawType(),
+            bindAsContract ? serviceType.getType() : null).asType(type);
     }
 
     /**
@@ -553,7 +554,7 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
      * @return initialized binding builder.
      */
     static <T> AbstractBindingBuilder<T> create(T service) {
-        return new InstanceBasedBindingBuilder<T>(service);
+        return new AbstractBindingBuilder.InstanceBasedBindingBuilder<>(service);
     }
 
     /**
@@ -563,7 +564,7 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
      * @return initialized binding builder.
      */
     static <T> AbstractBindingBuilder<T> createFactoryBinder(Factory<T> factory) {
-        return new FactoryInstanceBasedBindingBuilder<T>(factory);
+        return new AbstractBindingBuilder.FactoryInstanceBasedBindingBuilder<>(factory);
     }
 
     /**
@@ -575,6 +576,6 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
      */
     static <T> AbstractBindingBuilder<T> createFactoryBinder(Class<? extends Factory<T>> factoryType,
         Class<? extends Annotation> factoryScope) {
-        return new FactoryTypeBasedBindingBuilder<T>(factoryType, factoryScope);
+        return new AbstractBindingBuilder.FactoryTypeBasedBindingBuilder<>(factoryType, factoryScope);
     }
 }

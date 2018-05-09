@@ -21,7 +21,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Map.Entry;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -95,7 +95,7 @@ public class ConfigInjector {
         masterNode.removeChild(variablesNode.getKey());
         String contents = masterNode.toString();
 
-        for (Entry<Object, ? extends ConfigurationNode> entry : variablesNode.getChildrenMap().entrySet()) {
+        for (Map.Entry<Object, ? extends ConfigurationNode> entry : variablesNode.getChildrenMap().entrySet()) {
             final String key = entry.getKey().toString();
             final Object value = entry.getValue().getValue();
             if (value == null) {
