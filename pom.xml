@@ -15,6 +15,10 @@
         <module>bungee</module>
     </modules>
 
+    <properties>
+        <hk2.version>2.5.0-b36</hk2.version>
+    </properties>
+
     <distributionManagement>
         <repository>
             <id>prodity-releases</id>
@@ -59,8 +63,18 @@
         <dependencies>
             <dependency>
                 <groupId>org.glassfish.hk2</groupId>
-                <artifactId>hk2</artifactId>
-                <version>2.5.0-b36</version>
+                <artifactId>hk2-locator</artifactId>
+                <version>${hk2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.hk2</groupId>
+                <artifactId>hk2-extras</artifactId>
+                <version>${hk2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish.hk2</groupId>
+                <artifactId>hk2-metadata-generator</artifactId>
+                <version>${hk2.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
