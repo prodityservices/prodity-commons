@@ -24,4 +24,5 @@ public interface ProdityPlugin {
     Set<String> getDependencies();
 
     Set<String> getSoftDependencies();
+
 }

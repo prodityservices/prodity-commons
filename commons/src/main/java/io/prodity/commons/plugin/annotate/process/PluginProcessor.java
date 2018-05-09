@@ -134,7 +134,7 @@ public abstract class PluginProcessor extends AbstractProcessor {
 
     private void writeValuesToFile(@Nonnull Map<String, String> values) {
         Preconditions.checkNotNull(values, "values");
-        Try.run(() -> {
+        Try.to(() -> {
             final Yaml yaml = new Yaml();
             final FileObject fileObject = this.processingEnv.getFiler().createResource(StandardLocation.CLASS_OUTPUT, "", "plugin.yml");
             try (
@@ -144,7 +144,7 @@ public abstract class PluginProcessor extends AbstractProcessor {
                 yaml.dump(values, bufferedWriter);
                 bufferedWriter.flush();
             }
-        });
+        }).run();
     }
 
     private <T extends Annotation> void applyToDescription(TypeElement typeElement, Class<? extends Annotation> annotationClass,

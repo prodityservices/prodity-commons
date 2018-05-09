@@ -3,6 +3,7 @@ package io.prodity.commons.config.example;
 import io.prodity.commons.config.annotate.inject.Config;
 import io.prodity.commons.config.annotate.inject.ConfigMethod;
 import io.prodity.commons.config.annotate.inject.ConfigPath;
+import io.prodity.commons.config.annotate.inject.Required;
 import io.prodity.commons.config.annotate.listen.PostConfigLoad;
 import io.prodity.commons.config.annotate.listen.PreConfigLoad;
 import io.prodity.commons.config.annotate.modify.Colorize;
@@ -15,7 +16,8 @@ import java.util.function.Supplier;
 @Config(fileName = "config.yml")
 public class ExampleConfig {
 
-    @ConfigPath(value = "test.string", required = true)
+    @ConfigPath(value = "test.string")
+    @Required
     @ConfigDefault(TestDefaultSupplier.class)
     @Colorize
     private String testColorizedString;

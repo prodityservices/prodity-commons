@@ -56,33 +56,34 @@ public class ConfigValueResolver {
 
         }
 
-        Object object = null;
-        if (objectOptional.isPresent()) {
-            object = objectOptional.get();
-        } else if (element.getDefaultSupplier().isPresent()) {
-            object = element.loadDefault();
-        } else if (!annotation.required()) {
-            throw new ConfigLoadException(context, "path=" + path + " does not exist, has no default value, and is required");
-        }
+//        Object object = null;
+//        if (objectOptional.isPresent()) {
+//            object = objectOptional.get();
+//        } else if (element.getDefaultSupplier().isPresent()) {
+//            object = element.loadDefault();
+//        } else if (!annotation.required()) {
+//            throw new ConfigLoadException(context, "path=" + path + " does not exist, has no default value, and is required");
+//        }
+//
+//        if (element.getRepositoryName().isPresent()) {
+//            final String repositoryName = element.getRepositoryName().get();
+//            final Repository<Object, ?> repository = this.repositoryRegistry.getRepository(repositoryName);
+//            if (repository == null) {
+//                throw new ConfigLoadException(context, "repository with name=" + repositoryName + " could not be located");
+//            }
+//
+//            if (!repository.containsId(object)) {
+//                throw new ConfigLoadException(context, "repository=" + repositoryName + " does not contain id=" + object);
+//            }
+//
+//            object = repository.get(object);
+//        }
+//
+//        if (element.isColorized()) {
+//            //TODO colorize object if possible.
+//        }
 
-        if (element.getRepositoryName().isPresent()) {
-            final String repositoryName = element.getRepositoryName().get();
-            final Repository<Object, ?> repository = this.repositoryRegistry.getRepository(repositoryName);
-            if (repository == null) {
-                throw new ConfigLoadException(context, "repository with name=" + repositoryName + " could not be located");
-            }
-
-            if (!repository.containsId(object)) {
-                throw new ConfigLoadException(context, "repository=" + repositoryName + " does not contain id=" + object);
-            }
-
-            object = repository.get(object);
-        }
-
-        if (element.isColorized()) {
-            //TODO colorize object if possible.
-        }
-
+        return null;
     }
 
     @Nonnull
@@ -125,7 +126,7 @@ public class ConfigValueResolver {
             final Iterable<?> keyIterable = ((Map) keyObject).keySet();
             return repository.getAsMap(keyIterable);
         } else {
-
+            return null;//TODO
         }
     }
 

@@ -16,7 +16,8 @@ public class ConfigDeserializerRegistry {
     }
 
     public static ConfigDeserializerRegistry createWithDefaults() {
-        
+        //TODO
+        return null;
     }
 
     private final Map<Class<?>, ConfigDeserializer<?>> deserializers;
