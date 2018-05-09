@@ -3,7 +3,9 @@ package io.prodity.commons.terminable.registry;
 import io.prodity.commons.except.CompositeException;
 import io.prodity.commons.terminable.Terminable;
 import javax.annotation.Nonnull;
+import org.jvnet.hk2.annotations.Contract;
 
+@Contract
 public interface TerminableRegistry extends Terminable {
 
     @Nonnull

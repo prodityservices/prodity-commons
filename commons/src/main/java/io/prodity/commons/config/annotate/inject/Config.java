@@ -1,4 +1,4 @@
-package io.prodity.commons.config.annotate;
+package io.prodity.commons.config.annotate.inject;
 
 
 import java.lang.annotation.ElementType;

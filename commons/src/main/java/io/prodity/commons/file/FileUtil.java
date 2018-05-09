@@ -22,7 +22,7 @@ public enum FileUtil {
 
     @Nonnull
     public static String readFileContents(@Nonnull Path path) throws IOException, SecurityException {
-        Preconditions.checkNotNull(path, "path");
+        Preconditions.checkNotNull(path, "value");
 
         final List<String> lines = Files.readAllLines(path);
         final StringBuilder fileContentsBuilder = new StringBuilder();

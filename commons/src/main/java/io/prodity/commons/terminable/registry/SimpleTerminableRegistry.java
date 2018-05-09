@@ -7,7 +7,9 @@ import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import javax.annotation.Nonnull;
+import org.jvnet.hk2.annotations.Service;
 
+@Service
 public class SimpleTerminableRegistry implements TerminableRegistry {
 
     private final Deque<AutoCloseable> closeables;

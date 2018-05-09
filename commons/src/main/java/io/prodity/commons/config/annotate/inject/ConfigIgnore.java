@@ -1,4 +1,4 @@
-package io.prodity.commons.config.annotate;
+package io.prodity.commons.config.annotate.inject;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,10 +10,6 @@ import java.lang.annotation.Target;
     ElementType.PARAMETER
 })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ConfigValue {
-
-    String path();
-
-    boolean ignoreIfMissing() default false;
+public @interface ConfigIgnore {
 
 }

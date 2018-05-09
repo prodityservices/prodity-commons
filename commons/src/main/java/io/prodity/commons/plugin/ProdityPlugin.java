@@ -7,6 +7,6 @@ public interface ProdityPlugin {
 
     File getDataFolder();
 
-    InputStream getResource(String fileNamea);
+    InputStream getResource(String fileName);
 
 }

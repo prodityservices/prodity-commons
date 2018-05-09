@@ -49,6 +49,9 @@
     <orderEntry type="library" name="Maven: co.aikar:Table:1.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: co.aikar:DelegatingMap:1.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: co.aikar:locales:1.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: co.aikar:taskchain-core:3.6.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: org.yaml:snakeyaml:1.21" level="project" />
+    <orderEntry type="library" name="Maven: ninja.leaping.configurate:configurate-yaml:3.3" level="project" />
+    <orderEntry type="library" name="Maven: ninja.leaping.configurate:configurate-core:3.3" level="project" />
   </component>
 </module>

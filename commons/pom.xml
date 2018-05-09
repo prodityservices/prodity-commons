@@ -50,8 +50,18 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <groupId>co.aikar</groupId>
+            <artifactId>taskchain-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ninja.leaping.configurate</groupId>
+            <artifactId>configurate-yaml</artifactId>
             <scope>compile</scope>
         </dependency>
     </dependencies>
