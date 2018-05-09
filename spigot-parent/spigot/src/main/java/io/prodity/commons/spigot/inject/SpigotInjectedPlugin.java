@@ -166,5 +166,4 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
         return softDependencies;
     }
 
-
 }
