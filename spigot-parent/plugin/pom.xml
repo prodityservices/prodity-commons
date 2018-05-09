@@ -47,6 +47,15 @@
                             <goal>shade</goal>
                         </goals>
                         <phase>package</phase>
+                        <configuration>
+                            <!-- This transformer adds all the services together rather than replacing them -->
+                            <!-- This is necessary for multi-version projects -->
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/hk2-locator/default</resource>
+                                </transformer>
+                            </transformers>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
