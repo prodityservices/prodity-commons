@@ -6,10 +6,10 @@ package io.prodity.commons.spigot.inject;
  * that the Bukkit Scheduler can operate on.
  */
 public enum TimeUnit {
-    DAYS(1728000),
-    HOURS(72000),
-    MINUTES(1200),
-    SECONDS(20),
+    DAYS(1_728_000L),
+    HOURS(72_000L),
+    MINUTES(1_200L),
+    SECONDS(20L),
     TICKS(1),;
     private final long ticks;
 
