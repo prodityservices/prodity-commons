@@ -18,9 +18,6 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 @PluginAuthor("Nate Mortensen")
 @PluginDependency(value = "PlaceholderAPI", soft = true)
 @PluginDependency(value = "ProtocolLib")
-@PluginLoadState(LoadState.POSTWORLD)
-@PluginLoadBefore("SomePluginToLoadBefore1")
-@PluginLoadBefore("AnotherPluginToLoadBefore")
 public class ProdityCommonsSpigot extends ProditySpigotPlugin {
 
     @Override
@@ -30,4 +27,5 @@ public class ProdityCommonsSpigot extends ProditySpigotPlugin {
         ServiceLocatorUtilities.bind(locator, new InternalBinder(this));
         return locator;
     }
+
 }
