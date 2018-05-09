@@ -22,7 +22,7 @@ public interface ConfigMethod {
                 "method=" + method.toString() + " has parameterCount=" + parameterCount + " but specified arguments.length="
                     + arguments.length);
         }
-        
+
         method.invoke(object, arguments);
     }
 

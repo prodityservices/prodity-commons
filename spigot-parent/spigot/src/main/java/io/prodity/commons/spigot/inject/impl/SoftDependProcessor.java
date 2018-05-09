@@ -2,13 +2,13 @@ package io.prodity.commons.spigot.inject.impl;
 
 import io.prodity.commons.inject.SoftDepend;
 import io.prodity.commons.inject.impl.AnnotationProcessor;
+import javax.inject.Inject;
 import org.bukkit.plugin.PluginManager;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 
-import javax.inject.Inject;
-
 
 public class SoftDependProcessor extends AnnotationProcessor<SoftDepend> {
+
     private final PluginManager pluginManager;
 
     @Inject

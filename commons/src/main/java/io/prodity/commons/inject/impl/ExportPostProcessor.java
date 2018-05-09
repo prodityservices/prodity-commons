@@ -2,12 +2,12 @@ package io.prodity.commons.inject.impl;
 
 import io.prodity.commons.inject.Export;
 import io.prodity.commons.plugin.ProdityPlugin;
+import javax.inject.Inject;
 import org.glassfish.hk2.api.DescriptorVisibility;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 
-import javax.inject.Inject;
-
 public class ExportPostProcessor extends AnnotationProcessor<Export> {
+
     private final ProdityPlugin plugin;
 
     @Inject

@@ -8,6 +8,6 @@ import org.jvnet.hk2.annotations.Contract;
  * to be created is for them to be requested from a ServiceLocator.
  */
 @Contract
-public interface Eager
-{
+public interface Eager {
+
 }

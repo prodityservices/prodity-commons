@@ -3,7 +3,6 @@ package io.prodity.commons.bungee.plugin;
 import io.prodity.commons.plugin.ProdityPlugin;
 import java.io.InputStream;
 import java.util.Set;
-
 import net.md_5.bungee.api.plugin.Plugin;
 import org.glassfish.hk2.api.ServiceLocator;
 

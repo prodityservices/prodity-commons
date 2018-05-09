@@ -1,10 +1,9 @@
 package io.prodity.commons.plugin;
 
-import org.glassfish.hk2.api.ServiceLocator;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.Set;
+import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * Abstraction over both Bukkit and Bungee plugins.

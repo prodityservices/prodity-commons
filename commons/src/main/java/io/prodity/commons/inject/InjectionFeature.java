@@ -3,10 +3,9 @@ package io.prodity.commons.inject;
 import io.prodity.commons.inject.bind.ConsumerBinder;
 import io.prodity.commons.inject.bind.PluginBinder;
 import io.prodity.commons.plugin.ProdityPlugin;
+import java.util.function.Consumer;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.jvnet.hk2.annotations.Contract;
-
-import java.util.function.Consumer;
 
 /**
  * InjectionFeatures are the core of PluginInject.  Nearly all
@@ -29,38 +28,48 @@ import java.util.function.Consumer;
  * so abstracted from the feature that they won't fail to resolve without it.
  */
 @Contract
-public interface InjectionFeature
-{
+public interface InjectionFeature {
+
     /**
      * Invoked prior to plugin configuration being loaded
+     *
      * @param plugin the plugin
      */
-    default void preLoad(ProdityPlugin plugin) {}
+    default void preLoad(ProdityPlugin plugin) {
+    }
 
     /**
      * Invoked after plugin configuration has been loaded
+     *
      * @param plugin non-null plugin ServiceLocator
      */
-    default void postLoad(ProdityPlugin plugin) {}
+    default void postLoad(ProdityPlugin plugin) {
+    }
 
     /**
      * Invoked after the Bukkit plugin has been enabled, but
      * prior to Eager initialization.
+     *
      * @param plugin the plugin
      */
-    default void preEnable(ProdityPlugin plugin) {}
+    default void preEnable(ProdityPlugin plugin) {
+    }
 
     /**
      * Invoked after module initialization.
+     *
      * @param plugin the plugin
      */
-    default void postEnable(ProdityPlugin plugin) {}
+    default void postEnable(ProdityPlugin plugin) {
+    }
 
     /**
      * Invoked prior to ServiceLocator shutdown.
+     *
      * @param plugin the plugin
      */
-    default void preDisable(ProdityPlugin plugin) {}
+    default void preDisable(ProdityPlugin plugin) {
+    }
 
     default void bind(ProdityPlugin plugin, Consumer<PluginBinder> binder) {
         ServiceLocatorUtilities.bind(plugin.getServices(), new ConsumerBinder(plugin, binder));

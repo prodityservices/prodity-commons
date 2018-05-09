@@ -35,7 +35,7 @@ public @interface PluginLoadBeforeComposite {
                 final List<String> pluginNames = Arrays.stream(plugins)
                     .map(PluginLoadBefore::value)
                     .collect(Collectors.toList());
-                
+
                 data.set(PluginLoadBefore.Serializer.KEY, "[" + String.join(",", pluginNames) + "]");
             };
         }

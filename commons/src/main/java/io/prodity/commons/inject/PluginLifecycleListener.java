@@ -11,6 +11,10 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface PluginLifecycleListener {
-    default void onEnable(ProdityPlugin plugin) {}
-    default void onDisable(ProdityPlugin plugin) {}
+
+    default void onEnable(ProdityPlugin plugin) {
+    }
+
+    default void onDisable(ProdityPlugin plugin) {
+    }
 }

@@ -1,7 +1,6 @@
 package io.prodity.commons.inject;
 
 import org.glassfish.hk2.api.PopulatorPostProcessor;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -16,4 +15,5 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface DescriptorProcessor extends PopulatorPostProcessor {
+
 }

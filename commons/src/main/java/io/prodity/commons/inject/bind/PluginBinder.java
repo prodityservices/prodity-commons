@@ -2,15 +2,14 @@ package io.prodity.commons.inject.bind;
 
 import io.prodity.commons.inject.Export;
 import io.prodity.commons.plugin.ProdityPlugin;
+import java.lang.reflect.Type;
+import javax.inject.Singleton;
 import org.apache.commons.lang3.Validate;
 import org.glassfish.hk2.api.DescriptorVisibility;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.Binder;
-
-import javax.inject.Singleton;
-import java.lang.reflect.Type;
 
 /**
  * This class provides easy mechanisms for creating plugin-local bindings. All bindings default
@@ -23,6 +22,7 @@ import java.lang.reflect.Type;
  * that it satisfies.
  */
 public abstract class PluginBinder implements Binder {
+
     private final ProdityPlugin plugin;
     private DynamicConfiguration config;
     private AbstractBindingBuilder<?> current;

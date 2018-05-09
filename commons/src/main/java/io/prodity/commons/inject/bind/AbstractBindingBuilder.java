@@ -40,6 +40,12 @@
 
 package io.prodity.commons.inject.bind;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import javax.inject.Named;
 import org.glassfish.hk2.api.DescriptorVisibility;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.Factory;
@@ -53,13 +59,6 @@ import org.glassfish.hk2.utilities.reflection.ParameterizedTypeImpl;
 import org.glassfish.hk2.utilities.reflection.ReflectionHelper;
 import org.jvnet.hk2.component.MultiMap;
 
-import javax.inject.Named;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 
 /**
  * Abstract binding builder implementation.
@@ -69,6 +68,7 @@ import java.util.Set;
  */
 // NOTE: Added Visibility
 abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
+
     /**
      * Contracts the service should be bound to.
      */
@@ -170,7 +170,7 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
     @Override
     public AbstractBindingBuilder<T> withMetadata(String key, List<String> values) {
         for (String value : values) {
-            this.metadata.add(key,value);
+            this.metadata.add(key, value);
         }
         return this;
     }
@@ -230,13 +230,13 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
      * dynamic configuration}.
      *
      * @param configuration dynamic binding configuration.
-     * @param defaultLoader default HK2 loader that should be used in case a custom loader
-     *                      was not set.
+     * @param defaultLoader default HK2 loader that should be used in case a custom loader was not set.
      */
     abstract void complete(DynamicConfiguration configuration, HK2Loader defaultLoader);
 
 
     private static class ClassBasedBindingBuilder<T> extends AbstractBindingBuilder<T> {
+
         private final Class<T> service;
 
         public ClassBasedBindingBuilder(Class<T> service, Type serviceContractType) {
@@ -253,9 +253,9 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
             }
 
             ActiveDescriptorBuilder builder = BuilderHelper.activeLink(service)
-                    .named(name)
-                    .andLoadWith(this.loader)
-                    .analyzeWith(this.analyzer);
+                .named(name)
+                .andLoadWith(this.loader)
+                .analyzeWith(this.analyzer);
 
             if (scopeAnnotation != null) {
                 builder.in(scopeAnnotation);
@@ -303,10 +303,13 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
     }
 
     private static class InstanceBasedBindingBuilder<T> extends AbstractBindingBuilder<T> {
+
         private final T service;
 
         public InstanceBasedBindingBuilder(T service) {
-            if (service == null) throw new IllegalArgumentException();
+            if (service == null) {
+                throw new IllegalArgumentException();
+            }
             this.service = service;
         }
 
@@ -359,6 +362,7 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
     }
 
     private static class FactoryInstanceBasedBindingBuilder<T> extends AbstractBindingBuilder<T> {
+
         private final Factory<T> factory;
 
         public FactoryInstanceBasedBindingBuilder(Factory<T> factory) {
@@ -376,9 +380,9 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
             factoryContractDescriptor.setLoader(this.loader);
 
             ActiveDescriptorBuilder descriptorBuilder = BuilderHelper.activeLink(factory.getClass())
-                    .named(name)
-                    .andLoadWith(this.loader)
-                    .analyzeWith(this.analyzer);
+                .named(name)
+                .andLoadWith(this.loader)
+                .analyzeWith(this.analyzer);
 
             if (scope != null) {
                 descriptorBuilder.in(scope);
@@ -420,12 +424,13 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
             }
 
             configuration.bind(new FactoryDescriptorsImpl(
-                    factoryContractDescriptor,
-                    descriptorBuilder.buildProvideMethod()));
+                factoryContractDescriptor,
+                descriptorBuilder.buildProvideMethod()));
         }
     }
 
     private static class FactoryTypeBasedBindingBuilder<T> extends AbstractBindingBuilder<T> {
+
         private final Class<? extends Factory<T>> factoryClass;
         private final Class<? extends Annotation> factoryScope;
 
@@ -441,18 +446,18 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
             }
 
             ActiveDescriptorBuilder factoryDescriptorBuilder = BuilderHelper.activeLink(factoryClass)
-                    .named(name)
-                    .andLoadWith(this.loader)
-                    .analyzeWith(this.analyzer);
+                .named(name)
+                .andLoadWith(this.loader)
+                .analyzeWith(this.analyzer);
 
             if (factoryScope != null) {
                 factoryDescriptorBuilder.in(factoryScope);
             }
 
             ActiveDescriptorBuilder descriptorBuilder = BuilderHelper.activeLink(factoryClass)
-                    .named(name)
-                    .andLoadWith(this.loader)
-                    .analyzeWith(this.analyzer);
+                .named(name)
+                .andLoadWith(this.loader)
+                .analyzeWith(this.analyzer);
 
             if (scope != null) {
                 descriptorBuilder.in(scope);
@@ -496,8 +501,8 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
             }
 
             configuration.bind(new FactoryDescriptorsImpl(
-                    factoryDescriptorBuilder.build(),
-                    descriptorBuilder.buildProvideMethod()));
+                factoryDescriptorBuilder.build(),
+                descriptorBuilder.buildProvideMethod()));
         }
     }
 
@@ -505,8 +510,8 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
     /**
      * Create a new service binding builder.
      *
-     * @param <T>            service type.
-     * @param serviceType    service class.
+     * @param <T> service type.
+     * @param serviceType service class.
      * @param bindAsContract if {@code true}, the service class will be bound as one of the contracts.
      * @return initialized binding builder.
      */
@@ -517,21 +522,22 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
     /**
      * Create a new service binding builder.
      *
-     * @param <T>            service type.
-     * @param serviceType    service class.
+     * @param <T> service type.
+     * @param serviceType service class.
      * @param bindAsContract if {@code true}, the service class will be bound as one of the contracts.
      * @return initialized binding builder.
      */
     @SuppressWarnings("unchecked")
     static <T> AbstractBindingBuilder<T> create(Type serviceType, boolean bindAsContract) {
         return new ClassBasedBindingBuilder<T>(
-                (Class<T>) ReflectionHelper.getRawClass(serviceType), bindAsContract ? serviceType : null).asType(serviceType);
+            (Class<T>) ReflectionHelper.getRawClass(serviceType), bindAsContract ? serviceType : null).asType(serviceType);
     }
+
     /**
      * Create a new service binding builder.
      *
-     * @param <T>            service type.
-     * @param serviceType    generic service type.
+     * @param <T> service type.
+     * @param serviceType generic service type.
      * @param bindAsContract if {@code true}, the service class will be bound as one of the contracts.
      * @return initialized binding builder.
      */
@@ -567,7 +573,8 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
      * @param factoryScope service factory scope.
      * @return initialized binding builder.
      */
-    static <T> AbstractBindingBuilder<T> createFactoryBinder(Class<? extends Factory<T>> factoryType, Class<? extends Annotation> factoryScope) {
+    static <T> AbstractBindingBuilder<T> createFactoryBinder(Class<? extends Factory<T>> factoryType,
+        Class<? extends Annotation> factoryScope) {
         return new FactoryTypeBasedBindingBuilder<T>(factoryType, factoryScope);
     }
 }

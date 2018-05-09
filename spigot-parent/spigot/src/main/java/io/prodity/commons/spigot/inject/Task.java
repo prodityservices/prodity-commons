@@ -14,12 +14,17 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Task {
+
     /**
      * How frequently to run the task, specified in {@link #unit()}.
+     *
      * @return task period
      */
     long period();
+
     TimeUnit unit() default TimeUnit.TICKS;
+
     boolean async() default false;
+
     boolean cancelOnError() default true;
 }

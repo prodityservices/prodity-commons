@@ -1,13 +1,13 @@
 package io.prodity.commons.inject.impl;
 
 import io.prodity.commons.inject.DescriptorProcessor;
+import java.lang.annotation.Annotation;
 import org.glassfish.hk2.api.DescriptorType;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 
-import java.lang.annotation.Annotation;
-
 public abstract class AnnotationProcessor<T extends Annotation> implements DescriptorProcessor {
+
     private final Class<T> tClass;
 
     protected AnnotationProcessor(Class<T> tClass) {

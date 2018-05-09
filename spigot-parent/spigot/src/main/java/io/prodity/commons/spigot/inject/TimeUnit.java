@@ -10,8 +10,7 @@ public enum TimeUnit {
     HOURS(72000),
     MINUTES(1200),
     SECONDS(20),
-    TICKS(1),
-    ;
+    TICKS(1),;
     private final long ticks;
 
     TimeUnit(long ticks) {

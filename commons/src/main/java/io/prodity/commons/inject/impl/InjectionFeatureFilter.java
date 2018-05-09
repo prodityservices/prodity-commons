@@ -8,6 +8,7 @@ import org.glassfish.hk2.api.DescriptorVisibility;
 import org.glassfish.hk2.api.IndexedFilter;
 
 public class InjectionFeatureFilter implements IndexedFilter {
+
     private final ProdityPlugin plugin;
 
     public InjectionFeatureFilter(ProdityPlugin plugin) {
@@ -30,7 +31,7 @@ public class InjectionFeatureFilter implements IndexedFilter {
             String creator = InjectUtils.getOwner(d);
             if (creator != null) {
                 return plugin.getSoftDependencies().contains(creator)
-                        || plugin.getDependencies().contains(creator);
+                    || plugin.getDependencies().contains(creator);
             }
         }
         return false;

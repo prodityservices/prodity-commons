@@ -3,10 +3,15 @@ package io.prodity.commons.spigot.inject.impl;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import io.prodity.commons.inject.InjectUtils;
-import io.prodity.commons.plugin.ProdityPlugin;
 import io.prodity.commons.inject.PluginLifecycleListener;
+import io.prodity.commons.plugin.ProdityPlugin;
 import io.prodity.commons.spigot.inject.SpigotInjectedPlugin;
 import io.prodity.commons.spigot.inject.Task;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.List;
+import javax.inject.Inject;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
@@ -16,13 +21,8 @@ import org.glassfish.hk2.api.InstanceLifecycleEvent;
 import org.glassfish.hk2.api.InstanceLifecycleEventType;
 import org.glassfish.hk2.api.InstanceLifecycleListener;
 
-import javax.inject.Inject;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
-
 public class TaskRegistration implements InstanceLifecycleListener, PluginLifecycleListener {
+
     private final Multimap<ActiveDescriptor<?>, DiscoveredTask> tasks = HashMultimap.create();
     private final SpigotInjectedPlugin plugin;
 
@@ -38,7 +38,8 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
 
     @Override
     public void lifecycleEvent(InstanceLifecycleEvent lifecycleEvent) {
-        if (lifecycleEvent.getEventType() == InstanceLifecycleEventType.POST_PRODUCTION && !tasks.containsKey(lifecycleEvent.getActiveDescriptor())) {
+        if (lifecycleEvent.getEventType() == InstanceLifecycleEventType.POST_PRODUCTION && !tasks
+            .containsKey(lifecycleEvent.getActiveDescriptor())) {
             addAllTasks(lifecycleEvent.getActiveDescriptor(), lifecycleEvent.getLifecycleObject());
         } else if (lifecycleEvent.getEventType() == InstanceLifecycleEventType.PRE_DESTRUCTION) {
             for (DiscoveredTask task : tasks.removeAll(lifecycleEvent.getActiveDescriptor())) {
@@ -79,8 +80,8 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
 
     private Task checkValid(Method method) {
         if (method.getParameterCount() == 0
-                && !Modifier.isStatic(method.getModifiers())
-                && method.getReturnType() == Void.TYPE) {
+            && !Modifier.isStatic(method.getModifiers())
+            && method.getReturnType() == Void.TYPE) {
             return method.getAnnotation(Task.class);
         }
         return null;
@@ -101,6 +102,7 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
     }
 
     private class DiscoveredTask implements Runnable {
+
         private final Object instance;
         private final Method method;
         private final Task taskInfo;
@@ -152,11 +154,11 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
         @Override
         public String toString() {
             return "DiscoveredTask{" +
-                    "instance=" + instance +
-                    ", method=" + method +
-                    ", taskInfo=" + taskInfo +
-                    ", task=" + task +
-                    '}';
+                "instance=" + instance +
+                ", method=" + method +
+                ", taskInfo=" + taskInfo +
+                ", task=" + task +
+                '}';
         }
     }
 }

@@ -15,6 +15,7 @@ public class InjectUtils {
     }
 
     public static String getOwner(Descriptor descriptor) {
-        return descriptor.getMetadata().containsKey(Export.PLUGIN_META_KEY) ? descriptor.getMetadata().get(Export.PLUGIN_META_KEY).get(0) : null;
+        return descriptor.getMetadata().containsKey(Export.PLUGIN_META_KEY) ? descriptor.getMetadata().get(Export.PLUGIN_META_KEY).get(0)
+            : null;
     }
 }

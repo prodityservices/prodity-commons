@@ -1,7 +1,6 @@
 package io.prodity.commons.inject.bind;
 
 import io.prodity.commons.plugin.ProdityPlugin;
-
 import java.util.function.Consumer;
 
 /**
@@ -9,6 +8,7 @@ import java.util.function.Consumer;
  * to the pluginbinder.
  */
 public class ConsumerBinder extends PluginBinder {
+
     private final ProdityPlugin plugin;
     private final Consumer<PluginBinder> consumer;
 

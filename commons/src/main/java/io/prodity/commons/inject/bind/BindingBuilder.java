@@ -39,15 +39,15 @@
  */
 package io.prodity.commons.inject.bind;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Type;
+import java.util.List;
 import org.glassfish.hk2.api.DescriptorVisibility;
 import org.glassfish.hk2.api.HK2Loader;
 import org.glassfish.hk2.api.TypeLiteral;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.List;
-
 public interface BindingBuilder<T> {
+
     /**
      * Bind a new contract to a service.
      *
@@ -147,8 +147,7 @@ public interface BindingBuilder<T> {
      * Rank the binding. The higher rank, the more prominent position in an injected
      * {@link org.glassfish.hk2.api.IterableProvider iterable provider} for a contract.
      *
-     * @param rank binding rank to be used to resolve ordering in case of multiple services
-     *             are bound to the same contract.
+     * @param rank binding rank to be used to resolve ordering in case of multiple services are bound to the same contract.
      */
     BindingBuilder<T> ranked(int rank);
 
@@ -162,8 +161,7 @@ public interface BindingBuilder<T> {
     /**
      * Set proxyForSameScope flag on the binding
      *
-     * @param proxyForSameScope flag to determine if proxies should be generated
-     * even within the same scope
+     * @param proxyForSameScope flag to determine if proxies should be generated even within the same scope
      * @return A further refined ServiceBindingBuilder
      */
     BindingBuilder<T> proxyForSameScope(boolean proxyForSameScope);
@@ -171,8 +169,7 @@ public interface BindingBuilder<T> {
     /**
      * Set the name of the {@link org.glassfish.hk2.api.ClassAnalyzer} on the binding.
      *
-     * @param analyzer The name of the analyzer that should be used.  May be null
-     * to indicate the default class analzyer
+     * @param analyzer The name of the analyzer that should be used.  May be null to indicate the default class analzyer
      */
     BindingBuilder<T> analyzeWith(String analyzer);
 
