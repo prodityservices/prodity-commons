@@ -7,8 +7,6 @@ import io.prodity.commons.config.inject.ConfigFile;
 import io.prodity.commons.config.inject.deserialize.ConfigValueResolver;
 import io.prodity.commons.config.inject.element.ConfigElement;
 import io.prodity.commons.config.inject.element.ConfigElementBase;
-import io.prodity.commons.config.inject.element.attribute.ElementAttributeValue;
-import io.prodity.commons.config.inject.element.attribute.ElementAttributes.ColorizeAttribute;
 import io.prodity.commons.config.inject.except.ConfigInjectException;
 import io.prodity.commons.config.inject.member.ConfigMember;
 import io.prodity.commons.config.inject.object.ConfigObject;
@@ -16,8 +14,6 @@ import io.prodity.commons.except.tryto.Try;
 import io.prodity.commons.reflect.element.NamedAnnotatedElement;
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -61,15 +57,6 @@ public class ConfigField<T> extends ConfigElementBase<T> implements ConfigMember
 
     public Field getField() {
         return this.field;
-    }
-
-    @Override
-    public <V> Optional<V> getAttributeValue(Class<? extends ElementAttributeValue<V>> attributeClass) {
-        if (!Objects.equals(ColorizeAttribute.class, attributeClass)) {
-            return super.getAttributeValue(attributeClass);
-        }
-        final Optional<V> rawValue = (Optional<V>) super.getAttributeValue(ColorizeAttribute.class);
-        return ConfigMember.isColorized(rawValue, this.possessor.isColorizeElements());
     }
 
     @Override

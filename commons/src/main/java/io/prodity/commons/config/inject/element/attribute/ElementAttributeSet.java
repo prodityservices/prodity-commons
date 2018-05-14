@@ -6,7 +6,6 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.AnnotatedType;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class ElementAttributeSet {
 
@@ -39,15 +38,29 @@ public class ElementAttributeSet {
      *
      * @param element the element to resolveValues attributes from
      * @return the {@link Set} of resolved attributes, possibly empty but not null.
+     * @throws IllegalStateException if there are conflicting {@link ElementAttribute}s on the specified element
      */
-    public Set<? extends ElementAttributeValue<?>> resolveValues(AnnotatedElement element) {
+    public Set<? extends ElementAttributeValue<?>> resolveValues(AnnotatedElement element) throws IllegalStateException {
         Preconditions.checkNotNull(element, "element");
 
-        return this.attributes.stream()
-            .map((attribute) -> attribute.getValue(element))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
-            .collect(Collectors.toSet());
+        final Set<ElementAttributeValue<?>> values = Sets.newHashSet();
+
+        for (ElementAttribute<?> attribute : this.attributes) {
+            final Optional<? extends ElementAttributeValue<?>> value = attribute.getValue(element);
+            if (!value.isPresent()) {
+                continue;
+            }
+            for (ElementAttributeValue<?> possibleConflictingValue : values) {
+                if (attribute.isConflicting(possibleConflictingValue)) {
+                    throw new IllegalStateException(
+                        "element=" + element + " has conflicting attributes '" + attribute.getKey() + "' & '" + possibleConflictingValue
+                            .getAttributeKey() + "'");
+                }
+            }
+            values.add(value.get());
+        }
+
+        return values;
     }
 
 }

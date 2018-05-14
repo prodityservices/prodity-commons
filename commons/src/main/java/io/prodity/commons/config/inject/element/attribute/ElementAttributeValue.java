@@ -19,6 +19,10 @@ public class ElementAttributeValue<V> {
         return this.attribute;
     }
 
+    public ElementAttributeKey<V> getAttributeKey() {
+        return this.attribute.getKey();
+    }
+
     public boolean hasValue() {
         return this.value != null;
     }

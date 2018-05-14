@@ -4,10 +4,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 import io.prodity.commons.config.annotate.inject.ConfigIgnore;
 import io.prodity.commons.config.annotate.inject.ConfigPath;
-import io.prodity.commons.config.inject.element.attribute.ElementAttributeValue;
+import io.prodity.commons.config.inject.element.attribute.ElementAttributeKey;
 import io.prodity.commons.reflect.element.NamedAnnotatedElement;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Optional;
+import javax.annotation.Nullable;
 
 public interface ConfigElement<T> extends NamedAnnotatedElement {
 
@@ -19,16 +20,16 @@ public interface ConfigElement<T> extends NamedAnnotatedElement {
             .orElseGet(element::getName);
     }
 
-    static boolean isElement(AnnotatedElement element) {
-        return !element.isAnnotationPresent(ConfigIgnore.class);
+    static boolean isElement(@Nullable AnnotatedElement element) {
+        return element != null && !element.isAnnotationPresent(ConfigIgnore.class);
     }
 
     TypeToken<T> getType();
 
     String getPath();
 
-    boolean hasAttribute(Class<? extends ElementAttributeValue> attributeClass);
+    boolean hasAttribute(@Nullable ElementAttributeKey<?> key);
 
-    <V> Optional<V> getAttributeValue(Class<? extends ElementAttributeValue<V>> attributeClass);
+    <V> Optional<V> getAttributeValue(@Nullable ElementAttributeKey<V> key);
 
 }

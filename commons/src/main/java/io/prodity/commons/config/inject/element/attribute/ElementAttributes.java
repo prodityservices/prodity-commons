@@ -18,122 +18,86 @@ public enum ElementAttributes {
 
     ;
 
-    private static final ElementAttributeSet DEFAULT_RESOLVERS;
+    private static final ElementAttributeSet DEFAULT_ATTRIBUTES;
+
+    public static final ElementAttributeKey<ColorizeState> COLORIZE_KEY = ElementAttributeKey.createKey("COLORIZE");
+    public static final ElementAttributeKey<String> REPOSITORY_KEY = ElementAttributeKey.createKey("REPOSITORY");
+    public static final ElementAttributeKey<Boolean> REQUIRED_KEY = ElementAttributeKey.createKey("REQUIRED");
+    public static final ElementAttributeKey<Boolean> DESERIALIZABLE_KEY = ElementAttributeKey.createKey("DESERIALIZABLE");
+    public static final ElementAttributeKey<Class<? extends Supplier<?>>> DEFAULT_VALUE_KEY = ElementAttributeKey
+        .createKey("DEFAULT_VALUE");
+
+    public static final ElementAttribute<ColorizeState> COLORIZE_ATTRIBUTE = ElementAttribute.<ColorizeState>builder()
+        .setKey(ElementAttributes.COLORIZE_KEY)
+        .setPredicate((element) -> element.isAnnotationPresent(Colorize.class))
+        .setValueFunction((element) -> element.getAnnotation(Colorize.class).value())
+        .build();
+
+    public static final ElementAttribute<String> REPOSITORY_ATTRIBUTE = ElementAttribute.<String>builder()
+        .setKey(ElementAttributes.REPOSITORY_KEY)
+        .addConflicting(ElementAttributes.DESERIALIZABLE_KEY)
+        .setPredicate((element) -> element.isAnnotationPresent(LoadFromRepository.class))
+        .setValueFunction((element) -> element.getAnnotation(LoadFromRepository.class).value())
+        .build();
+
+    public static final ElementAttribute<Boolean> REQUIRED_ATTRIBUTE = ElementAttribute.<Boolean>builder()
+        .setKey(ElementAttributes.REQUIRED_KEY)
+        .setPredicate((element) -> element.isAnnotationPresent(Required.class))
+        .setValueFunction((element) -> element.getAnnotation(Required.class).value())
+        .build();
+
+    public static final ElementAttribute<Boolean> DESERIALIZABLE_ATTRIBUTE = ElementAttribute.<Boolean>builder()
+        .setKey(ElementAttributes.DESERIALIZABLE_KEY)
+        .addConflicting(ElementAttributes.REPOSITORY_KEY)
+        .setPredicate((element) -> {
+            final AnnotatedType elementType;
+            if (element instanceof Field) {
+                elementType = ((Field) element).getAnnotatedType();
+            } else if (element instanceof Parameter) {
+                elementType = ((Parameter) element).getAnnotatedType();
+            } else {
+                return false;
+            }
+            return elementType.isAnnotationPresent(ConfigSerializable.class);
+        })
+        .setValueFunction((element) -> true)
+        .build();
+
+    public static final ElementAttribute<Class<? extends Supplier<?>>> DEFAULT_VALUE_ATTRIBUTE = ElementAttribute.<Class<? extends Supplier<?>>>builder()
+        .setKey(ElementAttributes.DEFAULT_VALUE_KEY)
+        .setPredicate((element) -> element.isAnnotationPresent(ConfigDefault.class))
+        .setValueFunction((element) -> element.getAnnotation(ConfigDefault.class).value())
+        .build();
+
 
     static {
-        DEFAULT_RESOLVERS = new ElementAttributeSet();
+        DEFAULT_ATTRIBUTES = new ElementAttributeSet();
 
-        ElementAttributes.DEFAULT_RESOLVERS.add(ColorizeAttribute.RESOLVER);
-        ElementAttributes.DEFAULT_RESOLVERS.add(RequiredAttribute.RESOLVER);
-        ElementAttributes.DEFAULT_RESOLVERS.add(RepositoryAttribute.RESOLVER);
-        ElementAttributes.DEFAULT_RESOLVERS.add(DeserializableTypeAttribute.RESOLVER);
-        ElementAttributes.DEFAULT_RESOLVERS.add(DefaultValueAttribute.RESOLVER);
+        ElementAttributes.DEFAULT_ATTRIBUTES.add(ElementAttributes.COLORIZE_ATTRIBUTE);
+        ElementAttributes.DEFAULT_ATTRIBUTES.add(ElementAttributes.REPOSITORY_ATTRIBUTE);
+        ElementAttributes.DEFAULT_ATTRIBUTES.add(ElementAttributes.REQUIRED_ATTRIBUTE);
+        ElementAttributes.DEFAULT_ATTRIBUTES.add(ElementAttributes.DESERIALIZABLE_ATTRIBUTE);
+        ElementAttributes.DEFAULT_ATTRIBUTES.add(ElementAttributes.DEFAULT_VALUE_ATTRIBUTE);
     }
 
-    public static ElementAttributeSet getDefaultResolverSet() {
-        return ElementAttributes.DEFAULT_RESOLVERS;
+    public static ElementAttributeSet getDefaultAttributeSet() {
+        return ElementAttributes.DEFAULT_ATTRIBUTES;
     }
 
-    public static ElementAttributeSet createResolverSet() {
-        return new ElementAttributeSet(ElementAttributes.DEFAULT_RESOLVERS);
+    public static ElementAttributeSet createAttributeSet() {
+        return new ElementAttributeSet(ElementAttributes.DEFAULT_ATTRIBUTES);
     }
 
     /**
      * Executes {@link ElementAttributeSet#resolveValues(AnnotatedElement)} with the specified {@link AnnotatedElement} using the {@link
-     * ElementAttributes#DEFAULT_RESOLVERS}.
+     * ElementAttributes#DEFAULT_ATTRIBUTES}.
      *
      * @param element the element to resolveValues from
      * @return the {@link Set} of resolved attributes.
      */
     public static Set<? extends ElementAttributeValue<?>> resolveAttributes(AnnotatedElement element) {
         Preconditions.checkNotNull(element, "element");
-        return ElementAttributes.DEFAULT_RESOLVERS.resolveValues(element);
-    }
-
-    public static final class ColorizeAttribute extends ElementAttributeValue<ColorizeState> {
-
-        public static final ElementAttributeResolver<ColorizeAttribute> RESOLVER =
-            new ElementAttributeResolver<>(
-                ColorizeAttribute.class,
-                (element) -> element.isAnnotationPresent(Colorize.class),
-                (element) -> new ColorizeAttribute(element.getAnnotation(Colorize.class).value())
-            );
-
-        public ColorizeAttribute(ColorizeState value) {
-            super(Preconditions.checkNotNull(value, "value"));
-        }
-
-    }
-
-    public static final class RequiredAttribute extends ElementAttributeValue<Boolean> {
-
-        public static final ElementAttributeResolver<RequiredAttribute> RESOLVER =
-            new ElementAttributeResolver<>(
-                RequiredAttribute.class,
-                (element) -> element.isAnnotationPresent(Required.class),
-                (element) -> new RequiredAttribute(element.getAnnotation(Required.class).value())
-            );
-
-        public RequiredAttribute(boolean value) {
-            super(value);
-        }
-
-    }
-
-    public static final class RepositoryAttribute extends ElementAttributeValue<String> {
-
-        public static final ElementAttributeResolver<RepositoryAttribute> RESOLVER =
-            new ElementAttributeResolver<>(
-                RepositoryAttribute.class,
-                (element) -> element.isAnnotationPresent(LoadFromRepository.class),
-                (element) -> new RepositoryAttribute(element.getAnnotation(LoadFromRepository.class).value())
-            );
-
-        public RepositoryAttribute(String value) {
-            super(Preconditions.checkNotNull(value, "value"));
-        }
-
-    }
-
-    public static final class DeserializableTypeAttribute extends ElementAttributeValue<Void> {
-
-        public static final ElementAttributeResolver<DeserializableTypeAttribute> RESOLVER =
-            new ElementAttributeResolver<>(
-                DeserializableTypeAttribute.class,
-                (element) -> {
-                    final AnnotatedType elementType;
-                    if (element instanceof Field) {
-                        elementType = ((Field) element).getAnnotatedType();
-                    } else if (element instanceof Parameter) {
-                        elementType = ((Parameter) element).getAnnotatedType();
-                    } else {
-                        return false;
-                    }
-                    return elementType.isAnnotationPresent(ConfigSerializable.class);
-                },
-                (element) -> new DeserializableTypeAttribute()
-            );
-
-
-        public DeserializableTypeAttribute() {
-            super(null);
-        }
-
-    }
-
-    public static final class DefaultValueAttribute extends ElementAttributeValue<Class<? extends Supplier<?>>> {
-
-        public static final ElementAttributeResolver<DefaultValueAttribute> RESOLVER =
-            new ElementAttributeResolver<>(
-                DefaultValueAttribute.class,
-                (element) -> element.isAnnotationPresent(ConfigDefault.class),
-                (element) -> new DefaultValueAttribute(element.getAnnotation(ConfigDefault.class).value())
-            );
-
-        public DefaultValueAttribute(Class<? extends Supplier<?>> value) {
-            super(Preconditions.checkNotNull(value, "value"));
-        }
-
+        return ElementAttributes.DEFAULT_ATTRIBUTES.resolveValues(element);
     }
 
 }
