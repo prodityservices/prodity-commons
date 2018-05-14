@@ -1,7 +1,6 @@
 package io.prodity.commons.terminable;
 
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 @FunctionalInterface
 public interface Terminable extends AutoCloseable {
@@ -10,7 +9,6 @@ public interface Terminable extends AutoCloseable {
         return false;
     }
 
-    @Nonnull
     default Optional<Throwable> closeSilently() {
         try {
             this.close();

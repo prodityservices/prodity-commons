@@ -7,7 +7,6 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import javax.annotation.Nonnull;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
@@ -20,7 +19,6 @@ public @interface PluginDependency {
 
     class Serializer {
 
-        @Nonnull
         public static PluginSerializer<PluginDependency> create(String dependsKey, String softDependsKey) {
             Preconditions.checkNotNull(dependsKey, "dependsKey");
             Preconditions.checkNotNull(softDependsKey, "softDependsKey");

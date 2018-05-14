@@ -77,7 +77,7 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
     }
 
     /**
-     * Install any plugin-specific binders, or modify the ServiceLocator at will.
+     * Install any plugin-specific binders, or deserialize the ServiceLocator at will.
      * Keep in mind that anything bound with {@link org.glassfish.hk2.api.DescriptorVisibility#NORMAL}, the default
      * visibility, is going to be visible to all other plugins.  It's suggested to
      * use {@link io.prodity.commons.inject.bind.PluginBinder} to provide

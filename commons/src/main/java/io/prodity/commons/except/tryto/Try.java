@@ -7,13 +7,12 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
-import javax.annotation.Nonnull;
 
 public enum Try {
 
     ;
 
-    public static Runnable to(@Nonnull CheckedRunnable.GenericCheckedRunnable runnable) {
+    public static Runnable to(CheckedRunnable.GenericCheckedRunnable runnable) {
         Preconditions.checkNotNull(runnable, "runnable");
 
         return () -> {
@@ -25,8 +24,8 @@ public enum Try {
         };
     }
 
-    public static <E extends Throwable> CheckedRunnable<E> mapExceptionTo(@Nonnull CheckedRunnable.GenericCheckedRunnable runnable,
-        @Nonnull Function<Throwable, E> exceptionMapper) {
+    public static <E extends Throwable> CheckedRunnable<E> mapExceptionTo(CheckedRunnable.GenericCheckedRunnable runnable,
+        Function<Throwable, E> exceptionMapper) {
         Preconditions.checkNotNull(runnable, "runnable");
         Preconditions.checkNotNull(exceptionMapper, "exceptionMapper");
 
@@ -39,7 +38,7 @@ public enum Try {
         };
     }
 
-    public static <T> Supplier<T> to(@Nonnull CheckedSupplier.GenericCheckedSupplier<T> supplier) {
+    public static <T> Supplier<T> to(CheckedSupplier.GenericCheckedSupplier<T> supplier) {
         Preconditions.checkNotNull(supplier, "supplier");
         return () -> {
             try {
@@ -50,8 +49,8 @@ public enum Try {
         };
     }
 
-    public static <T, E extends Throwable> CheckedSupplier<T, E> mapExceptionTo(@Nonnull CheckedSupplier.GenericCheckedSupplier<T> supplier,
-        @Nonnull Function<Throwable, E> exceptionMapper) {
+    public static <T, E extends Throwable> CheckedSupplier<T, E> mapExceptionTo(CheckedSupplier.GenericCheckedSupplier<T> supplier,
+        Function<Throwable, E> exceptionMapper) {
         Preconditions.checkNotNull(supplier, "supplier");
         Preconditions.checkNotNull(exceptionMapper, "exceptionMapper");
         return () -> {
@@ -63,7 +62,7 @@ public enum Try {
         };
     }
 
-    public static <T, R> Function<T, R> to(@Nonnull CheckedFunction.GenericCheckedFunction<T, R> function) {
+    public static <T, R> Function<T, R> to(CheckedFunction.GenericCheckedFunction<T, R> function) {
         Preconditions.checkNotNull(function, "function");
         return (value) -> {
             try {
@@ -75,8 +74,8 @@ public enum Try {
     }
 
     public static <T, R, E extends Throwable> CheckedFunction<T, R, E> mapExceptionTo(
-        @Nonnull CheckedFunction.GenericCheckedFunction<T, R> function,
-        @Nonnull Function<Throwable, E> exceptionMapper) {
+        CheckedFunction.GenericCheckedFunction<T, R> function,
+        Function<Throwable, E> exceptionMapper) {
         Preconditions.checkNotNull(function, "function");
         Preconditions.checkNotNull(exceptionMapper, "exceptionMapper");
         return (object) -> {
@@ -88,7 +87,7 @@ public enum Try {
         };
     }
 
-    public static <T1, T2, R> BiFunction<T1, T2, R> to(@Nonnull CheckedBiFunction.GenericCheckedBiFunction<T1, T2, R> biFunction) {
+    public static <T1, T2, R> BiFunction<T1, T2, R> to(CheckedBiFunction.GenericCheckedBiFunction<T1, T2, R> biFunction) {
         Preconditions.checkNotNull(biFunction, "biFunction");
         return (value1, value2) -> {
             try {
@@ -100,8 +99,8 @@ public enum Try {
     }
 
     public static <T1, T2, R, E extends Throwable> CheckedBiFunction<T1, T2, R, E> mapExceptionTo(
-        @Nonnull CheckedBiFunction.GenericCheckedBiFunction<T1, T2, R> biFunction,
-        @Nonnull Function<Throwable, E> exceptionMapper) {
+        CheckedBiFunction.GenericCheckedBiFunction<T1, T2, R> biFunction,
+        Function<Throwable, E> exceptionMapper) {
         Preconditions.checkNotNull(biFunction, "biFunction");
         Preconditions.checkNotNull(exceptionMapper, "exceptionMapper");
         return (object1, object2) -> {
@@ -113,7 +112,7 @@ public enum Try {
         };
     }
 
-    public static <T> Consumer<T> to(@Nonnull CheckedConsumer.GenericCheckedConsumer<T> consumer) {
+    public static <T> Consumer<T> to(CheckedConsumer.GenericCheckedConsumer<T> consumer) {
         Preconditions.checkNotNull(consumer, "consumer");
         return (value) -> {
             try {
@@ -124,8 +123,8 @@ public enum Try {
         };
     }
 
-    public static <T, E extends Throwable> CheckedConsumer<T, E> mapExceptionTo(@Nonnull CheckedConsumer.GenericCheckedConsumer<T> consumer,
-        @Nonnull Function<Throwable, E> exceptionMapper) {
+    public static <T, E extends Throwable> CheckedConsumer<T, E> mapExceptionTo(CheckedConsumer.GenericCheckedConsumer<T> consumer,
+        Function<Throwable, E> exceptionMapper) {
         Preconditions.checkNotNull(consumer, "consumer");
         Preconditions.checkNotNull(exceptionMapper, "exceptionMapper");
         return (object) -> {
@@ -137,7 +136,7 @@ public enum Try {
         };
     }
 
-    public static <T1, T2> BiConsumer<T1, T2> to(@Nonnull CheckedBiConsumer.GenericCheckedBiConsumer<T1, T2> biConsumer) {
+    public static <T1, T2> BiConsumer<T1, T2> to(CheckedBiConsumer.GenericCheckedBiConsumer<T1, T2> biConsumer) {
         Preconditions.checkNotNull(biConsumer, "biConsumer");
         return (value1, value2) -> {
             try {
@@ -149,8 +148,8 @@ public enum Try {
     }
 
     public static <T1, T2, E extends Throwable> CheckedBiConsumer<T1, T2, E> mapExceptionTo(
-        @Nonnull CheckedBiConsumer.GenericCheckedBiConsumer<T1, T2> biConsumer,
-        @Nonnull Function<Throwable, E> exceptionMapper) {
+        CheckedBiConsumer.GenericCheckedBiConsumer<T1, T2> biConsumer,
+        Function<Throwable, E> exceptionMapper) {
         Preconditions.checkNotNull(biConsumer, "biConsumer");
         Preconditions.checkNotNull(exceptionMapper, "exceptionMapper");
         return (object1, object2) -> {
@@ -162,7 +161,7 @@ public enum Try {
         };
     }
 
-    public static <T> Predicate<T> to(@Nonnull CheckedPredicate.GenericCheckedPredicate<T> predicate) {
+    public static <T> Predicate<T> to(CheckedPredicate.GenericCheckedPredicate<T> predicate) {
         Preconditions.checkNotNull(predicate, "predicate");
         return (value) -> {
             try {
@@ -174,8 +173,8 @@ public enum Try {
     }
 
     public static <T, E extends Throwable> CheckedPredicate<T, E> mapExceptionTo(
-        @Nonnull CheckedPredicate.GenericCheckedPredicate<T> predicate,
-        @Nonnull Function<Throwable, E> exceptionMapper) {
+        CheckedPredicate.GenericCheckedPredicate<T> predicate,
+        Function<Throwable, E> exceptionMapper) {
         Preconditions.checkNotNull(predicate, "predicate");
         Preconditions.checkNotNull(exceptionMapper, "exceptionMapper");
         return (object) -> {

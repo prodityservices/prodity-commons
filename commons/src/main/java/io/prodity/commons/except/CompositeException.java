@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableList;
 import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.Collection;
-import javax.annotation.Nonnull;
 
 public class CompositeException extends Exception {
 
@@ -15,19 +14,18 @@ public class CompositeException extends Exception {
 
     private final ImmutableList<? extends Throwable> causes;
 
-    public CompositeException(@Nonnull Throwable... causes) {
+    public CompositeException(Throwable... causes) {
         super(CompositeException.formatMessage(causes.length));
         Preconditions.checkState(causes.length > 0, "causes length must be >0 but =%s", causes.length);
         this.causes = ImmutableList.copyOf(causes);
     }
 
-    public CompositeException(@Nonnull Collection<? extends Throwable> causes) {
+    public CompositeException(Collection<? extends Throwable> causes) {
         super(CompositeException.formatMessage(causes.size()));
         Preconditions.checkState(causes.size() > 0, "causes size must be >0 but =%s", causes.size());
         this.causes = ImmutableList.copyOf(causes);
     }
 
-    @Nonnull
     public ImmutableList<? extends Throwable> getCauses() {
         return this.causes;
     }

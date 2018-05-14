@@ -1,10 +1,12 @@
 package io.prodity.commons.config.example;
 
+import io.prodity.commons.config.annotate.deserialize.Colorize;
+import io.prodity.commons.config.annotate.deserialize.ConfigDeserializable;
 import io.prodity.commons.config.annotate.inject.ConfigPath;
-import io.prodity.commons.config.annotate.modify.Colorize;
 import io.prodity.commons.identity.Identifiable;
 import java.awt.Color;
 
+@ConfigDeserializable
 public class PojoExample implements Identifiable<String> {
 
     private String id;

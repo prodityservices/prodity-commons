@@ -3,7 +3,7 @@ package io.prodity.commons.config.example;
 import com.google.common.collect.Maps;
 import io.prodity.commons.config.annotate.inject.Config;
 import io.prodity.commons.config.annotate.inject.ConfigPath;
-import io.prodity.commons.config.annotate.modify.Colorize;
+import io.prodity.commons.config.annotate.deserialize.Colorize;
 import io.prodity.commons.repository.Repository;
 import java.util.Collection;
 import java.util.Map;

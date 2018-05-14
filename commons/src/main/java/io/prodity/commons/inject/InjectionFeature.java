@@ -25,7 +25,7 @@ import org.jvnet.hk2.annotations.Contract;
  * Special care should be taken if a plugin relies on an InjectionFeature from
  * a soft dependency.  Ideally any services that use that functionality should
  * be marked with {@link SoftDepend} or be
- * so abstracted from the feature that they won't fail to resolve without it.
+ * so abstracted from the feature that they won't fail to resolveValues without it.
  */
 @Contract
 public interface InjectionFeature {

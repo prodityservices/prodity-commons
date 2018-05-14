@@ -13,7 +13,6 @@ import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Messager;
@@ -30,11 +29,11 @@ public abstract class PluginProcessor extends AbstractProcessor {
     private final PluginSerializerMap serializers;
     private final String propertiesFileName;
 
-    protected PluginProcessor(@Nonnull PluginSerializerMap serializers) {
+    protected PluginProcessor(PluginSerializerMap serializers) {
         this(serializers, null);
     }
 
-    protected PluginProcessor(@Nonnull PluginSerializerMap serializers, @Nullable String propertiesFileName) {
+    protected PluginProcessor(PluginSerializerMap serializers, @Nullable String propertiesFileName) {
         Preconditions.checkNotNull(serializers, "serializers");
         this.serializers = serializers;
         this.propertiesFileName = propertiesFileName;
@@ -78,7 +77,6 @@ public abstract class PluginProcessor extends AbstractProcessor {
         return true;
     }
 
-    @Nonnull
     private Map<String, String> loadReplacements() throws IOException {
         if (this.propertiesFileName == null) {
             return Maps.newHashMap();
@@ -107,13 +105,12 @@ public abstract class PluginProcessor extends AbstractProcessor {
         return replacements;
     }
 
-    @Nonnull
-    private String surroundReplacement(@Nonnull String text) {
+    private String surroundReplacement(String text) {
         Preconditions.checkNotNull(text, "text");
         return "%" + text + "%";
     }
 
-    private void setReplacements(@Nonnull Map<String, String> values, @Nonnull Map<String, String> replacements) {
+    private void setReplacements(Map<String, String> values, Map<String, String> replacements) {
         Preconditions.checkNotNull(values, "values");
         Preconditions.checkNotNull(replacements, "replacements");
 
@@ -130,7 +127,7 @@ public abstract class PluginProcessor extends AbstractProcessor {
         }
     }
 
-    private void writeValuesToFile(@Nonnull Map<String, String> values) {
+    private void writeValuesToFile(Map<String, String> values) {
         Preconditions.checkNotNull(values, "values");
         Try.to(() -> {
             final Yaml yaml = new Yaml();

@@ -6,7 +6,6 @@ import io.prodity.commons.terminable.Terminable;
 import java.util.Deque;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import javax.annotation.Nonnull;
 import org.jvnet.hk2.annotations.Service;
 
 @Service
@@ -41,7 +40,7 @@ public class SimpleTerminableRegistry implements TerminableRegistry {
     }
 
     @Override
-    public TerminableRegistry bind(@Nonnull AutoCloseable autoCloseable) {
+    public TerminableRegistry bind(AutoCloseable autoCloseable) {
         this.closeables.push(autoCloseable);
         return this;
     }

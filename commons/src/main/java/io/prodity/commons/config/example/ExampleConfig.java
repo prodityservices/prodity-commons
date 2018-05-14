@@ -1,14 +1,14 @@
 package io.prodity.commons.config.example;
 
+import io.prodity.commons.config.annotate.deserialize.Colorize;
+import io.prodity.commons.config.annotate.deserialize.ConfigDefault;
+import io.prodity.commons.config.annotate.deserialize.LoadFromRepository;
 import io.prodity.commons.config.annotate.inject.Config;
-import io.prodity.commons.config.annotate.inject.ConfigMethod;
+import io.prodity.commons.config.annotate.inject.ConfigInject;
 import io.prodity.commons.config.annotate.inject.ConfigPath;
 import io.prodity.commons.config.annotate.inject.Required;
 import io.prodity.commons.config.annotate.listen.PostConfigLoad;
 import io.prodity.commons.config.annotate.listen.PreConfigLoad;
-import io.prodity.commons.config.annotate.modify.Colorize;
-import io.prodity.commons.config.annotate.modify.ConfigDefault;
-import io.prodity.commons.config.annotate.modify.LoadFromRepository;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -37,10 +37,10 @@ public class ExampleConfig {
 
     @ConfigPath("test.id.pojo")
     @Colorize //Colorize all strings in the PojoExample dependency tree
-    @LoadFromRepository(PojoExampleRepository.NAME) //Assumes the config value at the path is of the ID type PojoExample has
+    @LoadFromRepository(PojoExampleRepository.NAME) //Assumes the config deserialize at the path is of the ID type PojoExample has
     private PojoExample pojoExampleById;
 
-    @ConfigMethod
+    @ConfigInject
     private void setPojoExampleById(@ConfigPath("test.somepath") PojoExample pojoExample) {
         //TODO handle object
     }

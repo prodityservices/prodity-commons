@@ -7,22 +7,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
-import javax.annotation.Nonnull;
 
 public enum FileUtil {
 
     ;
 
-    @Nonnull
-    public static String readFileContents(@Nonnull File file) throws IOException, SecurityException {
+    public static String readFileContents(File file) throws IOException, SecurityException {
         Preconditions.checkNotNull(file, "file");
         final Path path = file.toPath();
         return FileUtil.readFileContents(path);
     }
 
-    @Nonnull
-    public static String readFileContents(@Nonnull Path path) throws IOException, SecurityException {
-        Preconditions.checkNotNull(path, "value");
+    public static String readFileContents(Path path) throws IOException, SecurityException {
+        Preconditions.checkNotNull(path, "deserialize");
 
         final List<String> lines = Files.readAllLines(path);
         final StringBuilder fileContentsBuilder = new StringBuilder();

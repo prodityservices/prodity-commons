@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
@@ -20,7 +19,6 @@ public @interface PluginAuthorComposite {
 
         public static final String KEY = "authors";
 
-        @Nonnull
         public static PluginSerializer<PluginAuthorComposite> create() {
             return (annotation, data) -> {
                 final PluginAuthor[] authors = annotation.value();

@@ -5,7 +5,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import javax.annotation.Nonnull;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
@@ -23,7 +22,6 @@ public @interface Plugin {
         public static final String VERSION_KEY = "version";
         public static final String DESCRIPTION_KEY = "description";
 
-        @Nonnull
         public static PluginSerializer<Plugin> create() {
             return (annotation, data) -> {
                 data.set(Plugin.Serializer.NAME_KEY, annotation.name());

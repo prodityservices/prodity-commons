@@ -40,7 +40,7 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
     public void lifecycleEvent(InstanceLifecycleEvent lifecycleEvent) {
         if (lifecycleEvent.getEventType() == InstanceLifecycleEventType.POST_PRODUCTION && !this.tasks
             .containsKey(lifecycleEvent.getActiveDescriptor())) {
-            addAllTasks(lifecycleEvent.getActiveDescriptor(), lifecycleEvent.getLifecycleObject());
+            this.addAllTasks(lifecycleEvent.getActiveDescriptor(), lifecycleEvent.getLifecycleObject());
         } else if (lifecycleEvent.getEventType() == InstanceLifecycleEventType.PRE_DESTRUCTION) {
             for (TaskRegistration.DiscoveredTask task : this.tasks.removeAll(lifecycleEvent.getActiveDescriptor())) {
                 if (!task.isCancelled()) {
@@ -51,7 +51,7 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
     }
 
     private void addAllTasks(ActiveDescriptor<?> descriptor, Object instance) {
-        findTasks(instance).forEach(task -> {
+        this.findTasks(instance).forEach(task -> {
             if (this.plugin.isEnabled()) {
                 task.start();
             }
@@ -63,7 +63,7 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
         List<TaskRegistration.DiscoveredTask> tasks = new ArrayList<>();
         Class<?> clazz = object.getClass();
         do {
-            addMethods(clazz, object, tasks);
+            this.addMethods(clazz, object, tasks);
             clazz = clazz.getSuperclass();
         } while (clazz != Object.class);
         return tasks;
@@ -71,7 +71,7 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
 
     private void addMethods(Class<?> clazz, Object instance, List<TaskRegistration.DiscoveredTask> to) {
         for (Method method : clazz.getDeclaredMethods()) {
-            Task task = checkValid(method);
+            Task task = this.checkValid(method);
             if (task != null) {
                 to.add(new TaskRegistration.DiscoveredTask(instance, method, task));
             }

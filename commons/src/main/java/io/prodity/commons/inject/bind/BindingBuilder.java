@@ -89,7 +89,7 @@ public interface BindingBuilder<T> {
      * Factories {@link org.glassfish.hk2.api.Factory#provide()} method
      *
      * @param key metadata key.
-     * @param value metadata value.
+     * @param value metadata deserialize.
      * @return updated binder.
      */
     BindingBuilder<T> withMetadata(String key, String value);
@@ -138,7 +138,7 @@ public interface BindingBuilder<T> {
     /**
      * {@link javax.inject.Named Name} the binding.
      *
-     * @param name new name value.
+     * @param name new name deserialize.
      * @return updated binding.
      */
     BindingBuilder<T> named(String name);
@@ -147,7 +147,7 @@ public interface BindingBuilder<T> {
      * Rank the binding. The higher rank, the more prominent position in an injected
      * {@link org.glassfish.hk2.api.IterableProvider iterable provider} for a contract.
      *
-     * @param rank binding rank to be used to resolve ordering in case of multiple services are bound to the same contract.
+     * @param rank binding rank to be used to resolveValues ordering in case of multiple services are bound to the same contract.
      */
     BindingBuilder<T> ranked(int rank);
 

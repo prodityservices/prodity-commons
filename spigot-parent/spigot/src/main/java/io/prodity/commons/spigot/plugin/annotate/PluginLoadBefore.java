@@ -6,7 +6,6 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import javax.annotation.Nonnull;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
@@ -19,7 +18,6 @@ public @interface PluginLoadBefore {
 
         public static final String KEY = "loadbefore";
 
-        @Nonnull
         public static PluginSerializer<PluginLoadBefore> create() {
             return (annotation, data) -> {
                 final String pluginName = annotation.value();

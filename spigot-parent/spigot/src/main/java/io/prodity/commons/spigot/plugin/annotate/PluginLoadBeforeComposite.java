@@ -8,7 +8,6 @@ import java.lang.annotation.Target;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
@@ -18,7 +17,6 @@ public @interface PluginLoadBeforeComposite {
 
     class Serializer {
 
-        @Nonnull
         public static PluginSerializer<PluginLoadBeforeComposite> create() {
             return (annotation, data) -> {
                 final PluginLoadBefore[] plugins = annotation.value();

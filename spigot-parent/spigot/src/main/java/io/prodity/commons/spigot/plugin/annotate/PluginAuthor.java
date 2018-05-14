@@ -6,7 +6,6 @@ import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import javax.annotation.Nonnull;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
@@ -19,7 +18,6 @@ public @interface PluginAuthor {
 
         public static final String KEY = "author";
 
-        @Nonnull
         public static PluginSerializer<PluginAuthor> create() {
             return (annotation, data) -> {
                 final String authorName = annotation.value();
