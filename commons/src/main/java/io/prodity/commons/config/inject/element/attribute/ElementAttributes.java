@@ -2,7 +2,6 @@ package io.prodity.commons.config.inject.element.attribute;
 
 import com.google.common.base.Preconditions;
 import io.prodity.commons.config.annotate.deserialize.Colorize;
-import io.prodity.commons.config.annotate.deserialize.Colorize.ColorizeState;
 import io.prodity.commons.config.annotate.deserialize.ConfigDefault;
 import io.prodity.commons.config.annotate.deserialize.LoadFromRepository;
 import io.prodity.commons.config.annotate.inject.Required;
@@ -20,14 +19,14 @@ public enum ElementAttributes {
 
     private static final ElementAttributeSet DEFAULT_ATTRIBUTES;
 
-    public static final ElementAttributeKey<ColorizeState> COLORIZE_KEY = ElementAttributeKey.createKey("COLORIZE");
+    public static final ElementAttributeKey<Boolean> COLORIZE_KEY = ElementAttributeKey.createKey("COLORIZE");
     public static final ElementAttributeKey<String> REPOSITORY_KEY = ElementAttributeKey.createKey("REPOSITORY");
     public static final ElementAttributeKey<Boolean> REQUIRED_KEY = ElementAttributeKey.createKey("REQUIRED");
     public static final ElementAttributeKey<Boolean> DESERIALIZABLE_KEY = ElementAttributeKey.createKey("DESERIALIZABLE");
     public static final ElementAttributeKey<Class<? extends Supplier<?>>> DEFAULT_VALUE_KEY = ElementAttributeKey
         .createKey("DEFAULT_VALUE");
 
-    public static final ElementAttribute<ColorizeState> COLORIZE_ATTRIBUTE = ElementAttribute.<ColorizeState>builder()
+    public static final ElementAttribute<Boolean> COLORIZE_ATTRIBUTE = ElementAttribute.<Boolean>builder()
         .setKey(ElementAttributes.COLORIZE_KEY)
         .setPredicate((element) -> element.isAnnotationPresent(Colorize.class))
         .setValueFunction((element) -> element.getAnnotation(Colorize.class).value())

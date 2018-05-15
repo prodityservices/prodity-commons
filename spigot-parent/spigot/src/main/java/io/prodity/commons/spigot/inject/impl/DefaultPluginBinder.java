@@ -1,6 +1,7 @@
 package io.prodity.commons.spigot.inject.impl;
 
 import io.prodity.commons.inject.bind.PluginBinder;
+import io.prodity.commons.plugin.ProdityPlugin;
 import io.prodity.commons.spigot.inject.SpigotInjectedPlugin;
 import java.util.logging.Logger;
 import org.bukkit.Bukkit;
@@ -27,8 +28,9 @@ public class DefaultPluginBinder<T extends SpigotInjectedPlugin> extends PluginB
 
     @Override
     protected void configure() {
-        this.bind(this.plugin).named(this.plugin.getName())
+        this.bind(this.plugin)//.named(this.plugin.getName())
             .to(this.pluginType)
+            .to(ProdityPlugin.class)
             .to(SpigotInjectedPlugin.class)
             .to(JavaPlugin.class)
             .to(Plugin.class);
@@ -39,7 +41,6 @@ public class DefaultPluginBinder<T extends SpigotInjectedPlugin> extends PluginB
         this.bind(Bukkit.getScheduler()).to(BukkitScheduler.class);
     }
 
-
     public static DefaultPluginBinder<?> createFor(SpigotInjectedPlugin plugin) {
         return DefaultPluginBinder.doCreate(plugin.getClass(), plugin);
     }
@@ -47,4 +48,5 @@ public class DefaultPluginBinder<T extends SpigotInjectedPlugin> extends PluginB
     private static <T extends SpigotInjectedPlugin> DefaultPluginBinder doCreate(Class<T> tClass, JavaPlugin plugin) {
         return new DefaultPluginBinder<>(tClass.cast(plugin), tClass);
     }
+
 }

@@ -23,4 +23,5 @@ public class McVersionProcessor extends AnnotationProcessor<McVersion> {
         }
         return false;
     }
+
 }

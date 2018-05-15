@@ -1,6 +1,7 @@
 package io.prodity.commons.plugin.annotate;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import io.prodity.commons.plugin.annotate.process.PluginSerializer;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
@@ -25,7 +26,7 @@ public @interface PluginDependency {
 
             return (annotation, data) -> {
                 final String key = annotation.soft() ? softDependsKey : dependsKey;
-                data.set(key, "[" + annotation.value() + "]");
+                data.set(key, Lists.newArrayList(annotation.value()));
             };
         }
 

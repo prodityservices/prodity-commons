@@ -4,12 +4,9 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import io.prodity.commons.config.annotate.inject.ConfigInject;
-import io.prodity.commons.config.inject.ConfigFile;
-import io.prodity.commons.config.inject.deserialize.ConfigValueResolver;
-import io.prodity.commons.config.inject.except.ConfigInjectException;
+import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.config.inject.member.ConfigMember;
 import io.prodity.commons.config.inject.object.ConfigObject;
-import io.prodity.commons.except.tryto.Try;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
@@ -61,18 +58,17 @@ public class ConfigMethod implements ConfigMember {
     }
 
     @Override
-    public void inject(ConfigFile configFile, ConfigValueResolver valueResolver, ConfigurationNode node) throws ConfigInjectException {
+    public void inject(ElementResolver elementResolver, ConfigurationNode node) throws Throwable {
         final List<Object> parameterValues = Lists.newArrayList();
         for (ConfigMethodParameter parameter : this.parameters) {
-            final ConfigurationNode paramterNode = node.getNode(parameter.getPath());
-            final Object value = parameter.resolve(configFile, valueResolver, paramterNode);
+            final Object value = parameter.resolve(elementResolver, node);
             parameterValues.add(value);
         }
 
         final Object object = this.possessor.getObject();
 
         this.method.setAccessible(true);
-        Try.mapExceptionTo(() -> this.method.invoke(object, parameterValues.toArray()), ConfigInjectException.newMapper(configFile)).get();
+        this.method.invoke(object, parameterValues.toArray());
     }
 
 }

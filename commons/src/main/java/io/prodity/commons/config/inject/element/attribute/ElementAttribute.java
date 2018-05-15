@@ -1,5 +1,6 @@
 package io.prodity.commons.config.inject.element.attribute;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import java.lang.reflect.AnnotatedElement;
@@ -118,6 +119,13 @@ public class ElementAttribute<V> {
         }
         final V value = this.valueFunction.apply(element);
         return Optional.of(new ElementAttributeValue<>(this, value));
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+            .add("key", this.key)
+            .toString();
     }
 
 }

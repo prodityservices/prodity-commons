@@ -17,4 +17,5 @@ import java.lang.annotation.Target;
 public @interface SoftDepend {
 
     String[] value();
+
 }

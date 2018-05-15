@@ -2,11 +2,8 @@ package io.prodity.commons.config.inject.member.method;
 
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
-import io.prodity.commons.config.inject.ConfigFile;
 import io.prodity.commons.config.inject.ConfigResolvable;
-import io.prodity.commons.config.inject.deserialize.ConfigValueResolver;
 import io.prodity.commons.config.inject.element.ConfigElementBase;
-import io.prodity.commons.config.inject.except.ConfigInjectException;
 import io.prodity.commons.config.inject.object.ConfigObject;
 import io.prodity.commons.reflect.element.NamedAnnotatedElement;
 import java.lang.reflect.Method;
@@ -14,9 +11,8 @@ import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import ninja.leaping.configurate.ConfigurationNode;
 
-public class ConfigMethodParameter<T> extends ConfigElementBase<T> implements ConfigResolvable {
+public class ConfigMethodParameter<T> extends ConfigElementBase<T> implements ConfigResolvable<T> {
 
     public static List<ConfigMethodParameter<?>> fromMethod(ConfigObject<?> configObject, Method method) {
         Preconditions.checkNotNull(configObject, "configObject");
@@ -48,12 +44,6 @@ public class ConfigMethodParameter<T> extends ConfigElementBase<T> implements Co
 
     public ConfigObject<?> getPossessor() {
         return this.possessor;
-    }
-
-    @Override
-    public Object resolve(ConfigFile configFile, ConfigValueResolver valueResolver, ConfigurationNode node) throws ConfigInjectException {
-        final Object value = valueResolver.resolveValue(this, node);
-        return value;
     }
 
 }

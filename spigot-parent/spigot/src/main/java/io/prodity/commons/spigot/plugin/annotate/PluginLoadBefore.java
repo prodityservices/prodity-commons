@@ -1,5 +1,6 @@
 package io.prodity.commons.spigot.plugin.annotate;
 
+import com.google.common.collect.Lists;
 import io.prodity.commons.plugin.annotate.process.PluginSerializer;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
@@ -21,7 +22,7 @@ public @interface PluginLoadBefore {
         public static PluginSerializer<PluginLoadBefore> create() {
             return (annotation, data) -> {
                 final String pluginName = annotation.value();
-                data.set(PluginLoadBefore.Serializer.KEY, pluginName);
+                data.set(PluginLoadBefore.Serializer.KEY, Lists.newArrayList(pluginName));
             };
         }
 

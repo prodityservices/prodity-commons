@@ -21,7 +21,6 @@ public class InternalBinder extends PluginBinder {
             McVersionFeature.class, TaskFeature.class);
     }
 
-
     @SafeVarargs
     private final void addCoreFeatures(Class<? extends InjectionFeature>... classes) {
         for (Class<?> clazz : classes) {
@@ -29,4 +28,5 @@ public class InternalBinder extends PluginBinder {
                 .withVisibility(DescriptorVisibility.NORMAL);
         }
     }
+
 }

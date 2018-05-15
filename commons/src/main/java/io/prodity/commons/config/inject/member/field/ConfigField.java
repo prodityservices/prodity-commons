@@ -3,14 +3,11 @@ package io.prodity.commons.config.inject.member.field;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
-import io.prodity.commons.config.inject.ConfigFile;
-import io.prodity.commons.config.inject.deserialize.ConfigValueResolver;
+import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.config.inject.element.ConfigElement;
 import io.prodity.commons.config.inject.element.ConfigElementBase;
-import io.prodity.commons.config.inject.except.ConfigInjectException;
 import io.prodity.commons.config.inject.member.ConfigMember;
 import io.prodity.commons.config.inject.object.ConfigObject;
-import io.prodity.commons.except.tryto.Try;
 import io.prodity.commons.reflect.element.NamedAnnotatedElement;
 import java.lang.reflect.Field;
 import java.util.List;
@@ -60,14 +57,14 @@ public class ConfigField<T> extends ConfigElementBase<T> implements ConfigMember
     }
 
     @Override
-    public void inject(ConfigFile configFile, ConfigValueResolver valueResolver, ConfigurationNode node) throws ConfigInjectException {
-        final Object value = valueResolver.resolveValue(this, node);
+    public void inject(ElementResolver elementResolver, ConfigurationNode node) throws Throwable {
+        final T value = this.resolve(elementResolver, node);
+
+        final Object object = this.possessor.getObject();
 
         this.field.setAccessible(true);
         FieldUtils.removeFinalModifier(this.field);
-
-        final Object object = this.possessor.getObject();
-        Try.mapExceptionTo(() -> this.field.set(object, value), ConfigInjectException.newMapper(configFile)).run();
+        this.field.set(object, value);
     }
 
 }

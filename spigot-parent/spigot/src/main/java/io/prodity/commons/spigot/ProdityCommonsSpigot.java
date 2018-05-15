@@ -20,9 +20,11 @@ public class ProdityCommonsSpigot extends ProditySpigotPlugin {
     @Override
     protected ServiceLocator initialize(ServiceLocator locator) {
         super.initialize(locator);
+
         // Export all the core features
         ServiceLocatorUtilities.bind(locator, new InternalBinder(this));
         return locator;
     }
+
 
 }

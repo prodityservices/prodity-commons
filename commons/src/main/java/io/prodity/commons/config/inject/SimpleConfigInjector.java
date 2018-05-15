@@ -2,15 +2,12 @@ package io.prodity.commons.config.inject;
 
 import com.google.common.base.Preconditions;
 import io.prodity.commons.config.annotate.inject.Config;
-import io.prodity.commons.config.inject.deserialize.ConfigDeserializerRegistry;
-import io.prodity.commons.config.inject.deserialize.ConfigValueResolver;
+import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.config.inject.except.ConfigInjectException;
 import io.prodity.commons.config.inject.listen.ListenerType;
 import io.prodity.commons.config.inject.object.MasterConfigObject;
 import io.prodity.commons.except.tryto.Try;
-import io.prodity.commons.message.color.Colorizer;
 import io.prodity.commons.plugin.ProdityPlugin;
-import io.prodity.commons.repository.registry.RepositoryRegistry;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -37,31 +34,7 @@ public class SimpleConfigInjector implements ConfigInjector {
     private ProdityPlugin plugin;
 
     @Inject
-    private Colorizer colorizer;
-
-    @Inject
-    private ConfigDeserializerRegistry deserializerRegistry;
-
-    @Inject
-    private RepositoryRegistry repositoryRegistry;
-
-    @Inject
-    private ConfigValueResolver valueResolver;
-
-    @Override
-    public Colorizer getColorizer() {
-        return this.colorizer;
-    }
-
-    @Override
-    public ConfigDeserializerRegistry getDeserializerRegistry() {
-        return this.deserializerRegistry;
-    }
-
-    @Override
-    public RepositoryRegistry getRepositoryRegistry() {
-        return this.repositoryRegistry;
-    }
+    private ElementResolver elementResolver;
 
     @Override
     public <T> T inject(Class<T> configClass) throws ConfigInjectException {
@@ -91,7 +64,7 @@ public class SimpleConfigInjector implements ConfigInjector {
         final MasterConfigObject<T> masterConfigObject = MasterConfigObject.of(configClass, object);
 
         masterConfigObject.callListeners(ListenerType.PRE_LOAD);
-        masterConfigObject.inject(configFile, this.valueResolver, masterNode);
+        masterConfigObject.inject(this.elementResolver, masterNode);
         masterConfigObject.callListeners(ListenerType.POST_LOAD);
 
         return masterConfigObject.getObject();

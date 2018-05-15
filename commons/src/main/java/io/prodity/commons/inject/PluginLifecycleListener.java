@@ -17,4 +17,5 @@ public interface PluginLifecycleListener {
 
     default void onDisable(ProdityPlugin plugin) {
     }
+
 }

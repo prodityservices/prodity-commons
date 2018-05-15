@@ -1,5 +1,6 @@
 package io.prodity.commons.spigot.plugin.annotate;
 
+import com.google.common.collect.Lists;
 import io.prodity.commons.plugin.annotate.process.PluginSerializer;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -26,7 +27,7 @@ public @interface PluginLoadBeforeComposite {
                 }
 
                 if (plugins.length == 1) {
-                    data.set(PluginLoadBefore.Serializer.KEY, "[" + plugins[0].value() + "]");
+                    data.set(PluginLoadBefore.Serializer.KEY, Lists.newArrayList(plugins[0].value()));
                     return;
                 }
 
@@ -34,7 +35,7 @@ public @interface PluginLoadBeforeComposite {
                     .map(PluginLoadBefore::value)
                     .collect(Collectors.toList());
 
-                data.set(PluginLoadBefore.Serializer.KEY, "[" + String.join(",", pluginNames) + "]");
+                data.set(PluginLoadBefore.Serializer.KEY, pluginNames);
             };
         }
 

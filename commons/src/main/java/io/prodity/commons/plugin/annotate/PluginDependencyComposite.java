@@ -2,6 +2,7 @@ package io.prodity.commons.plugin.annotate;
 
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import io.prodity.commons.plugin.annotate.process.PluginSerializer;
 import java.lang.annotation.ElementType;
@@ -39,17 +40,13 @@ public @interface PluginDependencyComposite {
                 }
 
                 if (!dependencies.isEmpty()) {
-                    data.set(dependsKey, PluginDependencyComposite.Serializer.blockAndJoin(dependencies));
+                    data.set(dependsKey, Lists.newArrayList(dependencies));
                 }
 
                 if (!softDependencies.isEmpty()) {
-                    data.set(softDependsKey, PluginDependencyComposite.Serializer.blockAndJoin(softDependencies));
+                    data.set(softDependsKey, Lists.newArrayList(softDependencies));
                 }
             };
-        }
-
-        private static String blockAndJoin(Iterable<String> strings) {
-            return "[" + String.join(",", strings) + "]";
         }
 
     }

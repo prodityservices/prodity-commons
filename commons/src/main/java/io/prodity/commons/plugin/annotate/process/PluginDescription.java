@@ -6,19 +6,19 @@ import java.util.Map;
 
 public class PluginDescription {
 
-    private final Map<String, String> values;
+    private final Map<String, Object> values;
 
     public PluginDescription() {
         this.values = Maps.newConcurrentMap();
     }
 
-    public void set(String key, String value) {
+    public void set(String key, Object value) {
         Preconditions.checkNotNull(key, "key");
         Preconditions.checkNotNull(value, "deserialize");
         this.values.put(key, value);
     }
 
-    public Map<String, String> getValuesCopy() {
+    public Map<String, Object> getValuesCopy() {
         return Maps.newHashMap(this.values);
     }
 

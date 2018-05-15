@@ -1,8 +1,10 @@
 package io.prodity.commons.config.inject.element;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
+import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.config.inject.element.attribute.ElementAttributeKey;
 import io.prodity.commons.config.inject.element.attribute.ElementAttributeValue;
 import io.prodity.commons.config.inject.element.attribute.ElementAttributes;
@@ -11,6 +13,7 @@ import io.prodity.commons.reflect.element.NamedAnnotatedElement;
 import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nullable;
+import ninja.leaping.configurate.ConfigurationNode;
 
 public class ConfigElementBase<T> implements ConfigElement<T>, DelegateNamedAnnotatedElement {
 
@@ -55,7 +58,7 @@ public class ConfigElementBase<T> implements ConfigElement<T>, DelegateNamedAnno
         return key != null && this.attributes.containsKey(key);
     }
 
-    protected <V> Optional<ElementAttributeValue<V>> getAttribute(@Nullable ElementAttributeKey<V> key) {
+    protected <V> Optional<ElementAttributeValue<V>> getRawAttribute(@Nullable ElementAttributeKey<V> key) {
         if (key == null || !this.attributes.containsKey(key)) {
             return Optional.empty();
         }
@@ -64,8 +67,23 @@ public class ConfigElementBase<T> implements ConfigElement<T>, DelegateNamedAnno
     }
 
     @Override
-    public <V> Optional<V> getAttributeValue(@Nullable ElementAttributeKey<V> key) {
-        return this.getAttribute(key).flatMap(ElementAttributeValue::getValue);
+    public <V> Optional<V> getAttribute(@Nullable ElementAttributeKey<V> key) {
+        return this.getRawAttribute(key).flatMap(ElementAttributeValue::getValue);
+    }
+
+    @Override
+    public T resolve(ElementResolver elementResolver, ConfigurationNode node) throws Throwable {
+        final ConfigurationNode valueNode = node.getNode(this.getPath());
+        return elementResolver.resolveValue(this, valueNode);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this.getClass())
+            .add("path", this.path)
+            .add("type", this.type)
+            .add("attributes", this.attributes)
+            .toString();
     }
 
 }

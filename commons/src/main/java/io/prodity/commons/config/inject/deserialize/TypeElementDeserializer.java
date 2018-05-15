@@ -2,19 +2,18 @@ package io.prodity.commons.config.inject.deserialize;
 
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
-import io.prodity.commons.config.inject.element.ConfigElement;
-import java.util.Objects;
 
 /**
- * {@link ConfigDeserializer} implementation for an explicit {@link TypeToken}.
+ * {@link ElementDeserializer} implementation for an explicit {@link TypeToken}.
  *
  * @param <T> the type to be deserialized
  */
-public abstract class TypeConfigDeserializer<T> implements ConfigDeserializer<T> {
+public abstract class TypeElementDeserializer<T> extends ElementDeserializer<T> {
 
     private final TypeToken<T> typeToken;
 
-    public TypeConfigDeserializer(TypeToken<T> typeToken) {
+    public TypeElementDeserializer(TypeToken<T> typeToken, int priority) {
+        super(priority);
         Preconditions.checkNotNull(typeToken, "typeToken");
         this.typeToken = typeToken;
     }
@@ -24,8 +23,8 @@ public abstract class TypeConfigDeserializer<T> implements ConfigDeserializer<T>
     }
 
     @Override
-    public final boolean canDeserialize(ConfigElement<T> element) {
-        return Objects.equals(element.getType(), this.typeToken);
+    public boolean canDeserialize(TypeToken<?> type) {
+        return this.typeToken.isSupertypeOf(type);
     }
 
 }

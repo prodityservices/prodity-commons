@@ -69,7 +69,7 @@ public abstract class PluginProcessor extends AbstractProcessor {
             this.applyToDescription(typeElement, annotationClass, serializer, descriptionData);
         });
 
-        final Map<String, String> values = descriptionData.getValuesCopy();
+        final Map<String, Object> values = descriptionData.getValuesCopy();
         final Map<String, String> replacements = Try.to(this::loadReplacements).get();
         this.setReplacements(values, replacements);
         this.writeValuesToFile(values);
@@ -110,7 +110,7 @@ public abstract class PluginProcessor extends AbstractProcessor {
         return "%" + text + "%";
     }
 
-    private void setReplacements(Map<String, String> values, Map<String, String> replacements) {
+    private void setReplacements(Map<String, Object> values, Map<String, String> replacements) {
         Preconditions.checkNotNull(values, "values");
         Preconditions.checkNotNull(replacements, "replacements");
 
@@ -118,16 +118,20 @@ public abstract class PluginProcessor extends AbstractProcessor {
             return;
         }
 
-        for (Map.Entry<String, String> valueEntry : values.entrySet()) {
-            String value = valueEntry.getValue();
+        for (Map.Entry<String, Object> valueEntry : values.entrySet()) {
+            Object value = valueEntry.getValue();
+            if (!(value instanceof String)) {
+                continue;
+            }
+            final String stringValue = (String) value;
             for (Map.Entry<String, String> replacementEntry : replacements.entrySet()) {
-                value = value.replace(replacementEntry.getKey(), replacementEntry.getValue());
+                value = stringValue.replace(replacementEntry.getKey(), replacementEntry.getValue());
             }
             valueEntry.setValue(value);
         }
     }
 
-    private void writeValuesToFile(Map<String, String> values) {
+    private void writeValuesToFile(Map<String, Object> values) {
         Preconditions.checkNotNull(values, "values");
         Try.to(() -> {
             final Yaml yaml = new Yaml();

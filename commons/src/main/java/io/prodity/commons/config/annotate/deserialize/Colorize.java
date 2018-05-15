@@ -13,14 +13,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Colorize {
 
-    ColorizeState value() default ColorizeState.TRUE;
-
-    enum ColorizeState {
-
-        TRUE,
-        FALSE,
-        UNDEFINED
-
-    }
+    boolean value() default true;
 
 }

@@ -26,8 +26,8 @@ public class MasterConfigObject<T> extends ConfigObject<T> implements ConfigList
 
     private final List<ConfigListenerMethod> listenerMethods;
 
-    public MasterConfigObject(Class<T> typeClass, T object, Iterable<ConfigListenerMethod> listenerMethods) {
-        super(typeClass, object, false);
+    protected MasterConfigObject(Class<T> typeClass, T object, Iterable<ConfigListenerMethod> listenerMethods) {
+        super(typeClass, object);
         this.listenerMethods = ImmutableList.copyOf(listenerMethods);
     }
 
