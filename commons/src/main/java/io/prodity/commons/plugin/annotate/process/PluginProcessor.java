@@ -6,6 +6,7 @@ import com.google.common.collect.Maps;
 import io.prodity.commons.except.tryto.Try;
 import io.prodity.commons.plugin.annotate.Plugin;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
@@ -77,22 +78,12 @@ public abstract class PluginProcessor extends AbstractProcessor {
         return true;
     }
 
-    private Map<String, String> loadReplacements() throws IOException {
+    private Map<String, String> loadReplacements() {
         if (this.propertiesFileName == null) {
             return Maps.newHashMap();
         }
 
-        final Properties properties = new Properties();
-        final FileObject fileObject = this.processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", this.propertiesFileName);
-        if (fileObject == null) {
-            this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "COULD NOT FIND fileObject.");
-        }
-        try (InputStream inputStream = fileObject.openInputStream()) {
-            if (inputStream == null) {
-                this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "COULD NOT FIND RESORUCE.");
-            }
-            properties.load(inputStream);
-        }
+        final Properties properties = this.loadProperties();
 
         final Map<String, String> replacements = Maps.newHashMap();
 
@@ -103,6 +94,21 @@ public abstract class PluginProcessor extends AbstractProcessor {
         }
 
         return replacements;
+    }
+
+    private Properties loadProperties() {
+        Properties properties = new Properties();
+        try {
+            final FileObject fileObject = this.processingEnv.getFiler().getResource(StandardLocation.CLASS_OUTPUT, "", this.propertiesFileName);
+            try (InputStream inputStream = fileObject.openInputStream()) {
+                properties.load(inputStream);
+            }
+        } catch (FileNotFoundException exception) {
+            // They don't have a file, that's fine.
+        } catch (IOException exception) {
+            this.processingEnv.getMessager().printMessage(Diagnostic.Kind.ERROR, "FAILED TO READ " + this.propertiesFileName);
+        }
+        return properties;
     }
 
     private String surroundReplacement(String text) {

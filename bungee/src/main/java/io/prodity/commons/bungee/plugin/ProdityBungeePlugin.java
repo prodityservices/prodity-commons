@@ -24,11 +24,6 @@ public class ProdityBungeePlugin extends Plugin implements ProdityPlugin {
     }
 
     @Override
-    public ServiceLocator getPluginRoot() {
-        return null;
-    }
-
-    @Override
     public Set<String> getDependencies() {
         return this.getDescription().getDepends();
     }

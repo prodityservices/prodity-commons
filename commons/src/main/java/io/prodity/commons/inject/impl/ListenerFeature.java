@@ -1,4 +1,4 @@
-package io.prodity.commons.spigot.inject.impl;
+package io.prodity.commons.inject.impl;
 
 import io.prodity.commons.inject.InjectionFeature;
 import io.prodity.commons.inject.PluginLifecycleListener;
@@ -7,10 +7,9 @@ import org.glassfish.hk2.api.InstanceLifecycleListener;
 
 public class ListenerFeature implements InjectionFeature {
 
-    @Override
-    public void postLoad(ProdityPlugin plugin) {
-        this.bind(plugin, binder -> {
-            binder.bind(DefaultFilter.class).to(ListenerFilter.class).ranked(-1);
+	@Override
+	public void preLoad(ProdityPlugin plugin) {
+	    this.bind(plugin, binder -> {
             binder.bind(ListenerRegistration.class)
                 .to(InstanceLifecycleListener.class)
                 .to(PluginLifecycleListener.class);

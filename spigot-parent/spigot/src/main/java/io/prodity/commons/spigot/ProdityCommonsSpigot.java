@@ -18,12 +18,11 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 public class ProdityCommonsSpigot extends ProditySpigotPlugin {
 
     @Override
-    protected ServiceLocator initialize(ServiceLocator locator) {
-        super.initialize(locator);
+    protected void initialize() {
+        super.initialize();
 
         // Export all the core features
-        ServiceLocatorUtilities.bind(locator, new InternalBinder(this));
-        return locator;
+        ServiceLocatorUtilities.bind(this.getServices(), new InternalBinder(this));
     }
 
 

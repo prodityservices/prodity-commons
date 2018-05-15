@@ -41,11 +41,14 @@ public abstract class PluginBinder implements Binder {
 
     public final <T> BindingBuilder<T> bind(Type type) {
         return this.resetBuilder(AbstractBindingBuilder.create(type, true));
-
     }
 
     public final <T> BindingBuilder<T> bind(T service) {
         return this.resetBuilder(AbstractBindingBuilder.create(service));
+    }
+
+    public final <T> BindingBuilder<T> export(Class<T> tClass) {
+        return this.bind(tClass).withVisibility(DescriptorVisibility.NORMAL);
     }
 
     private <T> AbstractBindingBuilder<T> resetBuilder(AbstractBindingBuilder<T> newBuilder) {
@@ -87,4 +90,8 @@ public abstract class PluginBinder implements Binder {
     }
 
     protected abstract void configure();
+
+    public ProdityPlugin getPlugin() {
+        return plugin;
+    }
 }

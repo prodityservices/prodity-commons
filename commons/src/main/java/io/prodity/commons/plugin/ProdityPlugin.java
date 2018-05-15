@@ -18,8 +18,6 @@ public interface ProdityPlugin {
 
     ServiceLocator getServices();
 
-    ServiceLocator getPluginRoot();
-
     Set<String> getDependencies();
 
     Set<String> getSoftDependencies();

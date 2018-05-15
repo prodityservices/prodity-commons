@@ -10,6 +10,8 @@
         <module name="commons-spigot-plugin" />
         <module name="commons-spigot-v1_12_R1" />
         <module name="commons-spigot-v1_8_R3" />
+        <module name="customfeature" />
+        <module name="spigot" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -21,6 +23,9 @@
       <module name="commons-spigot-plugin" target="1.8" />
       <module name="commons-spigot-v1_12_R1" target="1.8" />
       <module name="commons-spigot-v1_8_R3" target="1.8" />
+      <module name="customfeature" target="1.8" />
+      <module name="examples-parent" target="1.5" />
+      <module name="spigot" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

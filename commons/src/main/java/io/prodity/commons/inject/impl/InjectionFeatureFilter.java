@@ -31,7 +31,8 @@ public class InjectionFeatureFilter implements IndexedFilter {
             String creator = InjectUtils.getOwner(d);
             if (creator != null) {
                 return this.plugin.getSoftDependencies().contains(creator)
-                    || this.plugin.getDependencies().contains(creator);
+                    || this.plugin.getDependencies().contains(creator)
+                    || creator.equals(this.plugin.getName());
             }
         }
         return false;

@@ -1,20 +1,17 @@
-package io.prodity.commons.spigot.inject.impl;
+package io.prodity.commons.inject.impl;
 
 import io.prodity.commons.inject.SoftDepend;
-import io.prodity.commons.inject.impl.AnnotationProcessor;
 import javax.inject.Inject;
-import org.bukkit.plugin.PluginManager;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 
 
 public class SoftDependProcessor extends AnnotationProcessor<SoftDepend> {
-
-    private final PluginManager pluginManager;
+    private final Platform platform;
 
     @Inject
-    public SoftDependProcessor(PluginManager pluginManager) {
+    public SoftDependProcessor(Platform platform) {
         super(SoftDepend.class);
-        this.pluginManager = pluginManager;
+        this.platform = platform;
     }
 
     @Override
@@ -24,7 +21,7 @@ public class SoftDependProcessor extends AnnotationProcessor<SoftDepend> {
 
     private boolean isSatisfied(SoftDepend depend) {
         for (String plugin : depend.value()) {
-            if (this.pluginManager.getPlugin(plugin) == null) {
+            if (!this.platform.hasPlugin(plugin)) {
                 return false;
             }
         }

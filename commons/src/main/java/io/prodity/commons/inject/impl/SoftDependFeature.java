@@ -1,4 +1,4 @@
-package io.prodity.commons.spigot.inject.impl;
+package io.prodity.commons.inject.impl;
 
 import io.prodity.commons.inject.DescriptorProcessor;
 import io.prodity.commons.inject.InjectionFeature;

@@ -44,7 +44,6 @@ public enum ElementDeserializers {
         }
 
         @Nullable
-        @Override
         Number deserialize(ConfigElement<?> element, ConfigurationNode node) throws Throwable {
 
             final TypeToken<?> wrappedTypeToken = element.getType().wrap();
@@ -57,6 +56,11 @@ public enum ElementDeserializers {
             return NumberSerializer.NUMBER_TYPES.get(typeClass).apply(node);
         }
 
+        @Nullable
+        @Override
+        Number deserialize(TypeToken<?> type, ConfigurationNode node) throws Throwable {
+            return null;
+        }
     }
 
 }
