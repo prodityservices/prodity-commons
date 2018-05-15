@@ -2,6 +2,8 @@ package io.prodity.commons.config.inject.deserialize;
 
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
+import io.prodity.commons.color.Color;
+import io.prodity.commons.config.annotate.inject.ConfigPath;
 import io.prodity.commons.config.inject.deserialize.ElementDeserializers.NumberSerializer;
 import io.prodity.commons.repository.registry.RepositoryRegistry;
 import java.util.Comparator;
@@ -51,6 +53,9 @@ public class ElementDeserializerRegistry {
 
         return Optional.empty();
     }
+
+    @ConfigPath("")
+    private Color color;
 
 //    public <T> ElementDeserializerRegistry map(TypeToken<T> type, TypeToken<T> to) throws IllegalStateException {
 //        // .map(Color.class).to(ImmutableColor.class) - maps Color fields to ImmutableColor fields
