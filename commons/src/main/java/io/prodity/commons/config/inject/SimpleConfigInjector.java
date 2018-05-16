@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -61,11 +60,7 @@ public class SimpleConfigInjector implements ConfigInjector {
 
         final ConfigurationNode masterNode = this.loadAndReplaceVariables(configFile);
 
-        final Constructor<T> constructor = configClass.getConstructor();
-        constructor.setAccessible(true);
-
-        final T object = constructor.newInstance();
-        final ConfigObject<T> configObject = ConfigObject.of(configClass, object);
+        final ConfigObject<T> configObject = ConfigObject.of(configClass);
 
         configObject.inject(this.elementResolver, masterNode);
 

@@ -20,9 +20,8 @@ import ninja.leaping.configurate.ConfigurationNode;
 
 public class ConfigObject<T> implements ConfigInjectable, ConfigListener {
 
-    public static <T> ConfigObject<T> of(Class<T> typeClass, T object) throws IllegalStateException {
+    public static <T> ConfigObject<T> of(Class<T> typeClass) throws IllegalStateException {
         Preconditions.checkNotNull(typeClass, "typeClass");
-        Preconditions.checkNotNull(object, "object");
 
         final ConfigConstructor<T> constructor = ConfigConstructor.fromClass(typeClass);
         final List<ConfigListenerMethod> listenerMethods = ConfigListenerResolver.resolveFromClass(typeClass);
@@ -105,7 +104,8 @@ public class ConfigObject<T> implements ConfigInjectable, ConfigListener {
     @Override
     public void inject(ElementResolver elementResolver, ConfigurationNode node) throws Throwable {
         this.constructor.inject(elementResolver, node);
-        this.objectInstance = this.constructor.getObjectInstance();
+
+        this.objectInstance = this.constructor.instantiate(elementResolver, node);
 
         this.callListeners(ListenerType.PRE_INJECT);
         for (ConfigMember member : this.getMembers()) {

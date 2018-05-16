@@ -1,12 +1,14 @@
 package io.prodity.commons.config.inject.member;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
 import io.prodity.commons.config.annotate.inject.ConfigInject;
+import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import ninja.leaping.configurate.ConfigurationNode;
 
 public class ConfigConstructor<T> extends ExecutableConfigMember {
 
@@ -16,58 +18,58 @@ public class ConfigConstructor<T> extends ExecutableConfigMember {
      * @param configClass the {@link Class} to resolve from
      * @param <T> the type
      * @return the resolved {@link ConfigConstructor}
-     * @throws IllegalStateException if there is 0 or 2+ {@link ConfigConstructor}s for the specified class
+     * @throws IllegalStateException if there is multiple or no {@link ConfigConstructor}s present.
      */
     public static <T> ConfigConstructor<T> fromClass(Class<T> configClass) throws IllegalStateException {
-        Preconditions.checkNotNull(configClass, configClass);
+        Preconditions.checkNotNull(configClass, "configClass");
 
-        ConfigConstructor<T> noArgsConstructor = null;
-        final List<ConfigConstructor<T>> constructors = Lists.newArrayList();
+        final List<Constructor<?>> constructors = Arrays.stream(configClass.getDeclaredConstructors())
+            .filter((constructor) -> !constructor.isSynthetic())
+            .filter((constructor) -> constructor.isAnnotationPresent(ConfigInject.class))
+            .collect(Collectors.toList());
 
-        for (Constructor<?> constructor : configClass.getDeclaredConstructors()) {
-            final Constructor<T> typedConstructor = (Constructor<T>) constructor;
-            if (constructor.getParameterCount() == 0) {
-                noArgsConstructor = new ConfigConstructor<>(Lists.newArrayList(), typedConstructor);
-            } else if (constructor.isAnnotationPresent(ConfigInject.class)) {
-                final List<ConfigMemberParameter<?>> parameters = ConfigMemberParameter.fromExecutable(constructor);
-                final ConfigConstructor<T> configConstructor = new ConfigConstructor<>(parameters, typedConstructor);
-                constructors.add(configConstructor);
+        if (constructors.size() > 1) {
+            throw new IllegalStateException(
+                "configClass=" + configClass.getName() + "  has multiple constructors annotated with @ConfigInject");
+        }
+
+        if (constructors.isEmpty()) {
+            try {
+                final Constructor<?> constructor = configClass.getDeclaredConstructor();
+                constructors.add(constructor);
+            } catch (NoSuchMethodException exception) {
+                throw new IllegalStateException(
+                    "configClass=" + configClass.getName() + " has no constructors with 0 paramters or annotated with @ConfigInject");
             }
         }
 
-        if (constructors.isEmpty() && noArgsConstructor == null) {
-            throw new IllegalStateException(
-                "configClass=" + configClass + " has no Constructors with no paramters, or annotated with @ConfigInject");
-        }
+        final Constructor<T> constructor = (Constructor<T>) constructors.get(0);
+        final List<ConfigMemberParameter<?>> parameters = ConfigMemberParameter.fromExecutable(constructor);
 
-        if (constructors.size() > 1) {
-            throw new IllegalStateException("configClass=" + configClass + " has multiple annotated marked with @ConfigInject");
-        }
-
-        return !constructors.isEmpty() ? constructors.get(0) : noArgsConstructor;
+        return new ConfigConstructor<>(constructor, parameters);
     }
 
     private final Constructor<T> constructor;
     private T objectInstance;
 
-    public ConfigConstructor(Collection<ConfigMemberParameter<?>> parameters, Constructor<T> constructor) {
+    public ConfigConstructor(Constructor<T> constructor, List<ConfigMemberParameter<?>> parameters) {
         super(parameters);
         Preconditions.checkNotNull(constructor, "constructor");
         this.constructor = constructor;
-    }
-
-    public Constructor<T> getMethod() {
-        return this.constructor;
-    }
-
-    public T getObjectInstance() {
-        return this.objectInstance;
     }
 
     @Override
     void apply(Object... parameters) throws IllegalAccessException, InvocationTargetException, InstantiationException {
         this.constructor.setAccessible(true);
         this.objectInstance = this.constructor.newInstance(parameters);
+    }
+
+    public T instantiate(ElementResolver elementResolver, ConfigurationNode node) throws Throwable {
+        Preconditions.checkNotNull(elementResolver, "elementResolver");
+        Preconditions.checkNotNull(node, "node");
+
+        this.inject(elementResolver, node);
+        return this.objectInstance;
     }
 
 }

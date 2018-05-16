@@ -19,10 +19,6 @@ public class ConfigTest {
     @Inject
     private Logger logger;
 
-    private ConfigTest() {
-        
-    }
-
     @PostConstruct
     public void testInjector() {
         this.logger.info("INJECTING CONFIG.");
@@ -39,6 +35,10 @@ public class ConfigTest {
 
         @ConfigPath("test.int")
         private int testInt;
+
+        private TestConfig() {
+
+        }
 
         @Override
         public String toString() {
