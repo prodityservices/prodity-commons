@@ -1,7 +1,6 @@
 package io.prodity.commons.inject.impl;
 
 import io.prodity.commons.inject.DoNotRegister;
-import io.prodity.commons.inject.InjectUtils;
 import io.prodity.commons.inject.PluginLifecycleListener;
 import io.prodity.commons.plugin.ProdityPlugin;
 import java.util.Queue;

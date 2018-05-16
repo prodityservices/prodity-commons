@@ -1,16 +1,17 @@
 package io.prodity.commons.spigot.inject;
 
 import com.google.common.collect.ImmutableSet;
-import io.prodity.commons.inject.Eager;
-import io.prodity.commons.inject.InjectUtils;
+import io.prodity.commons.inject.impl.InjectUtils;
 import io.prodity.commons.inject.InjectionFeature;
-import io.prodity.commons.inject.PluginLifecycleListener;
 import io.prodity.commons.inject.impl.PluginBridge;
 import io.prodity.commons.plugin.ProdityPlugin;
 import io.prodity.commons.spigot.inject.impl.DefaultPluginBinder;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -37,13 +38,16 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
         this.serviceLocator = ServiceLocatorFactory.getInstance().create(this.getName());
         this.initialize();
         this.injectionFeatures = InjectUtils.findFeaturesFor(this);
-        this.injectionFeatures.forEach(f -> f.preLoad(this));
+        this.callEvent(InjectionFeature::preLoad);
         if (!InjectUtils.loadDescriptors(this.getClassLoader(), this.serviceLocator)) {
+            this.serviceLocator.shutdown();
+            this.serviceLocator = null;
+            this.injectionFeatures = Collections.emptyList();
             this.getLogger().severe("Failed to load injection inhabitants file.");
             this.getLogger().severe("Disabling...");
             return;
         }
-        this.injectionFeatures.forEach(f -> f.postLoad(this));
+        this.callEvent(InjectionFeature::postLoad);
     }
 
     /**
@@ -64,12 +68,9 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
     @Override
     public final void onEnable() {
         if (this.serviceLocator != null) {
-            this.injectionFeatures.forEach(f -> f.preEnable(this));
-            this.serviceLocator.inject(this);
-            this.serviceLocator.postConstruct(this);
-            this.serviceLocator.getAllServices(Eager.class);
-            this.serviceLocator.getAllServices(PluginLifecycleListener.class).forEach(l -> l.onEnable(this));
-            this.injectionFeatures.forEach(f -> f.postEnable(this));
+            this.callEvent(InjectionFeature::preEnable);
+            this.callEvent(InjectionFeature::onEnable);
+            this.callEvent(InjectionFeature::postEnable);
         } else {
             Bukkit.getPluginManager().disablePlugin(this);
         }
@@ -78,12 +79,20 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
     @Override
     public final void onDisable() {
         if (this.serviceLocator != null) {
-            this.injectionFeatures.forEach(f -> f.preDisable(this));
-            this.serviceLocator.getAllServices(PluginLifecycleListener.class).forEach(l -> l.onDisable(this));
-            this.serviceLocator.preDestroy(this);
+            this.callEvent(InjectionFeature::preDisable);
             PluginBridge.unbridge(this);
             this.serviceLocator.shutdown();
             this.serviceLocator = null;
+        }
+    }
+
+    private void callEvent(BiConsumer<InjectionFeature, ProdityPlugin> function) {
+        for (InjectionFeature feature : this.injectionFeatures) {
+            try {
+                function.accept(feature, this);
+            } catch (Exception e) {
+                this.getLogger().log(Level.SEVERE, "Exception from InjectionFeature", e);
+            }
         }
     }
 
@@ -107,5 +116,7 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
     public Set<String> getSoftDependencies() {
         return this.softDependencies;
     }
+
+
 
 }

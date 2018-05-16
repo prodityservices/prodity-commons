@@ -4,7 +4,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import io.prodity.commons.inject.InjectUtils;
+import io.prodity.commons.inject.impl.InjectUtils;
 import io.prodity.commons.inject.PluginLifecycleListener;
 import io.prodity.commons.plugin.ProdityPlugin;
 import io.prodity.commons.spigot.inject.SpigotInjectedPlugin;

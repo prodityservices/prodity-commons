@@ -1,10 +1,8 @@
 package io.prodity.commons.bungee.inject;
 
 import io.prodity.commons.bungee.inject.impl.DefaultPluginBinder;
-import io.prodity.commons.inject.Eager;
-import io.prodity.commons.inject.InjectUtils;
+import io.prodity.commons.inject.impl.InjectUtils;
 import io.prodity.commons.inject.InjectionFeature;
-import io.prodity.commons.inject.PluginLifecycleListener;
 import io.prodity.commons.inject.impl.PluginBridge;
 import io.prodity.commons.plugin.ProdityPlugin;
 import java.util.Collections;
@@ -15,12 +13,17 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.ServiceLocatorFactory;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 
+
+import javax.annotation.Nonnull;
+import java.io.InputStream;
+import java.util.Set;
+import java.util.function.BiConsumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public abstract class BungeeInjectedPlugin extends Plugin implements ProdityPlugin, Listener {
 
     private ServiceLocator serviceLocator;
-
-    // Initialize and save these so that any implementation that gets one event
-    // gets all of them.
     private List<InjectionFeature> injectionFeatures = Collections.emptyList();
 
     @Override
@@ -28,11 +31,16 @@ public abstract class BungeeInjectedPlugin extends Plugin implements ProdityPlug
         this.serviceLocator = ServiceLocatorFactory.getInstance().create(this.getName());
         this.initialize();
         this.injectionFeatures = InjectUtils.findFeaturesFor(this);
-        this.injectionFeatures.forEach(f -> f.preLoad(this));
+        this.callEvent(InjectionFeature::preLoad);
         if (!InjectUtils.loadDescriptors(this.getClass().getClassLoader(), this.serviceLocator)) {
+            this.serviceLocator.shutdown();
+            this.serviceLocator = null;
+            this.injectionFeatures = Collections.emptyList();
+            this.getLogger().severe("Failed to load injection inhabitants file.");
+            this.getLogger().severe("Disabling...");
             return;
         }
-        this.injectionFeatures.forEach(f -> f.postLoad(this));
+        this.callEvent(InjectionFeature::postLoad);
     }
 
     /**
@@ -52,16 +60,61 @@ public abstract class BungeeInjectedPlugin extends Plugin implements ProdityPlug
 
     @Override
     public void onEnable() {
-        this.injectionFeatures.forEach(f -> f.preEnable(this));
-        this.serviceLocator.inject(this);
-        this.serviceLocator.postConstruct(this);
-        this.serviceLocator.getAllServices(Eager.class);
-        this.serviceLocator.getAllServices(PluginLifecycleListener.class).forEach(l -> l.onEnable(this));
-        this.injectionFeatures.forEach(f -> f.postEnable(this));
+        if (this.serviceLocator != null) {
+            this.callEvent(InjectionFeature::preEnable);
+            this.callEvent(InjectionFeature::onEnable);
+            this.callEvent(InjectionFeature::postEnable);
+        }
     }
 
     @Override
     public void onDisable() {
-        super.onDisable();
+        if (this.serviceLocator != null) {
+            this.callEvent(InjectionFeature::preDisable);
+            PluginBridge.unbridge(this);
+            this.serviceLocator.shutdown();
+            this.serviceLocator = null;
+        }
+    }
+
+    private void callEvent(BiConsumer<InjectionFeature, ProdityPlugin> function) {
+        for (InjectionFeature feature : this.injectionFeatures) {
+            try {
+                function.accept(feature, this);
+            } catch (Exception e) {
+                this.getLogger().log(Level.SEVERE, "Exception from InjectionFeature", e);
+            }
+        }
+    }
+
+    @Nonnull
+    @Override
+    public Logger getLogger() {
+        return super.getLogger();
+    }
+
+    @Override
+    public ServiceLocator getServices() {
+        return this.serviceLocator;
+    }
+
+    @Override
+    public String getName() {
+        return this.getDescription().getName();
+    }
+
+    @Override
+    public Set<String> getDependencies() {
+        return this.getDescription().getDepends();
+    }
+
+    @Override
+    public Set<String> getSoftDependencies() {
+        return this.getDescription().getSoftDepends();
+    }
+
+    @Override
+    public InputStream getResource(String fileName) {
+        return this.getResourceAsStream(fileName);
     }
 }
