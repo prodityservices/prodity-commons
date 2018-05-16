@@ -8,10 +8,12 @@ import io.prodity.commons.config.inject.except.ConfigInjectException;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+
+import io.prodity.commons.inject.Eager;
 import org.jvnet.hk2.annotations.Service;
 
 @Service
-public class ConfigTest {
+public class ConfigTest implements Eager {
 
     @Inject
     private ConfigInjector injector;
@@ -35,10 +37,14 @@ public class ConfigTest {
     }
 
     @Config(fileName = "config.yml")
-    private class TestConfig {
+    private static class TestConfig {
 
         @ConfigPath("test.int")
         private int testInt;
+
+        public TestConfig() {
+
+        }
 
         @Override
         public String toString() {

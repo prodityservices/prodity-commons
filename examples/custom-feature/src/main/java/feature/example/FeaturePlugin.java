@@ -9,7 +9,4 @@ import javax.inject.Inject;
 @PluginDependency("ProdityCommons")
 public class FeaturePlugin extends ProditySpigotPlugin {
 
-    @Inject
-    private ConfigTest configTest;
-
 }
