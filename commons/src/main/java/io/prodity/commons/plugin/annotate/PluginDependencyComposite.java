@@ -1,6 +1,5 @@
 package io.prodity.commons.plugin.annotate;
 
-
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -14,8 +13,6 @@ import java.util.Set;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
 public @interface PluginDependencyComposite {
-
-    PluginDependency[] value();
 
     class Serializer {
 
@@ -50,5 +47,7 @@ public @interface PluginDependencyComposite {
         }
 
     }
+
+    PluginDependency[] value();
 
 }

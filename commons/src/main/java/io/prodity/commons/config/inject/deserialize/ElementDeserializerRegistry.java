@@ -22,6 +22,8 @@ public class ElementDeserializerRegistry {
 
     @Inject
     private RepositoryRegistry repositoryRegistry;
+    @ConfigPath("")
+    private Color color;
 
     @PostConstruct
     private void registerDefaults() {
@@ -53,9 +55,6 @@ public class ElementDeserializerRegistry {
 
         return Optional.empty();
     }
-
-    @ConfigPath("")
-    private Color color;
 
 //    public <T> ElementDeserializerRegistry map(TypeToken<T> type, TypeToken<T> to) throws IllegalStateException {
 //        // .map(Color.class).to(ImmutableColor.class) - maps Color fields to ImmutableColor fields

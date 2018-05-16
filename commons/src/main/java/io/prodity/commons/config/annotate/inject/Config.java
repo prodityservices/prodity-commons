@@ -1,6 +1,5 @@
 package io.prodity.commons.config.annotate.inject;
 
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

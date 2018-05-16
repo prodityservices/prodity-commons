@@ -21,7 +21,7 @@ public class TerminableWrapper<T> implements Terminable {
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         this.terminator.accept(this.object);
     }
 

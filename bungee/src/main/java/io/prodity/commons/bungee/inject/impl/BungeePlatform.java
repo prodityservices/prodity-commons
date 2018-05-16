@@ -8,6 +8,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.PluginManager;
 
 public class BungeePlatform implements Platform {
+
     @Override
     public boolean isListener(Object instance) {
         return instance instanceof Listener;

@@ -3,9 +3,8 @@ package io.prodity.commons.spigot.inject.impl;
 import io.prodity.commons.inject.bind.PluginBinder;
 import io.prodity.commons.plugin.ProdityPlugin;
 import io.prodity.commons.spigot.inject.SpigotInjectedPlugin;
-import java.util.logging.Logger;
-
 import io.prodity.commons.spigot.plugin.ProditySpigotPlugin;
+import java.util.logging.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.plugin.Plugin;
@@ -18,6 +17,7 @@ import org.bukkit.scheduler.BukkitScheduler;
  * Common bindings useful to all plugins.  Added by default.
  */
 public class DefaultPluginBinder extends PluginBinder {
+
     private final SpigotInjectedPlugin plugin;
 
     public DefaultPluginBinder(SpigotInjectedPlugin plugin) {

@@ -8,6 +8,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
 public class SpigotPlatform implements Platform {
+
     @Override
     public boolean isListener(Object instance) {
         return instance instanceof Listener;

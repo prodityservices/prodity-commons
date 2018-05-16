@@ -39,5 +39,5 @@ public class ElementAttributeValue<V> {
             .add("value", this.value)
             .toString();
     }
-    
+
 }

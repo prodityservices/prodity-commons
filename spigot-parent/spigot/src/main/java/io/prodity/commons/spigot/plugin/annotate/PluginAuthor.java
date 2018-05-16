@@ -12,8 +12,6 @@ import java.lang.annotation.Target;
 @Repeatable(PluginAuthorComposite.class)
 public @interface PluginAuthor {
 
-    String value();
-
     class Serializer {
 
         public static final String KEY = "author";
@@ -26,5 +24,7 @@ public @interface PluginAuthor {
         }
 
     }
+
+    String value();
 
 }

@@ -1,7 +1,6 @@
 package io.prodity.commons.spigot.inject;
 
 import com.google.common.collect.ImmutableSet;
-import io.prodity.commons.inject.DescriptorProcessor;
 import io.prodity.commons.inject.Eager;
 import io.prodity.commons.inject.InjectUtils;
 import io.prodity.commons.inject.InjectionFeature;
@@ -9,17 +8,14 @@ import io.prodity.commons.inject.PluginLifecycleListener;
 import io.prodity.commons.inject.impl.PluginBridge;
 import io.prodity.commons.plugin.ProdityPlugin;
 import io.prodity.commons.spigot.inject.impl.DefaultPluginBinder;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.ServiceLocatorFactory;
-import org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 
 /**
@@ -28,6 +24,7 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
  * and {@link javax.annotation.PreDestroy}. InjectedPlugin implements Listener and is automatically registered.
  */
 public class SpigotInjectedPlugin extends JavaPlugin implements Listener, ProdityPlugin {
+
     private Set<String> softDependencies;
     private Set<String> dependencies;
     private ServiceLocator serviceLocator;
@@ -58,7 +55,6 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
      * must use a regular binder, it's suggested to annotate your service with
      * {@link org.glassfish.hk2.api.Visibility} to ensure it's not available to
      * all plugins.
-     *
      */
     protected void initialize() {
         ServiceLocatorUtilities.bind(this.getServices(), new DefaultPluginBinder(this));

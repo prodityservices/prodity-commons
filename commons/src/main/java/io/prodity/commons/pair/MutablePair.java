@@ -1,6 +1,6 @@
 package io.prodity.commons.pair;
 
-import com.google.common.base.Objects;
+import java.util.Objects;
 import javax.annotation.Nullable;
 
 public class MutablePair<K, V> implements Pair<K, V> {
@@ -51,7 +51,7 @@ public class MutablePair<K, V> implements Pair<K, V> {
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.key, this.value);
+        return Objects.hash(this.key, this.value);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class MutablePair<K, V> implements Pair<K, V> {
             return true;
         }
         final MutablePair pair = (MutablePair) object;
-        return Objects.equal(this.key, pair.key) && Objects.equal(this.value, pair.value);
+        return Objects.equals(this.key, pair.key) && Objects.equals(this.value, pair.value);
     }
 
 }

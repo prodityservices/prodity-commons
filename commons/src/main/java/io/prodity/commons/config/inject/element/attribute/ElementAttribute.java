@@ -13,8 +13,8 @@ public class ElementAttribute<V> {
 
     public static final class Builder<V> {
 
-        private ElementAttributeKey<V> key;
         private final ImmutableMap.Builder<ElementAttributeKey<?>, Predicate<? extends ElementAttributeValue<?>>> conflicting;
+        private ElementAttributeKey<V> key;
         private Predicate<AnnotatedElement> predicate;
         private Function<AnnotatedElement, V> valueFunction;
 

@@ -13,8 +13,6 @@ import java.lang.annotation.Target;
 @Repeatable(PluginLoadBeforeComposite.class)
 public @interface PluginLoadBefore {
 
-    String value();
-
     class Serializer {
 
         public static final String KEY = "loadbefore";
@@ -27,5 +25,7 @@ public @interface PluginLoadBefore {
         }
 
     }
+
+    String value();
 
 }

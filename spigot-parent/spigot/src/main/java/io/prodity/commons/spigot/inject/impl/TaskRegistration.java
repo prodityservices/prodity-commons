@@ -1,5 +1,7 @@
 package io.prodity.commons.spigot.inject.impl;
 
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import io.prodity.commons.inject.InjectUtils;
@@ -12,7 +14,6 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 import org.glassfish.hk2.api.ActiveDescriptor;
@@ -115,7 +116,7 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
         }
 
         public BukkitTask start() {
-            Validate.isTrue(this.task == null, "Attempted to start a running task.");
+            Preconditions.checkState(this.task == null, "Attempted to start a running task.");
             long periodInTicks = this.taskInfo.unit().toTicks(this.taskInfo.period());
             if (this.taskInfo.async()) {
                 this.task = Bukkit.getScheduler().runTaskTimer(TaskRegistration.this.plugin, this, periodInTicks, periodInTicks);
@@ -154,12 +155,12 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
 
         @Override
         public String toString() {
-            return "DiscoveredTask{" +
-                "instance=" + this.instance +
-                ", method=" + this.method +
-                ", taskInfo=" + this.taskInfo +
-                ", task=" + this.task +
-                '}';
+            return MoreObjects.toStringHelper(this)
+                .add("instance", this.instance)
+                .add("method", this.method)
+                .add("taskInfo", this.taskInfo)
+                .add("task", this.task)
+                .toString();
         }
     }
 }

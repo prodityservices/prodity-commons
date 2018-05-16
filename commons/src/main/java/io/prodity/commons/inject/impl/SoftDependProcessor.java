@@ -4,8 +4,8 @@ import io.prodity.commons.inject.SoftDepend;
 import javax.inject.Inject;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 
-
 public class SoftDependProcessor extends AnnotationProcessor<SoftDepend> {
+
     private final Platform platform;
 
     @Inject

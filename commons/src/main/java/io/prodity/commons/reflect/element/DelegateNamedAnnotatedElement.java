@@ -26,5 +26,5 @@ public interface DelegateNamedAnnotatedElement extends NamedAnnotatedElement {
     default Annotation[] getDeclaredAnnotations() {
         return this.getAnnotatedElement().getDeclaredAnnotations();
     }
-    
+
 }

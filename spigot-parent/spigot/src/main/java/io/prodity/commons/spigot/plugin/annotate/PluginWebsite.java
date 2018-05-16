@@ -10,8 +10,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface PluginWebsite {
 
-    String value();
-
     class Serializer {
 
         public static final String KEY = "website";
@@ -24,5 +22,7 @@ public @interface PluginWebsite {
         }
 
     }
+
+    String value();
 
 }

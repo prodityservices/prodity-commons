@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 @Retention(RetentionPolicy.SOURCE)
 public @interface PluginLoadBeforeComposite {
 
-    PluginLoadBefore[] value();
-
     class Serializer {
 
         public static PluginSerializer<PluginLoadBeforeComposite> create() {
@@ -40,5 +38,7 @@ public @interface PluginLoadBeforeComposite {
         }
 
     }
+
+    PluginLoadBefore[] value();
 
 }

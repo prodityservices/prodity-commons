@@ -14,8 +14,6 @@ import java.util.stream.Collectors;
 @Retention(RetentionPolicy.SOURCE)
 public @interface PluginAuthorComposite {
 
-    PluginAuthor[] value();
-
     class Serializer {
 
         public static final String KEY = "authors";
@@ -42,5 +40,7 @@ public @interface PluginAuthorComposite {
         }
 
     }
+
+    PluginAuthor[] value();
 
 }

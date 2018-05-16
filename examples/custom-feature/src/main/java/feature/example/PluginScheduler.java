@@ -1,15 +1,15 @@
 package feature.example;
 
 import io.prodity.commons.spigot.plugin.ProditySpigotPlugin;
+import javax.inject.Inject;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
-
-import javax.inject.Inject;
 
 /**
  * A scheduler that's specific to a single plugin.  A nice little utility.
  */
 public class PluginScheduler {
+
     private final ProditySpigotPlugin plugin;
     private final BukkitScheduler scheduler;
 

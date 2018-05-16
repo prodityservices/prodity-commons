@@ -10,8 +10,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface PluginAuthor {
 
-    String value();
-
     class Serializer {
 
         public static final String KEY = "author";
@@ -24,5 +22,7 @@ public @interface PluginAuthor {
         }
 
     }
+
+    String value();
 
 }

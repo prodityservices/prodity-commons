@@ -1,16 +1,15 @@
 package example;
 
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.jvnet.hk2.annotations.Service;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.jvnet.hk2.annotations.Service;
 
 /**
  * An implementation of RenownStorage that never saves it. When a player
@@ -18,6 +17,7 @@ import java.util.concurrent.CompletableFuture;
  */
 @Service
 public class MemoryRenownStorage implements RenownStorage, Listener {
+
     private final Map<UUID, Integer> renown = new HashMap<>();
 
     @Override

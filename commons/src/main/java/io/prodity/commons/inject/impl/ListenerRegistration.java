@@ -4,21 +4,19 @@ import io.prodity.commons.inject.DoNotRegister;
 import io.prodity.commons.inject.InjectUtils;
 import io.prodity.commons.inject.PluginLifecycleListener;
 import io.prodity.commons.plugin.ProdityPlugin;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.inject.Inject;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.Filter;
 import org.glassfish.hk2.api.InstanceLifecycleEvent;
 import org.glassfish.hk2.api.InstanceLifecycleEventType;
 import org.glassfish.hk2.api.InstanceLifecycleListener;
 
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 public class ListenerRegistration implements InstanceLifecycleListener, PluginLifecycleListener {
+
     private final Queue<Object> earlyRegistered = new ConcurrentLinkedQueue<>();
     private final Set<ActiveDescriptor<?>> registered = ConcurrentHashMap.newKeySet();
     private final ProdityPlugin plugin;
@@ -30,7 +28,7 @@ public class ListenerRegistration implements InstanceLifecycleListener, PluginLi
         this.platform = platform;
     }
 
-
+    @Override
     public Filter getFilter() {
         return InjectUtils.filterByPlugin(this.plugin);
     }

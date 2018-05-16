@@ -1,6 +1,5 @@
 package example;
 
-
 import com.google.common.collect.ImmutableList;
 import feature.example.PluginScheduler;
 import io.prodity.commons.plugin.annotate.Plugin;
@@ -8,7 +7,9 @@ import io.prodity.commons.plugin.annotate.PluginDependency;
 import io.prodity.commons.spigot.inject.Task;
 import io.prodity.commons.spigot.inject.TimeUnit;
 import io.prodity.commons.spigot.plugin.ProditySpigotPlugin;
-import org.bukkit.Bukkit;
+import java.util.List;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -17,14 +18,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import java.util.List;
-
-@Plugin(name="Renown", version = "1.0.0", description = "Gives players renown based on actions.")
+@Plugin(name = "Renown", version = "1.0.0", description = "Gives players renown based on actions.")
 @PluginDependency("ProdityCommons")
 @PluginDependency("ExampleCustomFeature")
 public class RenownPlugin extends ProditySpigotPlugin {
+
     // PluginScheduler is a custom feature provided by ExampleCustomFeature
     @Inject
     private PluginScheduler scheduler;
@@ -35,13 +33,13 @@ public class RenownPlugin extends ProditySpigotPlugin {
     public void givePeriodic() {
         List<Player> onlinePlayers = ImmutableList.copyOf(this.getServer().getOnlinePlayers());
         this.renownStorage.bulkIncrement(onlinePlayers, 1)
-                .thenAcceptAsync(ignored -> {
-                    for (Player player : onlinePlayers) {
-                        if (player.isValid()) {
-                            player.sendMessage(ChatColor.GREEN+"You just gained 1 renown for playing on the server!");
-                        }
+            .thenAcceptAsync(ignored -> {
+                for (Player player : onlinePlayers) {
+                    if (player.isValid()) {
+                        player.sendMessage(ChatColor.GREEN + "You just gained 1 renown for playing on the server!");
                     }
-                }, this.scheduler::runTask);
+                }
+            }, this.scheduler::runTask);
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -52,11 +50,11 @@ public class RenownPlugin extends ProditySpigotPlugin {
             if (killer != null) {
                 // Decrement their renown, then message them on the main thread
                 this.renownStorage.decrementRenown(killer, 5)
-                        .thenAcceptAsync(ignored -> {
-                            if (killer.isValid()) {
-                                killer.sendMessage(ChatColor.RED+"You just lost 5 renown for murder!");
-                            }
-                        }, this.scheduler::runTask);
+                    .thenAcceptAsync(ignored -> {
+                        if (killer.isValid()) {
+                            killer.sendMessage(ChatColor.RED + "You just lost 5 renown for murder!");
+                        }
+                    }, this.scheduler::runTask);
             }
 
         }

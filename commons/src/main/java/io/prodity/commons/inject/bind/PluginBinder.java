@@ -1,10 +1,10 @@
 package io.prodity.commons.inject.bind;
 
+import com.google.common.base.Preconditions;
 import io.prodity.commons.inject.Export;
 import io.prodity.commons.plugin.ProdityPlugin;
 import java.lang.reflect.Type;
 import javax.inject.Singleton;
-import org.apache.commons.lang3.Validate;
 import org.glassfish.hk2.api.DescriptorVisibility;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.MultiException;
@@ -75,8 +75,8 @@ public abstract class PluginBinder implements Binder {
 
     @Override
     public final void bind(DynamicConfiguration config) {
-        Validate.isTrue(this.config == null, "Recursive configuration call detected.");
-        Validate.notNull(config);
+        Preconditions.checkState(this.config == null, "Recursive configuration call detected.");
+        Preconditions.checkNotNull(config, "confic");
 
         this.config = config;
         try {
@@ -92,6 +92,6 @@ public abstract class PluginBinder implements Binder {
     protected abstract void configure();
 
     public ProdityPlugin getPlugin() {
-        return plugin;
+        return this.plugin;
     }
 }

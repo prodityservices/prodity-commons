@@ -14,10 +14,6 @@ import java.lang.annotation.Target;
 @Repeatable(PluginDependencyComposite.class)
 public @interface PluginDependency {
 
-    String value();
-
-    boolean soft() default false;
-
     class Serializer {
 
         public static PluginSerializer<PluginDependency> create(String dependsKey, String softDependsKey) {
@@ -31,5 +27,9 @@ public @interface PluginDependency {
         }
 
     }
+
+    String value();
+
+    boolean soft() default false;
 
 }

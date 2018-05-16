@@ -59,7 +59,6 @@ import org.glassfish.hk2.utilities.reflection.ParameterizedTypeImpl;
 import org.glassfish.hk2.utilities.reflection.ReflectionHelper;
 import org.jvnet.hk2.component.MultiMap;
 
-
 /**
  * Abstract binding builder implementation.
  *
@@ -68,173 +67,6 @@ import org.jvnet.hk2.component.MultiMap;
  */
 // NOTE: Added Visibility
 abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
-
-    /**
-     * Contracts the service should be bound to.
-     */
-    Set<Type> contracts = new HashSet<>();
-    /**
-     * Bound service loader.
-     */
-    HK2Loader loader = null;
-    /**
-     * Binding metadata (e.g. useful for filtering).
-     */
-    final MultiMap<String, String> metadata = new MultiMap<>();
-    /**
-     * Qualifiers (other than @Named).
-     */
-    Set<Annotation> qualifiers = new HashSet<>();
-    /**
-     * Binding scope as annotation
-     */
-    Annotation scopeAnnotation = null;
-    /**
-     * Binding scope.
-     */
-    Class<? extends Annotation> scope = null;
-    /**
-     * Binding rank.
-     */
-    Integer ranked = null;
-    /**
-     * Binding name (see @Named).
-     */
-    String name = null;
-    /**
-     * Injectee is proxiable.
-     */
-    Boolean proxiable = null;
-    /**
-     * Injectee should be proxied even inside the same scope
-     */
-    Boolean proxyForSameScope = null;
-
-    Type implementationType = null;
-
-    DescriptorVisibility visibility = null;
-
-    @Override
-    public AbstractBindingBuilder<T> proxy(boolean proxiable) {
-        this.proxiable = proxiable;
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> proxyForSameScope(boolean proxyForSameScope) {
-        this.proxyForSameScope = proxyForSameScope;
-        return this;
-    }
-
-    /**
-     * Analyzer to use with this descriptor
-     */
-    String analyzer = null;
-
-    @Override
-    public AbstractBindingBuilder<T> analyzeWith(String analyzer) {
-        this.analyzer = analyzer;
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> to(Class<? super T> contract) {
-        this.contracts.add(contract);
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> to(TypeLiteral<?> contract) {
-        this.contracts.add(contract.getType());
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> to(Type contract) {
-        this.contracts.add(contract);
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> loadedBy(HK2Loader loader) {
-        this.loader = loader;
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> withMetadata(String key, String value) {
-        this.metadata.add(key, value);
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> withMetadata(String key, List<String> values) {
-        for (String value : values) {
-            this.metadata.add(key, value);
-        }
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> qualifiedBy(Annotation annotation) {
-        if (Named.class.equals(annotation.annotationType())) {
-            this.name = ((Named) annotation).value();
-        }
-        this.qualifiers.add(annotation);
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> in(Annotation scopeAnnotation) {
-        this.scopeAnnotation = scopeAnnotation;
-        if (this.scope != null) {
-            this.scope = null;
-        }
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> in(Class<? extends Annotation> scopeAnnotation) {
-        this.scope = scopeAnnotation;
-        if (this.scopeAnnotation != null) {
-            this.scopeAnnotation = null;
-        }
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> named(String name) {
-        this.name = name;
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> withVisibility(DescriptorVisibility visibility) {
-        this.visibility = visibility;
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> ranked(int rank) {
-        this.ranked = rank;
-        return this;
-    }
-
-    @Override
-    public AbstractBindingBuilder<T> asType(Type t) {
-        this.implementationType = t;
-        return this;
-    }
-
-    /**
-     * Build the binding descriptor and bind it in the {@link DynamicConfiguration
-     * dynamic configuration}.
-     *
-     * @param configuration dynamic binding configuration.
-     * @param defaultLoader default HK2 loader that should be used in case a custom loader was not set.
-     */
-    abstract void complete(DynamicConfiguration configuration, HK2Loader defaultLoader);
-
 
     private static class ClassBasedBindingBuilder<T> extends AbstractBindingBuilder<T> {
 
@@ -507,7 +339,6 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
         }
     }
 
-
     /**
      * Create a new service binding builder.
      *
@@ -578,4 +409,167 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
         Class<? extends Annotation> factoryScope) {
         return new AbstractBindingBuilder.FactoryTypeBasedBindingBuilder<>(factoryType, factoryScope);
     }
+
+    /**
+     * Binding metadata (e.g. useful for filtering).
+     */
+    final MultiMap<String, String> metadata = new MultiMap<>();
+    /**
+     * Contracts the service should be bound to.
+     */
+    Set<Type> contracts = new HashSet<>();
+    /**
+     * Bound service loader.
+     */
+    HK2Loader loader = null;
+    /**
+     * Qualifiers (other than @Named).
+     */
+    Set<Annotation> qualifiers = new HashSet<>();
+    /**
+     * Binding scope as annotation
+     */
+    Annotation scopeAnnotation = null;
+    /**
+     * Binding scope.
+     */
+    Class<? extends Annotation> scope = null;
+    /**
+     * Binding rank.
+     */
+    Integer ranked = null;
+    /**
+     * Binding name (see @Named).
+     */
+    String name = null;
+    /**
+     * Injectee is proxiable.
+     */
+    Boolean proxiable = null;
+    /**
+     * Injectee should be proxied even inside the same scope
+     */
+    Boolean proxyForSameScope = null;
+    Type implementationType = null;
+    DescriptorVisibility visibility = null;
+    /**
+     * Analyzer to use with this descriptor
+     */
+    String analyzer = null;
+
+    @Override
+    public AbstractBindingBuilder<T> proxy(boolean proxiable) {
+        this.proxiable = proxiable;
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> proxyForSameScope(boolean proxyForSameScope) {
+        this.proxyForSameScope = proxyForSameScope;
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> analyzeWith(String analyzer) {
+        this.analyzer = analyzer;
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> to(Class<? super T> contract) {
+        this.contracts.add(contract);
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> to(TypeLiteral<?> contract) {
+        this.contracts.add(contract.getType());
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> to(Type contract) {
+        this.contracts.add(contract);
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> loadedBy(HK2Loader loader) {
+        this.loader = loader;
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> withMetadata(String key, String value) {
+        this.metadata.add(key, value);
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> withMetadata(String key, List<String> values) {
+        for (String value : values) {
+            this.metadata.add(key, value);
+        }
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> qualifiedBy(Annotation annotation) {
+        if (Named.class.equals(annotation.annotationType())) {
+            this.name = ((Named) annotation).value();
+        }
+        this.qualifiers.add(annotation);
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> in(Annotation scopeAnnotation) {
+        this.scopeAnnotation = scopeAnnotation;
+        if (this.scope != null) {
+            this.scope = null;
+        }
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> in(Class<? extends Annotation> scopeAnnotation) {
+        this.scope = scopeAnnotation;
+        if (this.scopeAnnotation != null) {
+            this.scopeAnnotation = null;
+        }
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> named(String name) {
+        this.name = name;
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> withVisibility(DescriptorVisibility visibility) {
+        this.visibility = visibility;
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> ranked(int rank) {
+        this.ranked = rank;
+        return this;
+    }
+
+    @Override
+    public AbstractBindingBuilder<T> asType(Type t) {
+        this.implementationType = t;
+        return this;
+    }
+
+    /**
+     * Build the binding descriptor and bind it in the {@link DynamicConfiguration
+     * dynamic configuration}.
+     *
+     * @param configuration dynamic binding configuration.
+     * @param defaultLoader default HK2 loader that should be used in case a custom loader was not set.
+     */
+    abstract void complete(DynamicConfiguration configuration, HK2Loader defaultLoader);
 }

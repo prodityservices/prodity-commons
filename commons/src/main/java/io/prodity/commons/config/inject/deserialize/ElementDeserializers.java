@@ -15,14 +15,6 @@ public enum ElementDeserializers {
 
     ;
 
-    /**
-     * The default priority to used for the default serializers.
-     */
-    public static final int DEFAULT_PRIORITY = 1;
-    public static final int LOW_PRIORITY = 10;
-    public static final int MEDIUM_PRIORITY = 100;
-    public static final int HIGH_PRIORITY = 1000;
-
     static final class NumberSerializer extends TypeElementDeserializer<Number> {
 
         private static final ImmutableMap<Class<? extends Number>, GenericCheckedFunction<ConfigurationNode, Number>> NUMBER_TYPES =
@@ -58,9 +50,17 @@ public enum ElementDeserializers {
 
         @Nullable
         @Override
-        Number deserialize(TypeToken<?> type, ConfigurationNode node) throws Throwable {
+        Number deserialize(TypeToken<?> type, ConfigurationNode node) {
             return null;
         }
     }
+
+    /**
+     * The default priority to used for the default serializers.
+     */
+    public static final int DEFAULT_PRIORITY = 1;
+    public static final int LOW_PRIORITY = 10;
+    public static final int MEDIUM_PRIORITY = 100;
+    public static final int HIGH_PRIORITY = 1000;
 
 }

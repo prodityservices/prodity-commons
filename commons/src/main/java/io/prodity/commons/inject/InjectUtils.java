@@ -1,16 +1,14 @@
 package io.prodity.commons.inject;
 
 import io.prodity.commons.inject.impl.InjectionFeatureFilter;
-import io.prodity.commons.inject.impl.PluginBridge;
 import io.prodity.commons.plugin.ProdityPlugin;
+import java.io.IOException;
+import java.util.List;
 import org.glassfish.hk2.api.Descriptor;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.Filter;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder;
-
-import java.io.IOException;
-import java.util.List;
 
 public class InjectUtils {
 
@@ -30,11 +28,9 @@ public class InjectUtils {
     public static boolean loadDescriptors(ClassLoader loader, ServiceLocator into) {
         List<DescriptorProcessor> processors = into.getAllServices(DescriptorProcessor.class);
         DynamicConfigurationService dcs = into.getService(DynamicConfigurationService.class);
-        try
-        {
+        try {
             dcs.getPopulator().populate(new ClasspathDescriptorFileFinder(loader), processors.toArray(new DescriptorProcessor[0]));
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             return false;
         }
@@ -42,7 +38,6 @@ public class InjectUtils {
     }
 
     public static List<InjectionFeature> findFeaturesFor(ProdityPlugin plugin) {
-        //noinspection unchecked
         return (List<InjectionFeature>) plugin.getServices().getAllServices(new InjectionFeatureFilter(plugin));
     }
 

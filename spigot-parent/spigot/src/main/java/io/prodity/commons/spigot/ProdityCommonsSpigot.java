@@ -6,7 +6,6 @@ import io.prodity.commons.spigot.inject.impl.InternalBinder;
 import io.prodity.commons.spigot.plugin.ProditySpigotPlugin;
 import io.prodity.commons.spigot.plugin.annotate.PluginAuthor;
 import io.prodity.commons.spigot.plugin.annotate.PluginWebsite;
-import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 
 @Plugin(name = "ProdityCommons", description = "Core utilities for Prodity spigot plugins", version = "%plugin.version%")

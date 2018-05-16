@@ -1,6 +1,5 @@
 package io.prodity.commons.spigot.inject;
 
-
 /**
  * Common time units expressed in terms of ticks. This represents the units
  * that the Bukkit Scheduler can operate on.
@@ -22,5 +21,5 @@ public enum TimeUnit {
     public long toTicks(long amount) {
         return this.ticks * amount;
     }
-    
+
 }

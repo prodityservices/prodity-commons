@@ -10,12 +10,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface Plugin {
 
-    String name();
-
-    String version();
-
-    String description();
-
     class Serializer {
 
         public static final String NAME_KEY = "name";
@@ -31,5 +25,11 @@ public @interface Plugin {
         }
 
     }
+
+    String name();
+
+    String version();
+
+    String description();
 
 }

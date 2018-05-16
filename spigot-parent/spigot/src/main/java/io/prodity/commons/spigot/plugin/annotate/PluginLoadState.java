@@ -10,15 +10,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.SOURCE)
 public @interface PluginLoadState {
 
-    PluginLoadState.LoadState value();
-
-    enum LoadState {
-
-        STARTUP,
-        POSTWORLD
-
-    }
-
     class Serializer {
 
         public static final String KEY = "load";
@@ -29,6 +20,15 @@ public @interface PluginLoadState {
                 data.set(PluginLoadState.Serializer.KEY, loadState.name());
             };
         }
+
+    }
+
+    PluginLoadState.LoadState value();
+
+    enum LoadState {
+
+        STARTUP,
+        POSTWORLD
 
     }
 
