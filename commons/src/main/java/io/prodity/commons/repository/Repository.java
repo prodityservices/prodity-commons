@@ -1,12 +1,13 @@
 package io.prodity.commons.repository;
 
 import io.prodity.commons.identity.Identifiable;
-import io.prodity.commons.name.Named;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import org.jvnet.hk2.annotations.Contract;
 
-public interface Repository<K, V extends Identifiable<K>> extends Named {
+@Contract
+public interface Repository<K, V extends Identifiable<K>> {
 
     boolean containsId(K key);
 

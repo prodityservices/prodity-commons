@@ -5,11 +5,14 @@ import java.util.AbstractMap;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import javax.annotation.Nullable;
 
 public interface Pair<K, V> {
 
+    @Nullable
     K getKey();
 
+    @Nullable
     V getValue();
 
     default void accept(BiConsumer<K, V> biConsumer) {

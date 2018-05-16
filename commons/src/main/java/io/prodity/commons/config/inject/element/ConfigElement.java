@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 import io.prodity.commons.config.annotate.inject.ConfigIgnore;
 import io.prodity.commons.config.annotate.inject.ConfigPath;
+import io.prodity.commons.config.inject.ConfigObject;
 import io.prodity.commons.config.inject.ConfigResolvable;
 import io.prodity.commons.config.inject.element.attribute.ElementAttributeKey;
 import io.prodity.commons.reflect.element.NamedAnnotatedElement;
@@ -12,7 +13,7 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 /**
- * Represents an element of a {@link io.prodity.commons.config.inject.object.ConfigObject}
+ * Represents an element of a {@link ConfigObject}
  *
  * @param <T> the type of the element
  */

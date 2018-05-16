@@ -2,6 +2,9 @@ package io.prodity.commons.color;
 
 import java.util.Comparator;
 
+/**
+ * Represents an RGB color.<br>Test
+ */
 public interface Color extends Comparable<Color>, Cloneable {
 
     Comparator<Color> COMPARATOR = Comparator.comparing(Color::getRed)

@@ -32,7 +32,7 @@ public abstract class ElementDeserializer<T> implements Comparable<ElementDeseri
      * @param type the type
      * @return true if the specified element can be deserialized by this instance, false if not
      */
-    abstract boolean canDeserialize(TypeToken<?> type);
+    public abstract boolean canDeserialize(TypeToken<?> type);
 
     /**
      * Deserializes the specified {@link ConfigurationNode}.
@@ -43,7 +43,7 @@ public abstract class ElementDeserializer<T> implements Comparable<ElementDeseri
      * @throws Throwable if the deserialization fails
      */
     @Nullable
-    abstract T deserialize(TypeToken<?> type, ConfigurationNode node) throws Throwable;
+    public abstract T deserialize(TypeToken<?> type, ConfigurationNode node) throws Throwable;
 
     @Override
     public int compareTo(ElementDeserializer<?> other) {

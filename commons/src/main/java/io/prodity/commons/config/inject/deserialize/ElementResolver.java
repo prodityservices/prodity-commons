@@ -1,17 +1,18 @@
 package io.prodity.commons.config.inject.deserialize;
 
 import com.google.common.base.Preconditions;
+import io.prodity.commons.config.inject.deserialize.registry.ElementDeserializerRegistry;
 import io.prodity.commons.config.inject.element.ConfigElement;
 import io.prodity.commons.config.inject.element.attribute.ElementAttributes;
 import io.prodity.commons.message.color.Colorizer;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import ninja.leaping.configurate.ConfigurationNode;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
 @Service
@@ -23,21 +24,15 @@ public class ElementResolver {
     @Inject
     private Colorizer colorizer;
 
+    @Inject
+    private ServiceLocator serviceLocator;
+
     @Nullable
     public <T> T resolveValue(ConfigElement<T> element, ConfigurationNode node) throws Throwable {
         Preconditions.checkNotNull(element, "element");
         Preconditions.checkNotNull(node, "node");
 
-        final Optional<ElementDeserializer<?>> deserializerOptional = this.deserializerRegistry.get(element.getType());
-
-        if (!deserializerOptional.isPresent()) {
-            if (element.getAttributeOrDefault(ElementAttributes.REQUIRED_KEY, false)) {
-                throw new IllegalStateException(
-                    "element=" + element.toString() + " is required but there is no valid ConfigDeserializer registered for its type");
-            }
-
-            return null;
-        }
+        final ElementDeserializer<? extends T> deserializer = this.deserializerRegistry.get(element.getType());
 
         if (node.isVirtual()) {
             if (element.getAttributeOrDefault(ElementAttributes.REQUIRED_KEY, false)) {
@@ -47,8 +42,6 @@ public class ElementResolver {
 
             return null;
         }
-
-        final ElementDeserializer<T> deserializer = (ElementDeserializer<T>) deserializerOptional.get();
 
         T object = deserializer.deserialize(element.getType(), node);
 
@@ -64,8 +57,8 @@ public class ElementResolver {
             object = this.colorizeObject(object);
         }
 
-        //TODO default value attribute
-        //TODO repository attribute
+        //TODO default value attribute (invoke Supplier)
+        //TODO repository attribute (serviceLocator)
 
         return object;
     }

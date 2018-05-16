@@ -17,8 +17,6 @@ public enum ElementAttributes {
 
     ;
 
-    private static final ElementAttributeSet DEFAULT_ATTRIBUTES;
-
     public static final ElementAttributeKey<Boolean> COLORIZE_KEY = ElementAttributeKey.createKey("COLORIZE");
     public static final ElementAttributeKey<String> REPOSITORY_KEY = ElementAttributeKey.createKey("REPOSITORY");
     public static final ElementAttributeKey<Boolean> REQUIRED_KEY = ElementAttributeKey.createKey("REQUIRED");
@@ -67,6 +65,8 @@ public enum ElementAttributes {
         .setPredicate((element) -> element.isAnnotationPresent(ConfigDefault.class))
         .setValueFunction((element) -> element.getAnnotation(ConfigDefault.class).value())
         .build();
+
+    private static final ElementAttributeSet DEFAULT_ATTRIBUTES;
 
     static {
         DEFAULT_ATTRIBUTES = new ElementAttributeSet();

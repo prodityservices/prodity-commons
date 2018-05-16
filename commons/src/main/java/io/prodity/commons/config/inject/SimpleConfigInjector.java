@@ -4,8 +4,6 @@ import com.google.common.base.Preconditions;
 import io.prodity.commons.config.annotate.inject.Config;
 import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.config.inject.except.ConfigInjectException;
-import io.prodity.commons.config.inject.listen.ListenerType;
-import io.prodity.commons.config.inject.object.MasterConfigObject;
 import io.prodity.commons.except.tryto.Try;
 import io.prodity.commons.plugin.ProdityPlugin;
 import java.io.BufferedReader;
@@ -13,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -60,14 +59,15 @@ public class SimpleConfigInjector implements ConfigInjector {
 
         final ConfigurationNode masterNode = this.loadAndReplaceVariables(configFile);
 
-        final T object = configClass.newInstance();
-        final MasterConfigObject<T> masterConfigObject = MasterConfigObject.of(configClass, object);
+        final Constructor<T> constructor = configClass.getConstructor();
+        constructor.setAccessible(true);
 
-        masterConfigObject.callListeners(ListenerType.PRE_LOAD);
-        masterConfigObject.inject(this.elementResolver, masterNode);
-        masterConfigObject.callListeners(ListenerType.POST_LOAD);
+        final T object = constructor.newInstance();
+        final ConfigObject<T> configObject = ConfigObject.of(configClass, object);
 
-        return masterConfigObject.getObject();
+        configObject.inject(this.elementResolver, masterNode);
+
+        return configObject.getObject();
     }
 
     private ConfigurationNode loadAndReplaceVariables(ConfigFile configFile) throws IOException, ConfigInjectException {

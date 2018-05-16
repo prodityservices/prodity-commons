@@ -1,16 +1,23 @@
 package io.prodity.commons.color;
 
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Preconditions;
+import io.prodity.commons.config.annotate.deserialize.ConfigDeserializable;
+import io.prodity.commons.config.annotate.inject.ConfigInject;
+import io.prodity.commons.config.annotate.inject.Required;
 import java.util.Objects;
 
+@ConfigDeserializable
 public class MutableColor implements Color {
 
     private int red;
     private int green;
     private int blue;
 
-    public MutableColor(int red, int green, int blue) {
+    @ConfigInject
+    public MutableColor(@Required int red, @Required int green, @Required int blue) {
+        Colors.verifyComponent("red", red);
+        Colors.verifyComponent("green", green);
+        Colors.verifyComponent("blue", blue);
         this.red = red;
         this.green = green;
         this.blue = blue;
@@ -22,7 +29,7 @@ public class MutableColor implements Color {
     }
 
     public void setRed(int red) throws IllegalStateException {
-        Preconditions.checkState(red >= 0 && red <= 255, "specified RGB component red=" + red + " but must be 0-255 inclusive");
+        Colors.verifyComponent("red", red);
         this.red = red;
     }
 
@@ -32,7 +39,7 @@ public class MutableColor implements Color {
     }
 
     public void setGreen(int green) throws IllegalStateException {
-        Preconditions.checkState(green >= 0 && green <= 255, "specified RGB component green=" + green + " but must be 0-255 inclusive");
+        Colors.verifyComponent("green", green);
         this.green = green;
     }
 
@@ -42,7 +49,7 @@ public class MutableColor implements Color {
     }
 
     public void setBlue(int blue) throws IllegalStateException {
-        Preconditions.checkState(blue >= 0 && blue <= 255, "specified RGB component blue=" + blue + " but must be 0-255 inclusive");
+        Colors.verifyComponent("blue", blue);
         this.blue = blue;
     }
 

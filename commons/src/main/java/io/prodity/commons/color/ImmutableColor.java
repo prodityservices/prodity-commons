@@ -1,15 +1,23 @@
 package io.prodity.commons.color;
 
 import com.google.common.base.MoreObjects;
+import io.prodity.commons.config.annotate.deserialize.ConfigDeserializable;
+import io.prodity.commons.config.annotate.inject.ConfigInject;
+import io.prodity.commons.config.annotate.inject.Required;
 import java.util.Objects;
 
+@ConfigDeserializable
 public class ImmutableColor implements Color {
 
     private final int red;
     private final int green;
     private final int blue;
 
-    public ImmutableColor(int red, int green, int blue) {
+    @ConfigInject
+    public ImmutableColor(@Required int red, @Required int green, @Required int blue) {
+        Colors.verifyComponent("red", red);
+        Colors.verifyComponent("green", green);
+        Colors.verifyComponent("blue", blue);
         this.red = red;
         this.green = green;
         this.blue = blue;

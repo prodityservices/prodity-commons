@@ -24,7 +24,7 @@ public abstract class TypeElementDeserializer<T> extends ElementDeserializer<T> 
 
     @Override
     public boolean canDeserialize(TypeToken<?> type) {
-        return this.typeToken.isSupertypeOf(type);
+        return this.typeToken.equals(type);
     }
 
 }
