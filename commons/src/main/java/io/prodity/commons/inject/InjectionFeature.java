@@ -47,7 +47,7 @@ public interface InjectionFeature {
     }
 
     /**
-     * Invoked after the Bukkit plugin has been enabled, but
+     * Invoked after the plugin has been enabled, but
      * prior to Eager initialization.
      *
      * @param plugin the plugin
@@ -56,7 +56,14 @@ public interface InjectionFeature {
     }
 
     /**
-     * Invoked after module initialization.
+     * Performs initialization logic.
+     * @param plugin the plugin
+     */
+    default void onEnable(ProdityPlugin plugin) {
+    }
+
+    /**
+     * Invoked after eager initialization.
      *
      * @param plugin the plugin
      */

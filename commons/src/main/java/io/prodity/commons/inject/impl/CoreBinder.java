@@ -17,7 +17,8 @@ public abstract class CoreBinder extends PluginBinder {
 
     @Override
     protected void configure() {
-        this.addCoreFeatures(ExportFeature.class, ListenerFeature.class, SoftDependFeature.class);
+        this.addCoreFeatures(ExportFeature.class, ListenerFeature.class, SoftDependFeature.class,
+                LifecycleFeature.class);
     }
 
     @SafeVarargs

@@ -1,6 +1,5 @@
 package io.prodity.commons.inject.impl;
 
-import io.prodity.commons.inject.InjectUtils;
 import io.prodity.commons.inject.InjectionFeature;
 import io.prodity.commons.plugin.ProdityPlugin;
 import org.glassfish.hk2.api.Descriptor;
