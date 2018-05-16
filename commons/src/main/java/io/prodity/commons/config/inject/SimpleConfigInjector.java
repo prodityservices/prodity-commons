@@ -67,7 +67,13 @@ public class SimpleConfigInjector implements ConfigInjector {
 
         configObject.inject(this.elementResolver, masterNode);
 
-        return configObject.getObject();
+        final T instance = configObject.getObjectInstance();
+        if (instance == null) {
+            throw new IllegalStateException(
+                "configObject=" + configObject + "'s internal object instance is somehow null... this isn't right! O_o");
+        }
+
+        return instance;
     }
 
     private ConfigurationNode loadAndReplaceVariables(ConfigFile configFile) throws IOException, ConfigInjectException {

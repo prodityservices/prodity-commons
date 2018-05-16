@@ -71,13 +71,12 @@ public class ConfigObject<T> implements ConfigInjectable, ConfigListener {
         return this.objectInstance;
     }
 
-    void resolveMembers() {
+    private void resolveMembers() {
         if (this.members == null) {
             this.members = ImmutableList.copyOf(ConfigObject.resolveMembers(this));
         }
     }
 
-    @Nullable
     public List<ConfigMember> getMembers() {
         this.resolveMembers();
         return this.members;
