@@ -68,7 +68,6 @@ public enum ElementAttributes {
         .setValueFunction((element) -> element.getAnnotation(ConfigDefault.class).value())
         .build();
 
-
     static {
         DEFAULT_ATTRIBUTES = new ElementAttributeSet();
 
