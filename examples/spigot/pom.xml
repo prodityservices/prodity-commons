@@ -9,7 +9,7 @@
         <groupId>io.prodity.commons-examples</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>examples-spigot</artifactId>
     <packaging>jar</packaging>
 
@@ -28,7 +28,7 @@
             <groupId>io.prodity.commons-examples</groupId>
             <artifactId>examples-custom-feature</artifactId>
             <version>${project.version}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

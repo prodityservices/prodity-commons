@@ -26,6 +26,7 @@ public class RenownPlugin extends ProditySpigotPlugin {
     // PluginScheduler is a custom feature provided by ExampleCustomFeature
     @Inject
     private PluginScheduler scheduler;
+
     @Inject
     private RenownStorage renownStorage;
 
@@ -76,4 +77,5 @@ public class RenownPlugin extends ProditySpigotPlugin {
         }
         return null;
     }
+
 }

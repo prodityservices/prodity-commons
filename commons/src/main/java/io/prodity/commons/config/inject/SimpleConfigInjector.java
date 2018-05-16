@@ -5,6 +5,7 @@ import io.prodity.commons.config.annotate.inject.Config;
 import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.config.inject.except.ConfigInjectException;
 import io.prodity.commons.except.tryto.Try;
+import io.prodity.commons.inject.Export;
 import io.prodity.commons.plugin.ProdityPlugin;
 import java.io.BufferedReader;
 import java.io.File;
@@ -25,6 +26,7 @@ import org.jvnet.hk2.annotations.Service;
 import org.yaml.snakeyaml.DumperOptions;
 
 @Service
+@Export
 public class SimpleConfigInjector implements ConfigInjector {
 
     public static final String VARIABLES_KEY = "variables";
