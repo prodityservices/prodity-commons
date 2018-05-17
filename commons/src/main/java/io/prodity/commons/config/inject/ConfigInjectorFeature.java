@@ -1,5 +1,6 @@
 package io.prodity.commons.config.inject;
 
+import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.inject.Export;
 import io.prodity.commons.inject.InjectionFeature;
 import io.prodity.commons.plugin.ProdityPlugin;
@@ -13,6 +14,7 @@ public class ConfigInjectorFeature implements InjectionFeature {
     public void preLoad(ProdityPlugin plugin) {
         this.bind(plugin, (binder) -> {
             binder.bind(SimpleConfigInjector.class).to(ConfigInjector.class);
+            binder.bind(ElementResolver.class);
         });
     }
 

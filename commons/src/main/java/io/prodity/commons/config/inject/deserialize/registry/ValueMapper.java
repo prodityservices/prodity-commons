@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
 import io.prodity.commons.config.inject.deserialize.ElementDeserializer;
 import io.prodity.commons.config.inject.deserialize.ElementDeserializers;
+import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.config.inject.deserialize.TypeElementDeserializer;
 import java.util.function.Function;
 import javax.annotation.Nullable;
@@ -83,11 +84,11 @@ public class ValueMapper<T> {
             final ElementDeserializer<T> deserializer = new TypeElementDeserializer<T>(typeToMap, priority) {
                 @Nullable
                 @Override
-                public T deserialize(TypeToken<?> type, ConfigurationNode node) throws Throwable {
+                public T deserialize(ElementResolver resolver, TypeToken<?> type, ConfigurationNode node) throws Throwable {
                     final TypeToken<R> typeToMapFrom = PreparedValueMapper.this.typeToMapFrom;
 
                     final ElementDeserializer<? extends R> typeDeserializer = ValueMapper.this.deserializerRegistry.get(typeToMapFrom);
-                    final R value = typeDeserializer.deserialize(type, node);
+                    final R value = typeDeserializer.deserialize(resolver, typeToMapFrom, node);
                     return valueConverter.apply(value);
                 }
             };

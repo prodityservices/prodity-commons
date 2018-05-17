@@ -124,7 +124,7 @@ public class ElementAttribute<V> {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-            .add("key", this.key)
+            .add("key", this.key.getName())
             .toString();
     }
 

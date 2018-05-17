@@ -111,6 +111,7 @@ public class ConfigObject<T> implements ConfigInjectable, ConfigListener {
         for (ConfigMember member : this.getMembers()) {
             member.inject(elementResolver, node);
         }
+        
         this.callListeners(ListenerType.POST_INJECT);
     }
 

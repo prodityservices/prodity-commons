@@ -46,6 +46,7 @@ public class ConfigConstructor<T> extends ExecutableConfigMember {
         final Constructor<T> constructor = (Constructor<T>) constructors.get(0);
         final List<ConfigMemberParameter<?>> parameters = ConfigMemberParameter.fromExecutable(constructor);
 
+
         return new ConfigConstructor<>(constructor, parameters);
     }
 

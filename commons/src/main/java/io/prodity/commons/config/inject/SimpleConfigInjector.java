@@ -17,14 +17,13 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.logging.Logger;
 import javax.inject.Inject;
 import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.SimpleConfigurationNode;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
-import org.jvnet.hk2.annotations.Service;
 import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
 
-@Service
 public class SimpleConfigInjector implements ConfigInjector {
 
     public static final String VARIABLES_KEY = "variables";
@@ -34,9 +33,6 @@ public class SimpleConfigInjector implements ConfigInjector {
 
     @Inject
     private ElementResolver elementResolver;
-
-    @Inject
-    private Logger logger;
 
     @Override
     public <T> T inject(Class<T> configClass) throws ConfigInjectException {
@@ -59,10 +55,9 @@ public class SimpleConfigInjector implements ConfigInjector {
         if (created) {
             this.saveDefaultConfig(configFile);
         }
-
-        final ConfigurationNode masterNode = this.loadAndReplaceVariables(configFile);
-
+        
         final ConfigObject<T> configObject = ConfigObject.of(configClass);
+        final ConfigurationNode masterNode = this.loadAndReplaceVariables(configFile);
 
         configObject.inject(this.elementResolver, masterNode);
 
@@ -89,12 +84,14 @@ public class SimpleConfigInjector implements ConfigInjector {
             throw new ConfigInjectException(configFile, "variables node is not in the form of a Map");
         }
 
+        masterNode = SimpleConfigurationNode.root().setValue(masterNode.getValue());
         masterNode.removeChild(variablesNode.getKey());
-        String contents = masterNode.toString();
+        String contents = new Yaml().dump(masterNode.getValue());
 
         for (Map.Entry<Object, ? extends ConfigurationNode> entry : variablesNode.getChildrenMap().entrySet()) {
             final String key = entry.getKey().toString();
             final Object value = entry.getValue().getValue();
+
             if (value == null) {
                 throw new ConfigInjectException(configFile, "variable key=" + key + " does not have a valid deserialize assigned");
             }
@@ -149,8 +146,6 @@ public class SimpleConfigInjector implements ConfigInjector {
 
         final String fileName = annotation.fileName();
         final File file = new File(directory, fileName);
-
-        this.logger.info("FILE: " + file.toString());
 
         return file;
     }

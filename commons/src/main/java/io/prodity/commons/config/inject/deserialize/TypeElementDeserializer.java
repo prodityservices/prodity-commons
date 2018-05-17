@@ -11,11 +11,17 @@ import com.google.common.reflect.TypeToken;
 public abstract class TypeElementDeserializer<T> extends ElementDeserializer<T> {
 
     private final TypeToken<T> typeToken;
+    private final boolean suppportChildTypes;
 
     public TypeElementDeserializer(TypeToken<T> typeToken, int priority) {
+        this(typeToken, priority, false);
+    }
+
+    public TypeElementDeserializer(TypeToken<T> typeToken, int priority, boolean suppportChildTypes) {
         super(priority);
         Preconditions.checkNotNull(typeToken, "typeToken");
         this.typeToken = typeToken;
+        this.suppportChildTypes = suppportChildTypes;
     }
 
     public final TypeToken<T> getTypeToken() {
@@ -23,8 +29,8 @@ public abstract class TypeElementDeserializer<T> extends ElementDeserializer<T> 
     }
 
     @Override
-    public boolean canDeserialize(TypeToken<?> type) {
-        return this.typeToken.equals(type);
+    public final boolean canDeserialize(TypeToken<?> type) {
+        return this.suppportChildTypes ? this.typeToken.isSupertypeOf(type) : this.typeToken.equals(type);
     }
 
 }

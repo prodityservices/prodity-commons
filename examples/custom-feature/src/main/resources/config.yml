@@ -1,1 +1,15 @@
-test.int: 5
+variables:
+  '<test_int>': 5
+
+test:
+  int: <test_int>
+  int2: 125
+  long: 7777777
+  color:
+    red: 120
+    green: 50
+    blue: 255
+  mutablecolor:
+    red: 223
+    green: 0
+    blue: 255

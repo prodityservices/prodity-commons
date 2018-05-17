@@ -1,15 +1,19 @@
 package io.prodity.commons.config.inject.element;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import io.prodity.commons.config.annotate.inject.ConfigIgnore;
 import io.prodity.commons.config.annotate.inject.ConfigPath;
 import io.prodity.commons.config.inject.ConfigObject;
 import io.prodity.commons.config.inject.ConfigResolvable;
 import io.prodity.commons.config.inject.element.attribute.ElementAttributeKey;
+import io.prodity.commons.config.inject.element.attribute.ElementAttributeValue;
 import io.prodity.commons.reflect.element.NamedAnnotatedElement;
 import java.lang.reflect.AnnotatedElement;
+import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import javax.annotation.Nullable;
 
 /**
@@ -19,12 +23,22 @@ import javax.annotation.Nullable;
  */
 public interface ConfigElement<T> extends ConfigResolvable<T>, NamedAnnotatedElement {
 
-    static String resolvePath(NamedAnnotatedElement element) {
+    String PERIOD_LITERAL = Pattern.quote(".");
+
+    /**
+     * Resolves the {@link ninja.leaping.configurate.ConfigurationNode} path of the specified {@link NamedAnnotatedElement}.
+     *
+     * @param element the element
+     * @return an immutable {@link List} of the elements path
+     */
+    static List<String> resolvePath(NamedAnnotatedElement element) {
         Preconditions.checkNotNull(element, "element");
 
-        return Optional.ofNullable(element.getAnnotation(ConfigPath.class))
+        final String pathAsString = Optional.ofNullable(element.getAnnotation(ConfigPath.class))
             .map(ConfigPath::value)
             .orElseGet(element::getName);
+
+        return ImmutableList.copyOf(pathAsString.split(ConfigElement.PERIOD_LITERAL));
     }
 
     /**
@@ -37,35 +51,25 @@ public interface ConfigElement<T> extends ConfigResolvable<T>, NamedAnnotatedEle
         return element != null && !element.isAnnotationPresent(ConfigIgnore.class);
     }
 
-    /**
-     * Creates a new {@link SkeletalConfigElement} for the specified {@link Class} type.
-     *
-     * @param type the type's {@link Class}
-     * @param <T> the type
-     * @return the created {@link SkeletalConfigElement}
-     */
-    static <T> ConfigElement<T> ofType(Class<T> type) {
-        return ConfigElement.ofType(TypeToken.of(type));
-    }
-
-    /**
-     * Creates a new {@link SkeletalConfigElement} for the specified {@link TypeToken}.
-     *
-     * @param type the {@link TypeToken}
-     * @param <T> the type
-     * @return the created {@link SkeletalConfigElement}
-     */
-    static <T> ConfigElement<T> ofType(TypeToken<T> type) {
-        return new SkeletalConfigElement<>(type);
-    }
-
     TypeToken<T> getType();
 
-    String getPath();
+    /**
+     * Gets the element's path in a {@link ninja.leaping.configurate.ConfigurationNode}.
+     *
+     * @return an immutable {@link List} of the paths
+     */
+    List<String> getPath();
 
     boolean hasAttribute(@Nullable ElementAttributeKey<?> key);
 
     <V> Optional<V> getAttribute(@Nullable ElementAttributeKey<V> key);
+
+    /**
+     * Gets a {@link List} of all {@link ElementAttributeValue}s present in this element.
+     *
+     * @return an immutable {@link List} of the elements
+     */
+    List<ElementAttributeValue<?>> getAttributes();
 
     default <V> V getAttributeOrDefault(@Nullable ElementAttributeKey<V> key, @Nullable V defaultValue) {
         return this.getAttribute(key).orElse(defaultValue);

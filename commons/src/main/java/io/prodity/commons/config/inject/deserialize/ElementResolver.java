@@ -5,17 +5,17 @@ import io.prodity.commons.config.inject.deserialize.registry.ElementDeserializer
 import io.prodity.commons.config.inject.element.ConfigElement;
 import io.prodity.commons.config.inject.element.attribute.ElementAttributes;
 import io.prodity.commons.message.color.Colorizer;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.annotations.Service;
 
-@Service
 public class ElementResolver {
 
     @Inject
@@ -27,23 +27,30 @@ public class ElementResolver {
     @Inject
     private ServiceLocator serviceLocator;
 
+    public ElementDeserializerRegistry getDeserializerRegistry() {
+        return this.deserializerRegistry;
+    }
+
     @Nullable
     public <T> T resolveValue(ConfigElement<T> element, ConfigurationNode node) throws Throwable {
         Preconditions.checkNotNull(element, "element");
         Preconditions.checkNotNull(node, "node");
 
+
         final ElementDeserializer<? extends T> deserializer = this.deserializerRegistry.get(element.getType());
 
         if (node.isVirtual()) {
             if (element.getAttributeOrDefault(ElementAttributes.REQUIRED_KEY, false)) {
+                final List<String> nodePath = Arrays.stream(node.getPath()).map(Object::toString).collect(Collectors.toList());
+                final String nodePathString = String.join(".", nodePath);
                 throw new IllegalStateException(
-                    "element=" + element.toString() + " is required but node=" + node.toString() + " is virtual (not present)");
+                    "element=" + element.toString() + " is required but node=" + nodePathString + " is virtual (not present)");
             }
 
             return null;
         }
 
-        T object = deserializer.deserialize(element.getType(), node);
+        T object = deserializer.deserialize(this, element.getType(), node);
 
         if (object == null) {
             if (element.getAttribute(ElementAttributes.REQUIRED_KEY).orElse(false)) {
@@ -59,6 +66,8 @@ public class ElementResolver {
 
         //TODO default value attribute (invoke Supplier)
         //TODO repository attribute (serviceLocator)
+        //TODO ImmutableMap, ImmutableList, & ImmutableSet colorization support
+        //TODO Map & Set Colorization support
 
         return object;
     }

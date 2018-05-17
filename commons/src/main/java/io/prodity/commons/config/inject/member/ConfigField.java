@@ -5,15 +5,15 @@ import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
 import io.prodity.commons.config.inject.ConfigObject;
 import io.prodity.commons.config.inject.deserialize.ElementResolver;
+import io.prodity.commons.config.inject.element.BaseConfigElement;
 import io.prodity.commons.config.inject.element.ConfigElement;
-import io.prodity.commons.config.inject.element.ConfigElementBase;
 import io.prodity.commons.reflect.element.NamedAnnotatedElement;
 import java.lang.reflect.Field;
 import java.util.List;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
-public class ConfigField<T> extends ConfigElementBase<T> implements ConfigMember {
+public class ConfigField<T> extends BaseConfigElement<T> implements ConfigMember {
 
     public static List<ConfigField<?>> fromObject(ConfigObject<?> configObject) {
         Preconditions.checkNotNull(configObject, "configObject");

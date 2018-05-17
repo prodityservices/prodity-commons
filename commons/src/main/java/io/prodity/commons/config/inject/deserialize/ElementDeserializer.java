@@ -37,13 +37,14 @@ public abstract class ElementDeserializer<T> implements Comparable<ElementDeseri
     /**
      * Deserializes the specified {@link ConfigurationNode}.
      *
+     * @param elementResolver the {@link ElementResolver} in use
      * @param type the {@link TypeToken} of the serialized type
      * @param node the {@link ConfigurationNode} to deserialize from
      * @return the deserialized object, possibly null
      * @throws Throwable if the deserialization fails
      */
     @Nullable
-    public abstract T deserialize(TypeToken<?> type, ConfigurationNode node) throws Throwable;
+    public abstract T deserialize(ElementResolver elementResolver, TypeToken<?> type, ConfigurationNode node) throws Throwable;
 
     @Override
     public int compareTo(ElementDeserializer<?> other) {
