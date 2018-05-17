@@ -6,15 +6,16 @@ import io.prodity.commons.inject.InjectionFeature;
 import io.prodity.commons.plugin.ProdityPlugin;
 import java.io.IOException;
 import java.util.List;
+import javax.annotation.Nullable;
 import org.glassfish.hk2.api.Descriptor;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.Filter;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder;
 
-import javax.annotation.Nullable;
+public enum InjectUtils {
 
-public class InjectUtils {
+    ;
 
     public static Filter filterByPlugin(ProdityPlugin plugin) {
         return d -> InjectUtils.isFromPlugin(d, plugin);

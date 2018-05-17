@@ -6,12 +6,17 @@ import io.prodity.commons.color.Color;
 import io.prodity.commons.color.ImmutableColor;
 import io.prodity.commons.config.inject.deserialize.ElementDeserializer;
 import io.prodity.commons.config.inject.deserialize.ElementDeserializers.NumberSerializer;
+import io.prodity.commons.inject.Export;
 import java.util.Comparator;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 import javax.annotation.PostConstruct;
 import org.jvnet.hk2.annotations.Service;
 
+/***
+ * A globally shared registry for {@link ElementDeserializer}s.
+ */
+@Export
 @Service
 public class ElementDeserializerRegistry {
 

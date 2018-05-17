@@ -5,7 +5,6 @@ import io.prodity.commons.config.annotate.inject.Config;
 import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.config.inject.except.ConfigInjectException;
 import io.prodity.commons.except.tryto.Try;
-import io.prodity.commons.inject.Export;
 import io.prodity.commons.plugin.ProdityPlugin;
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,6 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.yaml.YAMLConfigurationLoader;
@@ -25,7 +25,6 @@ import org.jvnet.hk2.annotations.Service;
 import org.yaml.snakeyaml.DumperOptions;
 
 @Service
-@Export
 public class SimpleConfigInjector implements ConfigInjector {
 
     public static final String VARIABLES_KEY = "variables";
@@ -35,6 +34,9 @@ public class SimpleConfigInjector implements ConfigInjector {
 
     @Inject
     private ElementResolver elementResolver;
+
+    @Inject
+    private Logger logger;
 
     @Override
     public <T> T inject(Class<T> configClass) throws ConfigInjectException {
@@ -147,6 +149,9 @@ public class SimpleConfigInjector implements ConfigInjector {
 
         final String fileName = annotation.fileName();
         final File file = new File(directory, fileName);
+
+        this.logger.info("FILE: " + file.toString());
+
         return file;
     }
 

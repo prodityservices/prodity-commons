@@ -68,4 +68,5 @@ public class ListenerRegistration implements InstanceLifecycleListener, PluginLi
         }
         this.earlyRegistered.clear();
     }
+
 }
