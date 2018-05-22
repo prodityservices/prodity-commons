@@ -26,43 +26,7 @@ public class ConfigTest implements Eager {
     @PostConstruct
     public void testInjector() {
         this.logger.info("INJECTING CONFIG.");
-        try {
-            final TestConfig testConfig = this.injector.inject(TestConfig.class);
-            this.logger.info(testConfig.toString());
-        } catch (ConfigInjectException e) {
-            e.printStackTrace();
-        }
     }
 
-    @Config(fileName = "config.yml")
-    private static class TestConfig {
-
-        @ConfigPath("test.int")
-        private int testInt;
-
-        @ConfigPath("test.int2")
-        private AtomicInteger testInt2;
-
-        @ConfigPath("test.long")
-        private long testLong;
-
-        @ConfigPath("test.color")
-        private Color testColor;
-
-        @ConfigPath("test.mutablecolor")
-        private MutableColor testMutableColor;
-
-        @Override
-        public String toString() {
-            return MoreObjects.toStringHelper(this)
-                .add("testInt", this.testInt)
-                .add("testInt2", this.testInt2)
-                .add("testLong", this.testLong)
-                .add("testColor", this.testColor)
-                .add("testMutableColor", this.testMutableColor)
-                .toString();
-        }
-
-    }
 
 }
