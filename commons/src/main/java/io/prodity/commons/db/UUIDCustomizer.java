@@ -5,7 +5,7 @@ import org.jdbi.v3.core.Jdbi;
 import java.nio.ByteBuffer;
 import java.util.UUID;
 
-public class UUIDFeature implements JdbiFeature {
+public class UUIDCustomizer implements JdbiCustomizer {
     @Override
     public void customizeJdbi(Jdbi jdbi) {
         jdbi.registerArgument(new UUIDArgumentFactory());

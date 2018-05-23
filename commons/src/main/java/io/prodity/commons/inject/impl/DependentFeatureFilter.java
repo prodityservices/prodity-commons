@@ -1,22 +1,22 @@
 package io.prodity.commons.inject.impl;
 
-import io.prodity.commons.inject.InjectionFeature;
 import io.prodity.commons.plugin.ProdityPlugin;
 import org.glassfish.hk2.api.Descriptor;
-import org.glassfish.hk2.api.DescriptorVisibility;
 import org.glassfish.hk2.api.IndexedFilter;
 
-public class InjectionFeatureFilter implements IndexedFilter {
+public class DependentFeatureFilter implements IndexedFilter {
 
     private final ProdityPlugin plugin;
+    private final Class<?> tClass;
 
-    public InjectionFeatureFilter(ProdityPlugin plugin) {
+    public DependentFeatureFilter(ProdityPlugin plugin, Class<?> tClass) {
         this.plugin = plugin;
+        this.tClass = tClass;
     }
 
     @Override
     public String getAdvertisedContract() {
-        return InjectionFeature.class.getName();
+        return this.tClass.getName();
     }
 
     @Override
@@ -26,13 +26,11 @@ public class InjectionFeatureFilter implements IndexedFilter {
 
     @Override
     public boolean matches(Descriptor d) {
-        if (d.getDescriptorVisibility() == DescriptorVisibility.NORMAL) {
-            String creator = InjectUtils.getOwner(d);
-            if (creator != null) {
-                return this.plugin.getSoftDependencies().contains(creator)
+        String creator = InjectUtils.getOwner(d);
+        if (creator != null) {
+            return this.plugin.getSoftDependencies().contains(creator)
                     || this.plugin.getDependencies().contains(creator)
                     || creator.equals(this.plugin.getName());
-            }
         }
         return false;
     }

@@ -3,6 +3,7 @@ package io.prodity.commons.db;
 import com.google.common.base.Preconditions;
 import io.prodity.commons.config.inject.ConfigInjector;
 import io.prodity.commons.config.inject.except.ConfigInjectException;
+import io.prodity.commons.inject.impl.InjectUtils;
 import io.prodity.commons.lazy.Lazy;
 import io.prodity.commons.lazy.SimpleLazy;
 import io.prodity.commons.plugin.ProdityPlugin;
@@ -24,13 +25,11 @@ import javax.sql.DataSource;
 public class JdbiFactory implements Factory<Jdbi> {
 
     private final Lazy<Jdbi> instance = new SimpleLazy<>(this::create);
-    private final IterableProvider<JdbiFeature> features;
     private final Provider<ConfigInjector> injector;
     private final ProdityPlugin plugin;
 
     @Inject
-    public JdbiFactory(IterableProvider<JdbiFeature> features, Provider<ConfigInjector> injector, ProdityPlugin plugin) {
-        this.features = features;
+    public JdbiFactory(Provider<ConfigInjector> injector, ProdityPlugin plugin) {
         this.injector = injector;
         this.plugin = plugin;
     }
@@ -43,7 +42,7 @@ public class JdbiFactory implements Factory<Jdbi> {
             Jdbi jdbi = Jdbi.create(source);
             jdbi.installPlugin(new SqlObjectPlugin());
             // Now install from the ServiceLocator
-            for (JdbiFeature feature : this.features) {
+            for (JdbiCustomizer feature : InjectUtils.getDependentServices(this.plugin, JdbiCustomizer.class)) {
                 jdbi.installPlugin(feature);
             }
             return jdbi;
@@ -53,7 +52,7 @@ public class JdbiFactory implements Factory<Jdbi> {
     }
 
     private DataSource createDataSource() throws ConfigInjectException {
-        DatabaseConfig config = this.injector.get().inject(DatabaseConfig.class);
+        DatabaseConfig config = new DatabaseConfig();
         return config.createDataSource(this.plugin);
     }
 

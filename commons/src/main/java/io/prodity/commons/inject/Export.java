@@ -7,6 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.glassfish.hk2.api.DescriptorVisibility;
 
+import javax.inject.Qualifier;
+
 /**
  * Exported services are visible to other plugins.  To provide explicit bindings
  * that export a service, use {@link
@@ -16,6 +18,7 @@ import org.glassfish.hk2.api.DescriptorVisibility;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@Qualifier
 public @interface Export {
 
     String PLUGIN_META_KEY = "PLUGIN";

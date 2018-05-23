@@ -9,13 +9,12 @@ import javax.sql.DataSource;
 import java.util.concurrent.TimeUnit;
 
 //TODO Make this work
-@Config(fileName = "db.yml")
 public class DatabaseConfig {
-    private String host;
-    private int port;
-    private String database;
-    private String username;
-    private String password;
+    private String host = "localhost";
+    private int port = 3306;
+    private String database = "test";
+    private String username = "nate";
+    private String password = "password";
 
     public DataSource createDataSource(ProdityPlugin plugin) {
         HikariConfig config = this.createConfig(plugin);

@@ -4,7 +4,7 @@ import io.prodity.commons.inject.SoftDepend;
 import javax.inject.Inject;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 
-public class SoftDependProcessor extends AnnotationProcessor<SoftDepend> {
+public class SoftDependProcessor extends QualifierProcessor<SoftDepend> {
 
     private final Platform platform;
 
@@ -15,16 +15,12 @@ public class SoftDependProcessor extends AnnotationProcessor<SoftDepend> {
     }
 
     @Override
-    protected DescriptorImpl doProcess(DescriptorImpl descriptor, SoftDepend value) {
-        return this.isSatisfied(value) ? descriptor : null;
+    protected DescriptorImpl present(DescriptorImpl descriptor) {
+        String dependentOn = this.getMetadata(descriptor, "SoftDepend");
+        return this.isSatisfied(dependentOn) ? descriptor : null;
     }
 
-    private boolean isSatisfied(SoftDepend depend) {
-        for (String plugin : depend.value()) {
-            if (!this.platform.hasPlugin(plugin)) {
-                return false;
-            }
-        }
-        return true;
+    private boolean isSatisfied(String depend) {
+        return this.platform.hasPlugin(depend);
     }
 }

@@ -3,6 +3,7 @@ package io.prodity.commons.bungee.inject;
 import io.prodity.commons.bungee.inject.impl.DefaultPluginBinder;
 import io.prodity.commons.inject.impl.InjectUtils;
 import io.prodity.commons.inject.InjectionFeature;
+import io.prodity.commons.inject.impl.InjectionContainer;
 import io.prodity.commons.inject.impl.PluginBridge;
 import io.prodity.commons.plugin.ProdityPlugin;
 import java.util.Collections;
@@ -23,24 +24,11 @@ import java.util.logging.Logger;
 
 public abstract class BungeeInjectedPlugin extends Plugin implements ProdityPlugin, Listener {
 
-    private ServiceLocator serviceLocator;
-    private List<InjectionFeature> injectionFeatures = Collections.emptyList();
+    private final InjectionContainer container = new InjectionContainer(this);
 
     @Override
     public void onLoad() {
-        this.serviceLocator = ServiceLocatorFactory.getInstance().create(this.getName());
-        this.initialize();
-        this.injectionFeatures = InjectUtils.findFeaturesFor(this);
-        this.callEvent(InjectionFeature::preLoad);
-        if (!InjectUtils.loadDescriptors(this.getClass().getClassLoader(), this.serviceLocator)) {
-            this.serviceLocator.shutdown();
-            this.serviceLocator = null;
-            this.injectionFeatures = Collections.emptyList();
-            this.getLogger().severe("Failed to load injection inhabitants file.");
-            this.getLogger().severe("Disabling...");
-            return;
-        }
-        this.callEvent(InjectionFeature::postLoad);
+        this.container.load(this::initialize);
     }
 
     /**
@@ -55,37 +43,18 @@ public abstract class BungeeInjectedPlugin extends Plugin implements ProdityPlug
      */
     protected void initialize() {
         ServiceLocatorUtilities.bind(this.getServices(), new DefaultPluginBinder(this));
-        PluginBridge.bridge(this);
     }
 
     @Override
     public void onEnable() {
-        if (this.serviceLocator != null) {
-            this.callEvent(InjectionFeature::preEnable);
-            this.callEvent(InjectionFeature::onEnable);
-            this.callEvent(InjectionFeature::postEnable);
-        }
+        this.container.enable();
     }
 
     @Override
     public void onDisable() {
-        if (this.serviceLocator != null) {
-            this.callEvent(InjectionFeature::preDisable);
-            PluginBridge.unbridge(this);
-            this.serviceLocator.shutdown();
-            this.serviceLocator = null;
-        }
+        this.container.disable();
     }
 
-    private void callEvent(BiConsumer<InjectionFeature, ProdityPlugin> function) {
-        for (InjectionFeature feature : this.injectionFeatures) {
-            try {
-                function.accept(feature, this);
-            } catch (Exception e) {
-                this.getLogger().log(Level.SEVERE, "Exception from InjectionFeature", e);
-            }
-        }
-    }
 
     @Nonnull
     @Override
@@ -95,7 +64,7 @@ public abstract class BungeeInjectedPlugin extends Plugin implements ProdityPlug
 
     @Override
     public ServiceLocator getServices() {
-        return this.serviceLocator;
+        return this.container.getServices();
     }
 
     @Override

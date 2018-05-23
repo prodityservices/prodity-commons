@@ -11,11 +11,11 @@ public class UUIDColumnMapper implements ColumnMapper<UUID> {
 
     @Override
     public UUID map(ResultSet r, int columnNumber, StatementContext ctx) throws SQLException {
-        return UUIDFeature.fromBytes(r.getBytes(columnNumber));
+        return UUIDCustomizer.fromBytes(r.getBytes(columnNumber));
     }
 
     @Override
     public UUID map(ResultSet r, String columnLabel, StatementContext ctx) throws SQLException {
-        return UUIDFeature.fromBytes(r.getBytes(columnLabel));
+        return UUIDCustomizer.fromBytes(r.getBytes(columnLabel));
     }
 }

@@ -11,6 +11,7 @@ import org.glassfish.hk2.api.Descriptor;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.Filter;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.api.ServiceLocatorFactory;
 import org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder;
 
 public enum InjectUtils {
@@ -31,26 +32,19 @@ public enum InjectUtils {
             : null;
     }
 
-    public static boolean loadDescriptors(ClassLoader loader, ServiceLocator into) {
-        List<DescriptorProcessor> processors = into.getAllServices(DescriptorProcessor.class);
-        DynamicConfigurationService dcs = into.getService(DynamicConfigurationService.class);
-        try {
-            dcs.getPopulator().populate(new ClasspathDescriptorFileFinder(loader), processors.toArray(new DescriptorProcessor[0]));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
+
 
     public static <T> List<T> getLocalServices(ProdityPlugin plugin, Class<T> tClass) {
         //noinspection unchecked
         return (List<T>) plugin.getServices().getAllServices(new LocalServiceFilter<>(plugin, tClass));
     }
 
-    public static List<InjectionFeature> findFeaturesFor(ProdityPlugin plugin) {
+    public static <T> List<T> getDependentServices(ProdityPlugin plugin, Class<T> tClass) {
         //noinspection unchecked
-        return (List<InjectionFeature>) plugin.getServices().getAllServices(new InjectionFeatureFilter(plugin));
+        return (List<T>) plugin.getServices().getAllServices(new DependentFeatureFilter(plugin, tClass));
     }
 
+    public static ServiceLocator createLocator(ProdityPlugin plugin) {
+        return ServiceLocatorFactory.getInstance().create(plugin.getName());
+    }
 }

@@ -1,27 +1,25 @@
 package io.prodity.commons.spigot.inject.impl;
 
-import io.prodity.commons.inject.impl.AnnotationProcessor;
+import io.prodity.commons.inject.impl.QualifierProcessor;
 import io.prodity.commons.spigot.inject.McVersion;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 
-public class McVersionProcessor extends AnnotationProcessor<McVersion> {
+import javax.annotation.Nullable;
+
+public class McVersionProcessor extends QualifierProcessor<McVersion> {
 
     public McVersionProcessor() {
         super(McVersion.class);
     }
 
     @Override
-    protected DescriptorImpl doProcess(DescriptorImpl descriptor, McVersion value) {
-        return this.isSatisfied(value) ? descriptor : null;
+    protected DescriptorImpl present(DescriptorImpl descriptor) {
+        String requiredVersion = this.getMetadata(descriptor, "McVersion");
+        return this.isSatisfied(requiredVersion) ? descriptor : null;
     }
 
-    private boolean isSatisfied(McVersion version) {
-        for (String v : version.value()) {
-            if (v.equalsIgnoreCase(McVersionFeature.CURRENT)) {
-                return true;
-            }
-        }
-        return false;
+    private boolean isSatisfied(String version) {
+        return McVersionFeature.CURRENT.equalsIgnoreCase(version);
     }
 
 }
