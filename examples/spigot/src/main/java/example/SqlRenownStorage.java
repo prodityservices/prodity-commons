@@ -29,7 +29,7 @@ public class SqlRenownStorage implements RenownStorage {
     public CompletableFuture<Void> incrementRenown(Player player, int amount) {
         return this.async.run(dao -> {
             dao.incrementRenown(player.getUniqueId(), amount);
-        }).handle(this::printError);
+        }).whenComplete(this::printError);
     }
 
     @Override
