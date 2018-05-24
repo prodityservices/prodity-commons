@@ -18,7 +18,7 @@ public enum ElementAttributes {
     ;
 
     public static final ElementAttributeKey<Void> COLORIZE_KEY = ElementAttributeKey.createKey("COLORIZE");
-    public static final ElementAttributeKey<String> REPOSITORY_KEY = ElementAttributeKey.createKey("REPOSITORY");
+    public static final ElementAttributeKey<LoadFromRepository> REPOSITORY_KEY = ElementAttributeKey.createKey("REPOSITORY");
     public static final ElementAttributeKey<Void> REQUIRED_KEY = ElementAttributeKey.createKey("REQUIRED");
     public static final ElementAttributeKey<Boolean> DESERIALIZABLE_KEY = ElementAttributeKey.createKey("DESERIALIZABLE");
     public static final ElementAttributeKey<Class<? extends Supplier<?>>> DEFAULT_VALUE_KEY = ElementAttributeKey
@@ -30,11 +30,11 @@ public enum ElementAttributes {
         .setValueFunction((element) -> null)
         .build();
 
-    public static final ElementAttribute<String> REPOSITORY_ATTRIBUTE = ElementAttribute.<String>builder()
+    public static final ElementAttribute<LoadFromRepository> REPOSITORY_ATTRIBUTE = ElementAttribute.<LoadFromRepository>builder()
         .setKey(ElementAttributes.REPOSITORY_KEY)
         .addConflicting(ElementAttributes.DESERIALIZABLE_KEY)
         .setPredicate((element) -> element.isAnnotationPresent(LoadFromRepository.class))
-        .setValueFunction((element) -> element.getAnnotation(LoadFromRepository.class).value())
+        .setValueFunction((element) -> element.getAnnotation(LoadFromRepository.class))
         .build();
 
     public static final ElementAttribute<Void> REQUIRED_ATTRIBUTE = ElementAttribute.<Void>builder()

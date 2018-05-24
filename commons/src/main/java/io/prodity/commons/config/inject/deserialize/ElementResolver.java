@@ -1,12 +1,10 @@
 package io.prodity.commons.config.inject.deserialize;
 
 import com.google.common.base.Preconditions;
-import com.google.common.reflect.TypeToken;
 import io.prodity.commons.config.inject.ConfigInjectionContext;
 import io.prodity.commons.config.inject.deserialize.registry.ElementDeserializerRegistry;
 import io.prodity.commons.config.inject.element.ConfigElement;
 import io.prodity.commons.config.inject.element.attribute.ElementAttributes;
-import io.prodity.commons.repository.Repository;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
@@ -25,6 +23,9 @@ public class ElementResolver {
 
     @Inject
     private ElementColorizer elementColorizer;
+
+    @Inject
+    private ElementRepositoryLoader repositoryLoader;
 
     @Inject
     private ServiceLocator serviceLocator;
@@ -57,17 +58,7 @@ public class ElementResolver {
                     "element=" + element.toString() + " is required but node=" + nodePathString + " is virtual (not present)");
             });
         } else if (element.hasAttribute(ElementAttributes.REPOSITORY_KEY)) {
-            //            final String repositoryName = element.getAttribute(ElementAttributes.REPOSITORY_KEY).get();
-            //            final Repository repository = this.serviceLocator.getService(Repository.class, repositoryName);
-            //            if (repository == null) {
-            //                throw new IllegalStateException("element=" + element + " has repositoryName=" + repositoryName
-            //                    + " but no Repository Service with that name could be found");
-            //            }
-            //
-            //            Logger logger = Logger.getLogger("TEST");
-            //            logger.info("REPO TYPE: " + resolveType(repository));
-            //TODO issue is repositories that have @Config do not maintain their @Named annotation
-            //TODO after fixing, properly load the repository values by the key-type of the repository instead of the type of the element
+            value = this.repositoryLoader.loadFromRepository(element, node);
         } else {
             value = deserializer.deserialize(this.injectionContext, element.getType(), node);
             value = this.handleNullCheck(element, value, () -> "element=" + element + " is required but deserialized value=null");
@@ -75,10 +66,6 @@ public class ElementResolver {
 
         if (value == null) {
             return null;
-        }
-
-        if (element.hasAttribute(ElementAttributes.REPOSITORY_KEY)) {
-            value = this.resolveFromRepository(value, element);
         }
 
         if (element.hasAttribute(ElementAttributes.COLORIZE_KEY)) {
@@ -94,12 +81,8 @@ public class ElementResolver {
         return value == null ? null : (T) value;
     }
 
-    private <K, V> TypeToken<?> resolveType(Repository<K, V> repository) {
-        return new TypeToken<Repository<K, V>>() {}.resolveType(Repository.class.getTypeParameters()[0]);
-    }
-
     @Nullable
-    private Object handleNullCheck(ConfigElement<?> element, @Nullable Object currentValue, Supplier<String> requiredErrorMessage) {
+    Object handleNullCheck(ConfigElement<?> element, @Nullable Object currentValue, Supplier<String> requiredErrorMessage) {
         if (currentValue != null) {
             return currentValue;
         }
@@ -144,43 +127,6 @@ public class ElementResolver {
         }
 
         return object;
-    }
-
-    @Nullable
-    private Object resolveFromRepository(Object key, ConfigElement<?> element) {
-        if (!element.hasAttribute(ElementAttributes.REPOSITORY_KEY)) {
-            throw new IllegalStateException(
-                "can't resolve repository value from element=" + element.toString() + " as it does not have a repository attached");
-        }
-
-        final String repositoryName = element.getAttribute(ElementAttributes.REPOSITORY_KEY).get();
-        final Repository repository = this.serviceLocator.getService(Repository.class, repositoryName);
-        if (repository == null) {
-            throw new IllegalStateException("element=" + element + " has repositoryName=" + repositoryName
-                + " but no Repository Service with that name could be found");
-        }
-
-        final Object value = repository.get(key);
-        if (value == null) {
-            if (element.hasAttribute(ElementAttributes.REQUIRED_KEY)) {
-                throw new IllegalStateException(
-                    "element=" + element + " is required but key=" + key + " is not present in repository=" + repository.toString());
-            }
-
-            if (element.hasAttribute(ElementAttributes.DEFAULT_VALUE_KEY)) {
-                return this.resolveFromDefault(element);
-            }
-
-            return null;
-        }
-
-        if (!element.getType().getRawType().isInstance(value)) {
-            throw new IllegalStateException(
-                "element=" + element.toString() + " repository value=" + value.toString() + " is not of required type=" + element.getType()
-                    .toString());
-        }
-
-        return value;
     }
 
 }

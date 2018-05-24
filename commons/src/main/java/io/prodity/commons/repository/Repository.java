@@ -1,6 +1,6 @@
 package io.prodity.commons.repository;
 
-import io.prodity.commons.identity.Identifiable;
+import com.google.common.reflect.TypeToken;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
@@ -9,6 +9,10 @@ import org.jvnet.hk2.annotations.Contract;
 
 @Contract
 public interface Repository<K, V> {
+
+    TypeToken<K> getKeyType();
+
+    TypeToken<V> getValueType();
 
     boolean containsId(K key);
 

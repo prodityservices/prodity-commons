@@ -65,8 +65,10 @@ public class ExampleConfig {
     //   - When no annotation is specified, the field name is used
     //   - Be sure to add the -parameters compiler argument to retain parameter names for the above case.
     //
-    // @LoadFromRepository will load the element(s) by their IDs from the specified Repository name.
-    // Therefore, the IDs of the element(s) are specified in the config.
+    // @LoadFromRepository will load the element(s) by their IDs from the specified Repository class.
+    // A name for the Repository can also be specified, but is optional.
+    //   - Therefore, the IDs of the element(s) are specified in the config, and the values are retrieved from the
+    //     repository by their configured IDS
     //
     // In this example, Color is an interface so it can not be directly injected without special handling.
     // Since Color is in commons, the default ElementDeserializerRegistry maps Color out to one of it's implementations
@@ -74,7 +76,7 @@ public class ExampleConfig {
     //
     // As for collections, Set, List, ImmutableSet, ImmutableList, Arrays, & a few others have support built in by default.
     @ConfigPath("warm-colors")
-    @LoadFromRepository(ColorRepository.NAME)
+    @LoadFromRepository(ColorRepository.class)
     private ImmutableList<Color> warmColors;
 
     // @Colorize specifies that elements in the following cases should be colorized

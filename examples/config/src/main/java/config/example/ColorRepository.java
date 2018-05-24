@@ -3,6 +3,7 @@ package config.example;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.reflect.TypeToken;
 import io.prodity.commons.color.Color;
 import io.prodity.commons.config.annotate.inject.Config;
 import io.prodity.commons.config.annotate.inject.ConfigPath;
@@ -23,8 +24,21 @@ public class ColorRepository implements Repository<String, Color> {
 
     public static final String NAME = "example-color-repository";
 
+    private static final TypeToken<String> KEY_TYPE = TypeToken.of(String.class);
+    private static final TypeToken<Color> VALUE_TYPE = TypeToken.of(Color.class);
+
     @ConfigPath("colors")
     private Map<String, Color> colors;
+
+    @Override
+    public TypeToken<String> getKeyType() {
+        return ColorRepository.KEY_TYPE;
+    }
+
+    @Override
+    public TypeToken<Color> getValueType() {
+        return ColorRepository.VALUE_TYPE;
+    }
 
     @Override
     public boolean containsId(@Nullable String key) {

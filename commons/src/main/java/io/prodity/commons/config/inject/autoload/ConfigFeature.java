@@ -4,6 +4,7 @@ import io.prodity.commons.config.inject.ConfigInjectionContext;
 import io.prodity.commons.config.inject.ConfigInjector;
 import io.prodity.commons.config.inject.SimpleConfigInjector;
 import io.prodity.commons.config.inject.deserialize.ElementColorizer;
+import io.prodity.commons.config.inject.deserialize.ElementRepositoryLoader;
 import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.inject.Export;
 import io.prodity.commons.inject.InjectionFeature;
@@ -21,6 +22,7 @@ public class ConfigFeature implements InjectionFeature {
             binder.bind(SimpleConfigInjector.class).to(ConfigInjector.class);
             binder.bind(ElementResolver.class);
             binder.bind(ElementColorizer.class);
+            binder.bind(ElementRepositoryLoader.class);
             binder.bind(ConfigInjectionContext.class);
             binder.bind(ConfigResolver.class).to(JustInTimeInjectionResolver.class);
         });
