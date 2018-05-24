@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
 import io.prodity.commons.config.annotate.deserialize.ConfigDeserializable;
+import io.prodity.commons.config.inject.ConfigInjectionContext;
 import io.prodity.commons.config.inject.ConfigObject;
 import io.prodity.commons.config.inject.deserialize.registry.ElementDeserializerRegistry;
 import java.lang.reflect.ParameterizedType;
@@ -33,6 +34,10 @@ public enum ElementDeserializers {
     public static final int MEDIUM_PRIORITY = 100;
     public static final int HIGH_PRIORITY = 1000;
 
+    private static ConfigurationNode wrapObject(Object object) {
+        return object instanceof ConfigurationNode ? (ConfigurationNode) object : SimpleConfigurationNode.root().setValue(object);
+    }
+
     public static class NumberSerializer extends TypeElementDeserializer<Number> {
 
         private static final ImmutableMap<Class<? extends Number>, Function<ConfigurationNode, Number>> NUMBER_TYPES =
@@ -55,7 +60,7 @@ public enum ElementDeserializers {
 
         @Nullable
         @Override
-        public Number deserialize(ElementResolver resolver, TypeToken<?> type, ConfigurationNode node) {
+        public Number deserialize(ConfigInjectionContext context, TypeToken<?> type, ConfigurationNode node) {
             final TypeToken<?> wrappedType = type.wrap();
             final Class<?> typeClass = wrappedType.getRawType();
 
@@ -81,9 +86,9 @@ public enum ElementDeserializers {
 
         @Nullable
         @Override
-        public Object deserialize(ElementResolver resolver, TypeToken<?> type, ConfigurationNode node) throws Throwable {
+        public Object deserialize(ConfigInjectionContext context, TypeToken<?> type, ConfigurationNode node) throws Throwable {
             final ConfigObject<?> configObject = ConfigObject.of(type.getRawType());
-            configObject.inject(resolver, node);
+            configObject.inject(context, node);
             return configObject.getObjectInstance();
         }
 
@@ -96,7 +101,7 @@ public enum ElementDeserializers {
         }
 
         @Override
-        public String deserialize(ElementResolver elementResolver, TypeToken<?> type, ConfigurationNode node) throws Throwable {
+        public String deserialize(ConfigInjectionContext context, TypeToken<?> type, ConfigurationNode node) throws Throwable {
             return node.getString();
         }
 
@@ -109,7 +114,7 @@ public enum ElementDeserializers {
         }
 
         @Override
-        public Boolean deserialize(ElementResolver elementResolver, TypeToken<?> type, ConfigurationNode node) {
+        public Boolean deserialize(ConfigInjectionContext context, TypeToken<?> type, ConfigurationNode node) {
             return node.getBoolean();
         }
 
@@ -123,7 +128,7 @@ public enum ElementDeserializers {
 
         @Nullable
         @Override
-        public Enum deserialize(ElementResolver elementResolver, TypeToken<?> type, ConfigurationNode node) throws Throwable {
+        public Enum deserialize(ConfigInjectionContext context, TypeToken<?> type, ConfigurationNode node) throws Throwable {
             String enumValueName = node.getString();
             if (enumValueName == null) {
                 throw new IllegalStateException("no value present when deserializing Enum value");
@@ -158,7 +163,7 @@ public enum ElementDeserializers {
 
         @Nullable
         @Override
-        public UUID deserialize(ElementResolver elementResolver, TypeToken<?> type, ConfigurationNode node) throws Throwable {
+        public UUID deserialize(ConfigInjectionContext context, TypeToken<?> type, ConfigurationNode node) throws Throwable {
             final String uuidString = node.getString();
             if (uuidString == null) {
                 throw new IllegalStateException("no value present when deserializing UUID");
@@ -176,7 +181,7 @@ public enum ElementDeserializers {
 
         @Nullable
         @Override
-        public Pattern deserialize(ElementResolver elementResolver, TypeToken<?> type, ConfigurationNode node) {
+        public Pattern deserialize(ConfigInjectionContext context, TypeToken<?> type, ConfigurationNode node) {
             final String patternString = node.getString();
             if (patternString == null) {
                 throw new IllegalStateException("no value present when deserializing Pattern");
@@ -186,28 +191,35 @@ public enum ElementDeserializers {
 
     }
 
-    public static class ListDeserializer extends TypeElementDeserializer<List<?>> {
+    public static class ListDeserializer extends ElementDeserializer<List<?>> {
+
+        private static final TypeToken<List<?>> LIST_TOKEN = new TypeToken<List<?>>() {};
 
         public ListDeserializer() {
-            super(new TypeToken<List<?>>() {}, ElementDeserializers.DEFAULT_PRIORITY);
+            super(ElementDeserializers.DEFAULT_PRIORITY);
+        }
+
+        @Override
+        public boolean canDeserialize(TypeToken<?> type) {
+            return ListDeserializer.LIST_TOKEN.isSupertypeOf(type) || List.class.isAssignableFrom(type.getRawType());
         }
 
         @Nullable
         @Override
-        public List<?> deserialize(ElementResolver elementResolver, TypeToken<?> type, ConfigurationNode node) throws Throwable {
+        public List<?> deserialize(ConfigInjectionContext context, TypeToken<?> type, ConfigurationNode node) throws Throwable {
             if (!(type.getType() instanceof ParameterizedType)) {
                 throw new IllegalStateException("raw types are not supported for Lists");
             }
 
             final TypeToken<?> entryToken = type.resolveType(List.class.getTypeParameters()[0]);
-            final ElementDeserializer<?> elementDeserializer = elementResolver.getDeserializerRegistry().get(entryToken);
+            final ElementDeserializer<?> elementDeserializer = context.getDeserializerRegistry().get(entryToken);
 
             if (node.hasListChildren()) {
                 final List<? extends ConfigurationNode> nodeChildren = node.getChildrenList();
-                final List<Object> list = Lists.newArrayList(nodeChildren.size());
+                final List<Object> list = Lists.newArrayList();
 
                 for (ConfigurationNode childNode : nodeChildren) {
-                    final Object value = elementDeserializer.deserialize(elementResolver, entryToken, childNode);
+                    final Object value = elementDeserializer.deserialize(context, entryToken, childNode);
                     list.add(value);
                 }
 
@@ -215,7 +227,7 @@ public enum ElementDeserializers {
             } else {
                 final Object rawValue = node.getValue();
                 if (rawValue != null) {
-                    final Object value = elementDeserializer.deserialize(elementResolver, entryToken, node);
+                    final Object value = elementDeserializer.deserialize(context, entryToken, node);
                     return Lists.newArrayList(value);
                 }
             }
@@ -225,16 +237,22 @@ public enum ElementDeserializers {
 
     }
 
+    public static final class MapDeserializer extends ElementDeserializer<Map<?, ?>> {
 
-    public static final class MapDeserializer extends TypeElementDeserializer<Map<?, ?>> {
+        private static final TypeToken<Map<?, ?>> MAP_TOKEN = new TypeToken<Map<?, ?>>() {};
 
         public MapDeserializer() {
-            super(new TypeToken<Map<?, ?>>() {}, ElementDeserializers.DEFAULT_PRIORITY);
+            super(ElementDeserializers.DEFAULT_PRIORITY);
+        }
+
+        @Override
+        public boolean canDeserialize(TypeToken<?> type) {
+            return MapDeserializer.MAP_TOKEN.isSupertypeOf(type) || Map.class.isAssignableFrom(type.getRawType());
         }
 
         @Nullable
         @Override
-        public Map<?, ?> deserialize(ElementResolver elementResolver, TypeToken<?> type, ConfigurationNode node) throws Throwable {
+        public Map<?, ?> deserialize(ConfigInjectionContext context, TypeToken<?> type, ConfigurationNode node) throws Throwable {
             if (!node.hasMapChildren()) {
                 return null;
             }
@@ -245,7 +263,7 @@ public enum ElementDeserializers {
 
             final Map<Object, Object> map = Maps.newLinkedHashMap();
 
-            final ElementDeserializerRegistry deserializerRegistry = elementResolver.getDeserializerRegistry();
+            final ElementDeserializerRegistry deserializerRegistry = context.getDeserializerRegistry();
 
             final TypeToken<?> keyToken = type.resolveType(Map.class.getTypeParameters()[0]);
             final ElementDeserializer<?> keyDeserializer = deserializerRegistry.get(keyToken);
@@ -255,8 +273,8 @@ public enum ElementDeserializers {
 
             for (Map.Entry<Object, ? extends ConfigurationNode> entry : node.getChildrenMap().entrySet()) {
                 final Object keyValue = keyDeserializer
-                    .deserialize(elementResolver, keyToken, SimpleConfigurationNode.root().setValue(entry.getKey()));
-                final Object valueValue = valueDeserializer.deserialize(elementResolver, valueToken, entry.getValue());
+                    .deserialize(context, keyToken, SimpleConfigurationNode.root().setValue(entry.getKey()));
+                final Object valueValue = valueDeserializer.deserialize(context, valueToken, entry.getValue());
 
                 if (keyValue == null || valueValue == null) {
                     continue;
@@ -269,6 +287,5 @@ public enum ElementDeserializers {
         }
 
     }
-
 
 }

@@ -1,0 +1,29 @@
+colors:
+  aqua:
+    red: 0
+    green: 255
+    blue: 255
+  green:
+    red: 0
+    green: 255
+    blue: 0
+  red:
+    red: 255
+    green: 0
+    blue: 0
+  blue:
+    red: 0
+    green: 0
+    blue: 255
+  orange:
+    red: 255
+    green: 128
+    blue: 0
+
+warm-colors:
+  - "red"
+  - "orange"
+
+messages:
+  error: "&cSomething went wrong!"
+  success: "&aSuccess!"

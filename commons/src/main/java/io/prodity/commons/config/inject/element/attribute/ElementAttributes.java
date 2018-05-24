@@ -17,17 +17,17 @@ public enum ElementAttributes {
 
     ;
 
-    public static final ElementAttributeKey<Boolean> COLORIZE_KEY = ElementAttributeKey.createKey("COLORIZE");
+    public static final ElementAttributeKey<Void> COLORIZE_KEY = ElementAttributeKey.createKey("COLORIZE");
     public static final ElementAttributeKey<String> REPOSITORY_KEY = ElementAttributeKey.createKey("REPOSITORY");
-    public static final ElementAttributeKey<Boolean> REQUIRED_KEY = ElementAttributeKey.createKey("REQUIRED");
+    public static final ElementAttributeKey<Void> REQUIRED_KEY = ElementAttributeKey.createKey("REQUIRED");
     public static final ElementAttributeKey<Boolean> DESERIALIZABLE_KEY = ElementAttributeKey.createKey("DESERIALIZABLE");
     public static final ElementAttributeKey<Class<? extends Supplier<?>>> DEFAULT_VALUE_KEY = ElementAttributeKey
         .createKey("DEFAULT_VALUE");
 
-    public static final ElementAttribute<Boolean> COLORIZE_ATTRIBUTE = ElementAttribute.<Boolean>builder()
+    public static final ElementAttribute<Void> COLORIZE_ATTRIBUTE = ElementAttribute.<Void>builder()
         .setKey(ElementAttributes.COLORIZE_KEY)
         .setPredicate((element) -> element.isAnnotationPresent(Colorize.class))
-        .setValueFunction((element) -> element.getAnnotation(Colorize.class).value())
+        .setValueFunction((element) -> null)
         .build();
 
     public static final ElementAttribute<String> REPOSITORY_ATTRIBUTE = ElementAttribute.<String>builder()
@@ -37,10 +37,11 @@ public enum ElementAttributes {
         .setValueFunction((element) -> element.getAnnotation(LoadFromRepository.class).value())
         .build();
 
-    public static final ElementAttribute<Boolean> REQUIRED_ATTRIBUTE = ElementAttribute.<Boolean>builder()
+    public static final ElementAttribute<Void> REQUIRED_ATTRIBUTE = ElementAttribute.<Void>builder()
         .setKey(ElementAttributes.REQUIRED_KEY)
+        .addConflicting(ElementAttributes.DEFAULT_VALUE_KEY)
         .setPredicate((element) -> element.isAnnotationPresent(Required.class))
-        .setValueFunction((element) -> element.getAnnotation(Required.class).value())
+        .setValueFunction((element) -> null)
         .build();
 
     public static final ElementAttribute<Boolean> DESERIALIZABLE_ATTRIBUTE = ElementAttribute.<Boolean>builder()
@@ -62,6 +63,7 @@ public enum ElementAttributes {
 
     public static final ElementAttribute<Class<? extends Supplier<?>>> DEFAULT_VALUE_ATTRIBUTE = ElementAttribute.<Class<? extends Supplier<?>>>builder()
         .setKey(ElementAttributes.DEFAULT_VALUE_KEY)
+        .addConflicting(ElementAttributes.REQUIRED_KEY)
         .setPredicate((element) -> element.isAnnotationPresent(ConfigDefault.class))
         .setValueFunction((element) -> element.getAnnotation(ConfigDefault.class).value())
         .build();

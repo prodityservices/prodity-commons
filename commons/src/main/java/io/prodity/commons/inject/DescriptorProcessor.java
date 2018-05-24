@@ -10,7 +10,7 @@ import org.jvnet.hk2.annotations.Contract;
  * <p />
  * To provide a DescriptorProcessor for another plugin, see {@link InjectionFeature}.
  * Each plugin's processors are instantiated before the plugin
- * ServiceLocators are bridged, so they must be provided by an
+ * ServiceLocators are bridged, so they must be provided byWithType an
  * InjectionFeature.
  */
 @Contract

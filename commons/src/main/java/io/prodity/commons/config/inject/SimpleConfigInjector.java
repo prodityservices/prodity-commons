@@ -2,7 +2,6 @@ package io.prodity.commons.config.inject;
 
 import com.google.common.base.Preconditions;
 import io.prodity.commons.config.annotate.inject.Config;
-import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.config.inject.except.ConfigInjectException;
 import io.prodity.commons.except.tryto.Try;
 import io.prodity.commons.plugin.ProdityPlugin;
@@ -32,7 +31,7 @@ public class SimpleConfigInjector implements ConfigInjector {
     private ProdityPlugin plugin;
 
     @Inject
-    private ElementResolver elementResolver;
+    private ConfigInjectionContext injectionContext;
 
     @Override
     public <T> T inject(Class<T> configClass) throws ConfigInjectException {
@@ -43,6 +42,11 @@ public class SimpleConfigInjector implements ConfigInjector {
         }
 
         final Config config = configClass.getAnnotation(Config.class);
+        if (config.fileName().isEmpty()) {
+            throw new IllegalArgumentException(
+                "class=" + configClass.getName() + " does not have a fileName specified in its @Config annotation");
+        }
+
         return Try.mapExceptionTo(() -> this.injectChecked(configClass, config), ConfigInjectException.newMapper(config)).get();
     }
 
@@ -55,11 +59,11 @@ public class SimpleConfigInjector implements ConfigInjector {
         if (created) {
             this.saveDefaultConfig(configFile);
         }
-        
+
         final ConfigObject<T> configObject = ConfigObject.of(configClass);
         final ConfigurationNode masterNode = this.loadAndReplaceVariables(configFile);
 
-        configObject.inject(this.elementResolver, masterNode);
+        configObject.inject(this.injectionContext, masterNode);
 
         final T instance = configObject.getObjectInstance();
         if (instance == null) {

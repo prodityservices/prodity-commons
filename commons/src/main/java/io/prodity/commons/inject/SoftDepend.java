@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 /**
  * Indicates that this service should only be loaded if a plugin exists
  * for every name in {@link #value()}.  The service itself has a hard
- * dependency on this plugins, but by failing to load the service and
+ * dependency on this plugins, but byWithType failing to load the service and
  * having alternative implementations of the contract, the plugin can
  * maintain a soft dependency.
  */

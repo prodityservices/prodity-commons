@@ -13,6 +13,4 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Colorize {
 
-    boolean value() default true;
-
 }

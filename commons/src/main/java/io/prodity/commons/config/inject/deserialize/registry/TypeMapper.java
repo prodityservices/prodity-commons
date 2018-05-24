@@ -2,10 +2,8 @@ package io.prodity.commons.config.inject.deserialize.registry;
 
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
+import io.prodity.commons.config.inject.ConfigInjectionContext;
 import io.prodity.commons.config.inject.deserialize.ElementDeserializer;
-import io.prodity.commons.config.inject.deserialize.ElementDeserializers;
-import io.prodity.commons.config.inject.deserialize.ElementResolver;
-import io.prodity.commons.config.inject.deserialize.TypeElementDeserializer;
 import javax.annotation.Nullable;
 import ninja.leaping.configurate.ConfigurationNode;
 
@@ -14,29 +12,10 @@ import ninja.leaping.configurate.ConfigurationNode;
  *
  * @param <T> type to map
  */
-public class TypeMapper<T> {
-
-    private final ElementDeserializerRegistry deserializerRegistry;
-    private final TypeToken<T> typeToMap;
-    private int priority = ElementDeserializers.DEFAULT_PRIORITY + 1;
+public class TypeMapper<T> extends ElementMapper<T, TypeMapper<T>> {
 
     public TypeMapper(ElementDeserializerRegistry deserializerRegistry, TypeToken<T> typeToMap) {
-        Preconditions.checkNotNull(deserializerRegistry, "deserializerRegistry");
-        Preconditions.checkNotNull(typeToMap, "typeToMap");
-        this.deserializerRegistry = deserializerRegistry;
-        this.typeToMap = typeToMap;
-    }
-
-    /**
-     * Sets the priority of the created {@link ElementDeserializer}. <br>
-     * Default priority is {@link ElementDeserializers#DEFAULT_PRIORITY}+1
-     *
-     * @param priority the priority to set
-     * @return this {@link TypeMapper} instance
-     */
-    public TypeMapper<T> withPriority(int priority) {
-        this.priority = priority;
-        return this;
+        super(deserializerRegistry, typeToMap);
     }
 
     /**
@@ -48,15 +27,20 @@ public class TypeMapper<T> {
     public <T1 extends T> void to(TypeToken<T1> mapTo) {
         Preconditions.checkNotNull(mapTo, "mapTo");
 
-        final ElementDeserializer<T> deserializer = new TypeElementDeserializer<T>(this.typeToMap, this.priority) {
+        final ElementDeserializer<T> deserializer = new ElementDeserializer<T>(this.priority) {
+            @Override
+            public boolean canDeserialize(TypeToken<?> type) {
+                return TypeMapper.this.getStrategy().test(type);
+            }
+
             @Nullable
             @Override
-            public T deserialize(ElementResolver resolver, TypeToken<?> type, ConfigurationNode node) throws Throwable {
-                return TypeMapper.this.deserializerRegistry.get(mapTo).deserialize(resolver, mapTo, node);
+            public T deserialize(ConfigInjectionContext context, TypeToken<?> type, ConfigurationNode node) throws Throwable {
+                return TypeMapper.this.getDeserializerRegistry().get(mapTo).deserialize(context, mapTo, node);
             }
         };
 
-        this.deserializerRegistry.register(deserializer);
+        this.getDeserializerRegistry().register(deserializer);
     }
 
     public <T1 extends T> void to(Class<T1> type) {

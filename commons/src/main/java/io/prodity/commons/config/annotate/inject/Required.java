@@ -12,12 +12,4 @@ import java.lang.annotation.Target;
 })
 public @interface Required {
 
-    class Default {
-
-        public static final boolean DEFAULT_VALUE = true;
-
-    }
-
-    boolean value() default Required.Default.DEFAULT_VALUE;
-
 }

@@ -23,7 +23,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 @PluginDependency("ExampleCustomFeature")
 public class RenownPlugin extends ProditySpigotPlugin {
 
-    // PluginScheduler is a custom feature provided by ExampleCustomFeature
+    // PluginScheduler is a custom feature provided byWithType ExampleCustomFeature
     @Inject
     private PluginScheduler scheduler;
 

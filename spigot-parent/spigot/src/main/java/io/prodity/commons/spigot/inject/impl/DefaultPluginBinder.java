@@ -14,7 +14,7 @@ import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.scheduler.BukkitScheduler;
 
 /**
- * Common bindings useful to all plugins.  Added by default.
+ * Common bindings useful to all plugins.  Added byWithType default.
  */
 public class DefaultPluginBinder extends PluginBinder {
 

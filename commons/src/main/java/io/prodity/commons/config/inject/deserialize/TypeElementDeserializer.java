@@ -17,6 +17,12 @@ public abstract class TypeElementDeserializer<T> extends ElementDeserializer<T> 
         this(typeToken, priority, false);
     }
 
+    /**
+     * @param typeToken the {@link TypeToken} of the supported type
+     * @param priority the priority to be used in {@link io.prodity.commons.config.inject.deserialize.registry.ElementDeserializerRegistry}s
+     * @param suppportChildTypes whether or not to support child(sub) types of the specified type.
+     * If true is specified, any types that extend the supported type can be deserialized byWithType this deserializer.
+     */
     public TypeElementDeserializer(TypeToken<T> typeToken, int priority, boolean suppportChildTypes) {
         super(priority);
         Preconditions.checkNotNull(typeToken, "typeToken");

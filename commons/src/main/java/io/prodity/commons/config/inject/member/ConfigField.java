@@ -3,8 +3,8 @@ package io.prodity.commons.config.inject.member;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.TypeToken;
+import io.prodity.commons.config.inject.ConfigInjectionContext;
 import io.prodity.commons.config.inject.ConfigObject;
-import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.config.inject.element.BaseConfigElement;
 import io.prodity.commons.config.inject.element.ConfigElement;
 import io.prodity.commons.reflect.element.NamedAnnotatedElement;
@@ -55,8 +55,8 @@ public class ConfigField<T> extends BaseConfigElement<T> implements ConfigMember
     }
 
     @Override
-    public void inject(ElementResolver elementResolver, ConfigurationNode node) throws Throwable {
-        final T value = this.resolve(elementResolver, node);
+    public void inject(ConfigInjectionContext context, ConfigurationNode node) throws Throwable {
+        final T value = this.resolve(context.getElementResolver(), node);
 
         final Object object = this.possessor.getObjectInstance();
 

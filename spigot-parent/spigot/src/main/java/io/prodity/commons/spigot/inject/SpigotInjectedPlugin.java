@@ -1,8 +1,8 @@
 package io.prodity.commons.spigot.inject;
 
 import com.google.common.collect.ImmutableSet;
-import io.prodity.commons.inject.impl.InjectUtils;
 import io.prodity.commons.inject.InjectionFeature;
+import io.prodity.commons.inject.impl.InjectUtils;
 import io.prodity.commons.inject.impl.PluginBridge;
 import io.prodity.commons.plugin.ProdityPlugin;
 import io.prodity.commons.spigot.inject.impl.DefaultPluginBinder;
@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,8 +19,8 @@ import org.glassfish.hk2.api.ServiceLocatorFactory;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 
 /**
- * InjectedPlugin should be extended by plugins wishing to utilize automatic dependency injection.
- * Initialization and cleanup logic should be performed by annotating methods with {@link javax.annotation.PostConstruct}
+ * InjectedPlugin should be extended byWithType plugins wishing to utilize automatic dependency injection.
+ * Initialization and cleanup logic should be performed byWithType annotating methods with {@link javax.annotation.PostConstruct}
  * and {@link javax.annotation.PreDestroy}. InjectedPlugin implements Listener and is automatically registered.
  */
 public class SpigotInjectedPlugin extends JavaPlugin implements Listener, ProdityPlugin {
@@ -97,7 +96,7 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
     }
 
     /**
-     * Gets the ServiceLocator used by this plugin.  Returns null
+     * Gets the ServiceLocator used byWithType this plugin.  Returns null
      * if this plugin is disabled.
      *
      * @return nullable ServiceLocator

@@ -5,7 +5,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import java.lang.reflect.AnnotatedElement;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -106,19 +105,25 @@ public class ElementAttribute<V> {
         return valuePredicate.test(value);
     }
 
+    public boolean isPresent(AnnotatedElement element) {
+        Preconditions.checkNotNull(element, "element");
+        return this.predicate.test(element);
+    }
+
     /**
      * Resolves the {@link ElementAttributeValue} from the specified {@link AnnotatedElement} if the element has this attribute
      *
      * @param element the element
-     * @return a nonnull {@link Optional} containing a possible {@link ElementAttributeValue} of this attribute on the specified element
+     * @return the {@link ElementAttributeValue} of this {@link ElementAttribute} on the specified element
+     * @throws IllegalStateException if this attribute is not present on the specified element
      */
-    public Optional<ElementAttributeValue<V>> getValue(AnnotatedElement element) {
+    public ElementAttributeValue<V> getValue(AnnotatedElement element) throws IllegalStateException {
         Preconditions.checkNotNull(element, "element");
-        if (!this.predicate.test(element)) {
-            return Optional.empty();
+        if (!this.isPresent(element)) {
+            throw new IllegalStateException("attribute=" + this.toString() + " is not present on element=" + element.toString());
         }
         final V value = this.valueFunction.apply(element);
-        return Optional.of(new ElementAttributeValue<>(this, value));
+        return new ElementAttributeValue<>(this, value);
     }
 
     @Override

@@ -2,7 +2,7 @@ package io.prodity.commons.config.inject.member;
 
 import com.google.common.base.Preconditions;
 import io.prodity.commons.config.annotate.inject.ConfigInject;
-import io.prodity.commons.config.inject.deserialize.ElementResolver;
+import io.prodity.commons.config.inject.ConfigInjectionContext;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
@@ -65,11 +65,11 @@ public class ConfigConstructor<T> extends ExecutableConfigMember {
         this.objectInstance = this.constructor.newInstance(parameters);
     }
 
-    public T instantiate(ElementResolver elementResolver, ConfigurationNode node) throws Throwable {
-        Preconditions.checkNotNull(elementResolver, "elementResolver");
+    public T instantiate(ConfigInjectionContext context, ConfigurationNode node) throws Throwable {
+        Preconditions.checkNotNull(context, "context");
         Preconditions.checkNotNull(node, "node");
 
-        this.inject(elementResolver, node);
+        this.inject(context, node);
         return this.objectInstance;
     }
 

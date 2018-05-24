@@ -1,6 +1,7 @@
 package io.prodity.commons.config.inject.deserialize;
 
 import com.google.common.reflect.TypeToken;
+import io.prodity.commons.config.inject.ConfigInjectionContext;
 import javax.annotation.Nullable;
 import ninja.leaping.configurate.ConfigurationNode;
 
@@ -27,24 +28,24 @@ public abstract class ElementDeserializer<T> implements Comparable<ElementDeseri
     }
 
     /**
-     * Returns whether or not the specified {@link TypeToken} can be deserialized by this {@link ElementDeserializer}.
+     * Returns whether or not the specified {@link TypeToken} can be deserialized byWithType this {@link ElementDeserializer}.
      *
      * @param type the type
-     * @return true if the specified element can be deserialized by this instance, false if not
+     * @return true if the specified element can be deserialized byWithType this instance, false if not
      */
     public abstract boolean canDeserialize(TypeToken<?> type);
 
     /**
      * Deserializes the specified {@link ConfigurationNode}.
      *
-     * @param elementResolver the {@link ElementResolver} in use
+     * @param context the {@link ConfigInjectionContext} in use
      * @param type the {@link TypeToken} of the serialized type
      * @param node the {@link ConfigurationNode} to deserialize from
      * @return the deserialized object, possibly null
      * @throws Throwable if the deserialization fails
      */
     @Nullable
-    public abstract T deserialize(ElementResolver elementResolver, TypeToken<?> type, ConfigurationNode node) throws Throwable;
+    public abstract T deserialize(ConfigInjectionContext context, TypeToken<?> type, ConfigurationNode node) throws Throwable;
 
     @Override
     public int compareTo(ElementDeserializer<?> other) {
