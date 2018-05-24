@@ -4,39 +4,41 @@ import com.google.common.base.Preconditions;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * A thread safe implementation of {@link Lazy}.
+ * A thread safe implementation of {@link Lazy} implemented using double-checked
+ * locking. Does not permit null values.
  *
  * @param <V> the type of value
  */
 public class SimpleLazy<V> implements Lazy<V> {
-
     private final Supplier<V> supplier;
-    private final AtomicReference<V> valueReference;
-    private final AtomicBoolean valid;
+    private volatile V value = null;
 
     public SimpleLazy(Supplier<V> supplier) {
         Preconditions.checkNotNull(supplier, "supplier");
         this.supplier = supplier;
-        this.valid = new AtomicBoolean(false);
-        this.valueReference = new AtomicReference<>();
     }
 
     @Override
-    @Nullable
+    @Nonnull
     public V get() {
-        if (!this.valid.get()) {
-            final V newValue = this.supplier.get();
-            this.valid.set(true);
+        if (this.value == null) {
+            synchronized (this) {
+                if (this.value == null) {
+                    this.value = this.supplier.get();
+                    Preconditions.checkNotNull(this.value, "Supplier returned null!");
+                }
+            }
         }
-        return this.valueReference.get();
+        return this.value;
     }
 
     @Override
     public void invalidate() {
-        this.valid.set(false);
+        this.value = null;
     }
 
 }

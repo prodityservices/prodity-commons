@@ -7,7 +7,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
+import javax.inject.Inject;
+import java.util.concurrent.Executor;
+
 public class SpigotPlatform implements Platform {
+    private final SpigotInjectedPlugin plugin;
+
+    @Inject
+    public SpigotPlatform(SpigotInjectedPlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean isListener(Object instance) {
@@ -15,8 +24,8 @@ public class SpigotPlatform implements Platform {
     }
 
     @Override
-    public void registerListener(Object instance, ProdityPlugin plugin) {
-        Bukkit.getPluginManager().registerEvents((Listener) instance, (SpigotInjectedPlugin) plugin);
+    public void registerListener(Object instance) {
+        Bukkit.getPluginManager().registerEvents((Listener) instance, this.plugin);
     }
 
     @Override
@@ -30,7 +39,12 @@ public class SpigotPlatform implements Platform {
     }
 
     @Override
-    public boolean isEnabled(ProdityPlugin plugin) {
-        return Bukkit.getPluginManager().isPluginEnabled(plugin.getName());
+    public boolean isEnabled() {
+        return this.plugin.isEnabled();
+    }
+
+    @Override
+    public Executor getAsyncExecutor() {
+        return runnable -> Bukkit.getScheduler().runTaskAsynchronously(this.plugin, runnable);
     }
 }

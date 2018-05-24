@@ -7,6 +7,7 @@ import java.lang.reflect.Type;
 import javax.inject.Singleton;
 import org.glassfish.hk2.api.DescriptorVisibility;
 import org.glassfish.hk2.api.DynamicConfiguration;
+import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.MultiException;
 import org.glassfish.hk2.api.TypeLiteral;
 import org.glassfish.hk2.utilities.Binder;
@@ -45,6 +46,10 @@ public abstract class PluginBinder implements Binder {
 
     public final <T> BindingBuilder<T> bind(T service) {
         return this.resetBuilder(AbstractBindingBuilder.create(service));
+    }
+
+    public final <T> BindingBuilder<T> bindFactory(Class<? extends Factory<T>> serviceType) {
+        return this.resetBuilder(AbstractBindingBuilder.createFactoryBinder(serviceType, Singleton.class));
     }
 
     public final <T> BindingBuilder<T> export(Class<T> tClass) {

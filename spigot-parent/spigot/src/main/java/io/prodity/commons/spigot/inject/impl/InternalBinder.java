@@ -15,9 +15,8 @@ public class InternalBinder extends CoreBinder {
 
     @Override
     protected void configure() {
-        this.export(SpigotPlatform.class).to(Platform.class);
         super.configure();
-        this.addCoreFeatures(McVersionFeature.class, TaskFeature.class);
+        this.addCoreFeatures(McVersionFeature.class, TaskFeature.class, CommandFeature.class);
     }
 
 }

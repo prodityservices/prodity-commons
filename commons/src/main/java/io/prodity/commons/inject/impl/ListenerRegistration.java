@@ -36,7 +36,7 @@ public class ListenerRegistration implements InstanceLifecycleListener, PluginLi
     public void lifecycleEvent(InstanceLifecycleEvent event) {
         if (event.getEventType() == InstanceLifecycleEventType.POST_PRODUCTION) {
             if (this.shouldRegister(event.getLifecycleObject()) && this.registered.add(event.getActiveDescriptor())) {
-                if (this.platform.isEnabled(this.plugin)) {
+                if (this.platform.isEnabled()) {
                     this.register(event.getLifecycleObject());
                 } else {
                     this.earlyRegistered.add(event.getLifecycleObject());
@@ -54,7 +54,7 @@ public class ListenerRegistration implements InstanceLifecycleListener, PluginLi
     }
 
     private void register(Object candidate) {
-        this.platform.registerListener(candidate, this.plugin);
+        this.platform.registerListener(candidate);
     }
 
     private void unregister(Object listener) {

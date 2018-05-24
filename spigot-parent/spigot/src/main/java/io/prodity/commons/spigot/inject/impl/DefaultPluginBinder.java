@@ -1,6 +1,8 @@
 package io.prodity.commons.spigot.inject.impl;
 
 import io.prodity.commons.inject.bind.PluginBinder;
+import io.prodity.commons.inject.impl.Platform;
+import io.prodity.commons.inject.impl.ProdityInjectionResolver;
 import io.prodity.commons.plugin.ProdityPlugin;
 import io.prodity.commons.spigot.inject.SpigotInjectedPlugin;
 import io.prodity.commons.spigot.plugin.ProditySpigotPlugin;
@@ -12,6 +14,10 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.glassfish.hk2.api.InjectionResolver;
+import org.glassfish.hk2.api.TypeLiteral;
+
+import javax.inject.Inject;
 
 /**
  * Common bindings useful to all plugins.  Added byWithType default.
@@ -38,6 +44,8 @@ public class DefaultPluginBinder extends PluginBinder {
         this.bind(Bukkit.getPluginManager()).to(PluginManager.class);
         this.bind(Bukkit.getMessenger()).to(Messenger.class);
         this.bind(Bukkit.getScheduler()).to(BukkitScheduler.class);
+        this.bind(SpigotPlatform.class).to(Platform.class);
+        this.bind(ProdityInjectionResolver.class).ranked(10).to(new TypeLiteral<InjectionResolver<Inject>>() {});
     }
 
 }
