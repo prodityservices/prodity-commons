@@ -25,7 +25,7 @@ public class ElementResolver {
     private ElementColorizer elementColorizer;
 
     @Inject
-    private ElementRepositoryLoader repositoryLoader;
+    private ElementRepositoryResolver repositoryLoader;
 
     @Inject
     private ServiceLocator serviceLocator;
@@ -58,7 +58,7 @@ public class ElementResolver {
                     "element=" + element.toString() + " is required but node=" + nodePathString + " is virtual (not present)");
             });
         } else if (element.hasAttribute(ElementAttributes.REPOSITORY_KEY)) {
-            value = this.repositoryLoader.loadFromRepository(element, node);
+            value = this.repositoryLoader.resolveFromRepository(element, node);
         } else {
             value = deserializer.deserialize(this.injectionContext, element.getType(), node);
             value = this.handleNullCheck(element, value, () -> "element=" + element + " is required but deserialized value=null");

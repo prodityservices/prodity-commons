@@ -14,7 +14,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
 
 @Service
-public class ElementRepositoryLoader {
+public class ElementRepositoryResolver {
 
     @Inject
     private ServiceLocator serviceLocator;
@@ -26,7 +26,7 @@ public class ElementRepositoryLoader {
     private ElementDeserializerRegistry deserializerRegistry;
 
     @Nullable
-    public Object loadFromRepository(ConfigElement<?> element, ConfigurationNode node)
+    public Object resolveFromRepository(ConfigElement<?> element, ConfigurationNode node)
         throws IllegalArgumentException, IllegalStateException {
         Preconditions.checkNotNull(element, "element");
         Preconditions.checkNotNull(node, "node");
@@ -51,7 +51,18 @@ public class ElementRepositoryLoader {
         }
 
         final ElementResolver elementResolver = this.resolverProvider.get();
-        //TODO load from Map<?,?>, List<?>, and raw type
+
+        //TODO load Map - keys are repo keys, values are repo values.
+        // - Assume value to load from is a list of repo ids. Map would be useless here.
+
+        //TODO load List - elements are repo values
+        // - Assume value to load from is a list of repo ids.
+
+        //TODO load actual type
+        // - Assume value to load from is single repo ID
+
+        //TODO possible extra support for other load strategies.
+
         return null;
     }
 
