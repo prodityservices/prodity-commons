@@ -26,4 +26,10 @@ public interface Repository<K, V extends Identifiable<K>> {
 
     Map<K, V> getAsMap(Iterable<K> keys);
 
+    Collection<V> getValues();
+
+    Collection<K> getKeys();
+
+    Map<K, V> getAll();
+
 }

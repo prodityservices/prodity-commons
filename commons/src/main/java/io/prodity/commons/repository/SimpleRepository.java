@@ -3,6 +3,7 @@ package io.prodity.commons.repository;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import io.prodity.commons.identity.Identifiable;
 import java.util.Collection;
@@ -78,5 +79,20 @@ public abstract class SimpleRepository<K, V extends Identifiable<K>> implements 
         }
         return values;
     }
-    
+
+    @Override
+    public Collection<V> getValues() {
+        return Lists.newArrayList(this.map.values());
+    }
+
+    @Override
+    public Collection<K> getKeys() {
+        return Sets.newHashSet(this.map.keySet());
+    }
+
+    @Override
+    public Map<K, V> getAll() {
+        return Maps.newLinkedHashMap(this.map);
+    }
+
 }
