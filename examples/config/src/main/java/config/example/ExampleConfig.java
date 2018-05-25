@@ -3,6 +3,8 @@ package config.example;
 import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import config.example.HandledConfigObject.ImmutableHandledConfigObject;
+import config.example.HandledConfigObject.MutableHandledConfigObject;
 import io.prodity.commons.color.Color;
 import io.prodity.commons.config.annotate.deserialize.Colorize;
 import io.prodity.commons.config.annotate.deserialize.ConfigDefault;
@@ -14,7 +16,12 @@ import io.prodity.commons.config.annotate.inject.Required;
 import io.prodity.commons.config.annotate.listen.PostConfigInject;
 import io.prodity.commons.config.annotate.listen.PreConfigInject;
 import io.prodity.commons.config.inject.ConfigInjectionContext;
+import io.prodity.commons.config.inject.deserialize.ElementDeserializers;
+import io.prodity.commons.config.inject.deserialize.registry.ElementDeserializerRegistry;
 import io.prodity.commons.spigot.inject.TimeUnit;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Set;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -62,6 +69,9 @@ public class ExampleConfig {
     private ExampleConfig() {
 
     }
+
+    @Inject
+    private Logger logger;
 
     // @ConfigInject should be applied to all fields that are to be injected by the config injector, that
     // do not have @ConfigPath present. @ConfigPath automatically assumes the field is to be injected.
@@ -126,8 +136,23 @@ public class ExampleConfig {
     @ConfigDefault(BroadcastDurationDefault.class)
     private long broadcastDuration;
 
-    @Inject
-    private Logger logger;
+    // See #preInject
+    @ConfigPath("handled-example.immutable")
+    @Required
+    private MutableHandledConfigObject mutableHandledExample;
+
+    // See #preInject
+    @ConfigPath("handled-example.mutable")
+    @Required
+    private ImmutableHandledConfigObject immutableHandledExample;
+
+    // See #preInject
+    //
+    // When using a Collection for a configuration section that is defined in the map form,
+    // only the values will be added to the Collection.
+    @ConfigPath("handled-example")
+    @Required
+    private Set<HandledConfigObject> handledExamples;
 
     //Annotations @PreConfigInject and @PostConfigInject can be used on methods in the following cases:
     // 1) A class annotated with @Config that is directly injected by a ConfigInjector
@@ -142,6 +167,35 @@ public class ExampleConfig {
     @PreConfigInject
     private void preInject(ConfigInjectionContext context) {
         context.getLogger().info("Injecting ExampleConfig");
+
+        // The ElementDeserializerRegistry can be used to add your own ElementDeserializers that manually handle
+        // the deserialization of the type(s) you specify.
+        final ElementDeserializerRegistry registry = context.getDeserializerRegistry();
+
+        final int priorityToUse = ElementDeserializers.MEDIUM_PRIORITY;
+
+        final MutableHandledConfigObject.Deserializer mutableDeserializer = new MutableHandledConfigObject.Deserializer(priorityToUse);
+        registry.register(mutableDeserializer);
+
+        final ImmutableHandledConfigObject.Deserializer immutableDeserializer = new ImmutableHandledConfigObject.Deserializer(
+            priorityToUse);
+        registry.register(immutableDeserializer);
+
+        // Now both MutableHandledConfigObject and ImmutableHandledConfigObject have their custom ElementDeserializers registered so that
+        // they can be deserialized properly.
+        // However, an issue now is that fields with the type HandledConfigObject can not be deserialized.
+        // Therefore we can map the Immutable implementation to HandledConfigObject
+
+        registry.mapType(HandledConfigObject.class)
+            .withPriority(ElementDeserializers.LOW_PRIORITY)
+            .to(ImmutableHandledConfigObject.class);
+
+        // Values can also be mapped, instead of mapping the type.
+        // So if we wanted to handle Timestamps by deserializing a Date, and then creating a Timestamp object with that
+        // date's time long, the following would be done.
+        registry.mapValueOf(Timestamp.class)
+            .from(Date.class)
+            .by((date) -> new Timestamp(date.getTime()));
     }
 
     @PostConfigInject

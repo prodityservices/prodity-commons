@@ -11,6 +11,7 @@ import io.prodity.commons.config.inject.deserialize.registry.ElementDeserializer
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -211,11 +212,17 @@ public enum ElementDeserializers {
                 throw new IllegalStateException("raw types are not supported for Lists");
             }
 
-            final TypeToken<?> entryToken = type.resolveType(List.class.getTypeParameters()[0]);
+            final TypeToken<?> entryToken = type.resolveType(Collection.class.getTypeParameters()[0]);
             final ElementDeserializer<?> elementDeserializer = context.getDeserializerRegistry().get(entryToken);
 
-            if (node.hasListChildren()) {
-                final List<? extends ConfigurationNode> nodeChildren = node.getChildrenList();
+            if (node.hasListChildren() || node.hasMapChildren()) {
+                final Collection<? extends ConfigurationNode> nodeChildren;
+                if (node.hasListChildren()) {
+                    nodeChildren = node.getChildrenList();
+                } else {
+                    nodeChildren = node.getChildrenMap().values();
+                }
+
                 final List<Object> list = Lists.newArrayList();
 
                 for (ConfigurationNode childNode : nodeChildren) {
