@@ -3,7 +3,7 @@ package io.prodity.commons.config.inject.element;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
-import io.prodity.commons.config.annotate.inject.ConfigIgnore;
+import io.prodity.commons.config.annotate.inject.ConfigInject;
 import io.prodity.commons.config.annotate.inject.ConfigPath;
 import io.prodity.commons.config.inject.ConfigObject;
 import io.prodity.commons.config.inject.ConfigResolvable;
@@ -45,10 +45,10 @@ public interface ConfigElement<T> extends ConfigResolvable<T>, NamedAnnotatedEle
      * Gets whether or not the specified {@link AnnotatedElement} is a {@link ConfigElement}.
      *
      * @param element the element
-     * @return true if the specified element is a {@link ConfigElement}, false if not.
+     * @return true if the specified element is a {@link ConfigElement}, false if not
      */
     static boolean isElement(@Nullable AnnotatedElement element) {
-        return element != null && !element.isAnnotationPresent(ConfigIgnore.class);
+        return element != null && (element.isAnnotationPresent(ConfigPath.class) || element.isAnnotationPresent(ConfigInject.class));
     }
 
     TypeToken<T> getType();

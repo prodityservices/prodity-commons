@@ -120,7 +120,7 @@ public class ElementAttribute<V> {
     public ElementAttributeValue<V> getValue(AnnotatedElement element) throws IllegalStateException {
         Preconditions.checkNotNull(element, "element");
         if (!this.isPresent(element)) {
-            throw new IllegalStateException("attribute=" + this.toString() + " is not present on element=" + element.toString());
+            throw new IllegalStateException("attribute=" + this.toString() + " is not present on element=" + element);
         }
         final V value = this.valueFunction.apply(element);
         return new ElementAttributeValue<>(this, value);

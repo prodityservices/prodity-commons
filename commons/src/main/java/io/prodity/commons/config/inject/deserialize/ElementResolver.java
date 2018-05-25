@@ -1,10 +1,13 @@
 package io.prodity.commons.config.inject.deserialize;
 
 import com.google.common.base.Preconditions;
+import com.google.common.primitives.Primitives;
 import io.prodity.commons.config.inject.ConfigInjectionContext;
 import io.prodity.commons.config.inject.deserialize.registry.ElementDeserializerRegistry;
+import io.prodity.commons.config.inject.deserialize.repository.ElementRepositoryResolver;
 import io.prodity.commons.config.inject.element.ConfigElement;
 import io.prodity.commons.config.inject.element.attribute.ElementAttributes;
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
@@ -55,7 +58,7 @@ public class ElementResolver {
                 final List<String> nodePath = Arrays.stream(node.getPath()).map(Object::toString).collect(Collectors.toList());
                 final String nodePathString = String.join(".", nodePath);
                 throw new IllegalStateException(
-                    "element=" + element.toString() + " is required but node=" + nodePathString + " is virtual (not present)");
+                    "element=" + element + " is required but node=" + nodePathString + " is virtual (not present)");
             });
         } else if (element.hasAttribute(ElementAttributes.REPOSITORY_KEY)) {
             value = this.repositoryLoader.resolveFromRepository(element, node);
@@ -74,8 +77,8 @@ public class ElementResolver {
 
         if (value != null && !element.getType().wrap().getRawType().isInstance(value)) {
             throw new IllegalStateException(
-                "element=" + element.toString() + " valueType=" + value.getClass().getName() + " is not an instance of the  required type="
-                    + element.getType().toString());
+                "element=" + element + " valueType=" + value.getClass().getName() + " is not an instance of the required type=" + element
+                    .getType());
         }
 
         return value == null ? null : (T) value;
@@ -101,29 +104,32 @@ public class ElementResolver {
     private Object resolveFromDefault(ConfigElement<?> element) {
         if (!element.hasAttribute(ElementAttributes.DEFAULT_VALUE_KEY)) {
             throw new IllegalStateException(
-                "can't resolve default value from element=" + element.toString() + " as it does not have a default value");
+                "can't resolve default value from element=" + element + " as it does not have a default value");
         }
 
         final Class<? extends Supplier<?>> defaultSupplier = element.getAttribute(ElementAttributes.DEFAULT_VALUE_KEY).get();
         final Supplier<?> supplierInstance;
         try {
-            supplierInstance = defaultSupplier.newInstance();
+            final Constructor<? extends Supplier<?>> constructor = defaultSupplier.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            supplierInstance = constructor.newInstance();
         } catch (Throwable throwable) {
             throw new IllegalStateException(
-                "defaultSupplier=" + defaultSupplier.getName() + " for element=" + element.toString() + " could not be instantiated",
+                "defaultSupplier=" + defaultSupplier.getName() + " for element=" + element + " could not be instantiated",
                 throwable);
         }
 
         final Object object = supplierInstance.get();
         if (object == null) {
             throw new IllegalStateException(
-                "element=" + element.toString() + " has a default supplier=" + defaultSupplier.getName() + " that returns a null value");
+                "element=" + element + " has a default supplier=" + defaultSupplier.getName() + " that returns a null value");
         }
 
-        if (!element.getType().getRawType().isInstance(object)) {
+        final Class<?> objectClass = Primitives.wrap(object.getClass());
+
+        if (!element.getType().wrap().isSupertypeOf(objectClass)) {
             throw new IllegalStateException(
-                "defaultValue=" + object + " of element=" + element.toString() + " is not of the element's type=" + element.getType()
-                    .toString());
+                "defaultValue=" + object + " of element=" + element + " is not of the element's type=" + element.getType());
         }
 
         return object;

@@ -1,5 +1,6 @@
 package config.example;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.prodity.commons.color.Color;
@@ -61,6 +62,9 @@ public class ExampleConfig {
 
     }
 
+    // @ConfigInject should be applied to all fields that are to be injected by the config injector, that
+    // do not have @ConfigPath present. @ConfigPath automatically assumes the field is to be injected.
+    //
     // @ConfigPath specifies the path of the field/parameter in the config file
     //   - When no annotation is specified, the field name is used
     //   - Be sure to add the -parameters compiler argument to retain parameter names for the above case.
@@ -69,15 +73,21 @@ public class ExampleConfig {
     // A name for the Repository can also be specified, but is optional.
     //   - Therefore, the IDs of the element(s) are specified in the config, and the values are retrieved from the
     //     repository by their configured IDS
+    //   - The IDs can only be defined in the config as a single node or list format
+    //   - The loaded values can then be applied to a single Object, List, or Map
     //
     // In this example, Color is an interface so it can not be directly injected without special handling.
     // Since Color is in commons, the default ElementDeserializerRegistry maps Color out to one of it's implementations
     // that is ImmutableColor. More information on how you can map your own interface types to their implementations can be seen below.
     //
     // As for collections, Set, List, ImmutableSet, ImmutableList, Arrays, & a few others have support built in by default.
-    @ConfigPath("warm-colors")
-    @LoadFromRepository(ColorRepository.class)
+//    @ConfigPath("warm-colors")
+//    @LoadFromRepository(ColorRepository.class)
     private ImmutableList<Color> warmColors;
+
+    @ConfigPath("main-color")
+    @LoadFromRepository(ColorRepository.class)
+    private Color mainColor;
 
     // @Colorize specifies that elements in the following cases should be colorized
     // 1) String types
@@ -120,11 +130,15 @@ public class ExampleConfig {
     // for registering your own ElementDeserializers & more.
     @PreConfigInject
     private void preInject(ConfigInjectionContext context) {
+        context.getLogger().info("Injecting ExampleConfig");
     }
 
     @PostConfigInject
     private void postInject() {
-        this.logger.info("config loaded.");
+        this.logger.info("ExampleConfig successfully injected.");
+        this.logger.info("========");
+        this.logger.info(this.toString());
+        this.logger.info("========");
     }
 
     public ImmutableList<Color> getWarmColors() {
@@ -141,6 +155,16 @@ public class ExampleConfig {
 
     public TimeUnit getBroadcastUnit() {
         return this.broadcastUnit;
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+            .add("mainColor", this.mainColor)
+            .add("messages", this.messages)
+            .add("broadcastUnit", this.broadcastUnit)
+            .add("broadcastDuration", this.broadcastDuration)
+            .toString();
     }
 
 }

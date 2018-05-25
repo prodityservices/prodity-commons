@@ -56,7 +56,8 @@ public class ElementDeserializerRegistry {
         this.register(new ListDeserializer());
         this.register(new MapDeserializer());
 
-        this.mapType(Color.class).to(ImmutableColor.class);
+        this.mapType(Color.class)
+            .to(ImmutableColor.class);
 
         this.mapValueOf(new TypeToken<Object[]>() {})
             .withStrategy((typeToMap, type) -> type.isArray())
@@ -139,7 +140,7 @@ public class ElementDeserializerRegistry {
         }
 
         throw new IllegalArgumentException(
-            "no ElementDeserializer registered for type=" + type.toString() + " (wrapped=" + wrappedType.toString() + ")");
+            "no ElementDeserializer registered for type=" + type + " (wrapped=" + wrappedType + ")");
     }
 
     /**

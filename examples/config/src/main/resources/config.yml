@@ -24,6 +24,8 @@ warm-colors:
   - "red"
   - "orange"
 
+main-color: "aqua"
+
 messages:
   error: "&cSomething went wrong!"
   success: "&aSuccess!"

@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
-import io.prodity.commons.color.Color;
 import io.prodity.commons.config.annotate.inject.Config;
 import io.prodity.commons.config.annotate.inject.ConfigPath;
 import io.prodity.commons.repository.Repository;
@@ -20,15 +19,15 @@ import javax.inject.Singleton;
 @Named(ColorRepository.NAME)
 @Config(fileName = "config.yml")
 @Singleton
-public class ColorRepository implements Repository<String, Color> {
+public class ColorRepository implements Repository<String, IdentifiableColor> {
 
     public static final String NAME = "example-color-repository";
 
     private static final TypeToken<String> KEY_TYPE = TypeToken.of(String.class);
-    private static final TypeToken<Color> VALUE_TYPE = TypeToken.of(Color.class);
+    private static final TypeToken<IdentifiableColor> VALUE_TYPE = TypeToken.of(IdentifiableColor.class);
 
     @ConfigPath("colors")
-    private Map<String, Color> colors;
+    private Map<String, IdentifiableColor> colors;
 
     @Override
     public TypeToken<String> getKeyType() {
@@ -36,7 +35,7 @@ public class ColorRepository implements Repository<String, Color> {
     }
 
     @Override
-    public TypeToken<Color> getValueType() {
+    public TypeToken<IdentifiableColor> getValueType() {
         return ColorRepository.VALUE_TYPE;
     }
 
@@ -47,19 +46,19 @@ public class ColorRepository implements Repository<String, Color> {
 
     @Nullable
     @Override
-    public Color get(@Nullable String key) {
+    public IdentifiableColor get(@Nullable String key) {
         return key == null ? null : this.colors.get(key);
     }
 
     @Override
-    public Optional<Color> getSafely(@Nullable String key) {
+    public Optional<IdentifiableColor> getSafely(@Nullable String key) {
         return key == null ? Optional.empty() : Optional.ofNullable(this.colors.get(key));
     }
 
     @Override
-    public Collection<Color> getAsCollection(Iterable<String> keys) {
+    public Collection<IdentifiableColor> getAsCollection(Iterable<String> keys) {
         Preconditions.checkNotNull(keys, "keys");
-        final List<Color> colors = Lists.newArrayList();
+        final List<IdentifiableColor> colors = Lists.newArrayList();
         for (String key : keys) {
             if (this.colors.containsKey(key)) {
                 colors.add(this.colors.get(key));
@@ -70,8 +69,8 @@ public class ColorRepository implements Repository<String, Color> {
     }
 
     @Override
-    public Map<String, Color> getAsMap(Iterable<String> keys) {
-        final Map<String, Color> colors = Maps.newHashMap();
+    public Map<String, IdentifiableColor> getAsMap(Iterable<String> keys) {
+        final Map<String, IdentifiableColor> colors = Maps.newHashMap();
         for (String key : keys) {
             if (this.colors.containsKey(key)) {
                 colors.put(key, this.colors.get(key));

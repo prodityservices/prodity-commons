@@ -17,14 +17,13 @@ public class ConfigListenerMethod {
 
         if (method.getParameterCount() > 1) {
             throw new IllegalArgumentException(
-                "method=" + method.toString()
-                    + " can only have ConfigInjectionContext as a parameter type, if any, as a ConfigListenerMethod");
+                "method=" + method + " can only have ConfigInjectionContext as a parameter type, if any, as a ConfigListenerMethod");
         }
 
         final Class<?> paramType = method.getParameterTypes()[0];
         if (!ConfigInjectionContext.class.equals(paramType)) {
             throw new IllegalStateException(
-                "method=" + method.toString() + " can only have ConfigInjectionContext as a parameter type as a ConfigListenerMethod");
+                "method=" + method + " can only have ConfigInjectionContext as a parameter type as a ConfigListenerMethod");
         }
     }
 

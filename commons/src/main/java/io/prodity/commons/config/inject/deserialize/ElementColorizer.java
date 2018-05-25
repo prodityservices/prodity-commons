@@ -37,7 +37,7 @@ public class ElementColorizer {
     }
 
     public <T> ElementColorizer addType(Class<? extends T> typeClass, Function<T, T> colorizerFunction) {
-        return this.addType((clazz) -> clazz.equals(typeClass), colorizerFunction);
+        return this.addType((clazz) -> typeClass.isAssignableFrom(clazz), colorizerFunction);
     }
 
     public <T> ElementColorizer addType(Predicate<Class<? extends T>> classPredicate, Function<T, T> colorizerFunction) {
@@ -72,7 +72,8 @@ public class ElementColorizer {
 
     @Nullable
     private Object colorizeObject(@Nullable Object object) {
-        return object == null ? null : this.getColorizerFunction(object.getClass()).map((function) -> function.apply(object));
+        return object == null ? null
+            : this.getColorizerFunction(object.getClass()).map((function) -> function.apply(object)).orElse(object);
     }
 
     private Object colorizeString(Object object) {
