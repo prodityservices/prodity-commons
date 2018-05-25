@@ -9,7 +9,7 @@ import javax.inject.Inject;
 @PluginDependency("ProdityCommons")
 public class ConfigPlugin extends ProditySpigotPlugin {
 
-    //Injecting the config so it is automatically injected on the plugin startup for this example.
+    //Injecting the config so it is automatically instantiated/injected on the plugin startup for this example.
     @Inject
     private ExampleConfig exampleConfig;
 

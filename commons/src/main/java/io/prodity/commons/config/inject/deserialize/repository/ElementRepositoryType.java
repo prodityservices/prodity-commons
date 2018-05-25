@@ -1,13 +1,22 @@
 package io.prodity.commons.config.inject.deserialize.repository;
 
+import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;
 import io.prodity.commons.config.annotate.deserialize.LoadFromRepository;
 import io.prodity.commons.config.inject.element.ConfigElement;
+import io.prodity.commons.config.inject.element.attribute.ElementAttributes;
+import io.prodity.commons.identity.Identifiable;
+import io.prodity.commons.reflect.TypeTokens;
 import io.prodity.commons.repository.Repository;
+import java.lang.reflect.Constructor;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -15,14 +24,14 @@ import java.util.function.Predicate;
  * Represents a supported {@link ConfigElement} type that is supported by the {@link LoadFromRepository} element attribute(annotation).
  */
 public class ElementRepositoryType implements Comparable<ElementRepositoryType> {
-    
+
     public static final class Builder {
 
         private Integer priority;
         private Predicate<TypeToken<?>> tokenPredicate;
         private BiConsumer<TypeToken<?>, Repository<?, ?>> typeVerifier;
         private Function<TypeToken<?>, TypeToken<?>> repositoryKeyConverter;
-        private BiFunction<Repository, Object, Object> valueRetriever;
+        private Function<ValueRetrieverData, Object> valueRetriever;
 
         private Builder() {
 
@@ -67,12 +76,12 @@ public class ElementRepositoryType implements Comparable<ElementRepositoryType> 
         }
 
         /**
-         * Sets the {@link BiFunction} that retrieves value(s) from a {@link Repository} using an untyped key object.
+         * Sets the {@link Function} that retrieves value(s) from a {@link Repository} using an untyped key object.
          *
-         * @param valueRetriever the {@link BiFunction}
+         * @param valueRetriever the {@link Function}
          * @return this builder instance
          */
-        public Builder setValueRetriever(BiFunction<Repository, Object, Object> valueRetriever) {
+        public Builder setValueRetriever(Function<ValueRetrieverData, Object> valueRetriever) {
             this.valueRetriever = valueRetriever;
             return this;
         }
@@ -85,10 +94,69 @@ public class ElementRepositoryType implements Comparable<ElementRepositoryType> 
             Preconditions.checkNotNull(this.valueRetriever, "valueRetriever");
         }
 
-        public ElementRepositoryType build() {
+        private ElementRepositoryType build() {
             this.verify();
             return new ElementRepositoryType(this.priority, this.tokenPredicate, this.typeVerifier, this.repositoryKeyConverter,
                 this.valueRetriever);
+        }
+
+        public void register(ElementRepositoryResolver resolver) {
+            Preconditions.checkNotNull(resolver, "resolver");
+            final ElementRepositoryType type = this.build();
+            resolver.addSupportedType(type);
+        }
+
+        @Override
+        public ElementRepositoryType.Builder clone() {
+            final ElementRepositoryType.Builder builder = new ElementRepositoryType.Builder();
+            if (this.priority != null) {
+                builder.setPriority(this.priority);
+            }
+
+            builder.setTokenPredicate(this.tokenPredicate);
+            builder.setTypeVerifier(this.typeVerifier);
+            builder.setRepositoryKeyConverter(this.repositoryKeyConverter);
+            builder.setValueRetriever(this.valueRetriever);
+
+            return builder;
+        }
+
+    }
+
+    public static final class ValueRetrieverData {
+
+        private final ConfigElement<?> element;
+        private final Repository repository;
+        private final Object keyObject;
+
+        public ValueRetrieverData(ConfigElement<?> element, Repository repository, Object keyObject) {
+            Preconditions.checkNotNull(element, "element");
+            Preconditions.checkNotNull(repository, "repository");
+            Preconditions.checkNotNull(keyObject, "keyObject");
+            this.element = element;
+            this.repository = repository;
+            this.keyObject = keyObject;
+        }
+
+        public ConfigElement<?> getElement() {
+            return this.element;
+        }
+
+        public Repository getRepository() {
+            return this.repository;
+        }
+
+        public Object getKeyObject() {
+            return this.keyObject;
+        }
+
+        @Override
+        public String toString() {
+            return MoreObjects.toStringHelper(this)
+                .add("element", this.element)
+                .add("repository", this.repository)
+                .add("keyObject", this.keyObject)
+                .toString();
         }
 
     }
@@ -97,15 +165,146 @@ public class ElementRepositoryType implements Comparable<ElementRepositoryType> 
         return new ElementRepositoryType.Builder();
     }
 
+    /**
+     * Creates a new {@link ElementRepositoryType.Builder} for a {@link Collection} type.
+     *
+     * @param priority the priority
+     * @param collectionType the {@link TypeToken} of the {@link Collection} implementation
+     * @param collectionConverter the {@link Function} that converts the {@link Collection} of resolved
+     * values to the {@link Collection} implementation to be used. This is only used if the specified type can
+     * not be instantiated via reflection.
+     * @return the created {@link ElementRepositoryType.Builder}
+     */
+    public static ElementRepositoryType.Builder createForCollection(int priority, TypeToken<? extends Collection<?>> collectionType,
+        Function<Collection<?>, Collection<?>> collectionConverter) {
+
+        return ElementRepositoryType.builder()
+            .setPriority(priority)
+            .setTokenPredicate((type) -> type.isSubtypeOf(collectionType))
+            .setTypeVerifier((type, repository) -> {
+                final TypeToken<?> elementType = type.resolveType(Collection.class.getTypeParameters()[0]);
+                if (!elementType.isSupertypeOf(repository.getValueType())) {
+                    throw new IllegalStateException(
+                        "elementType=" + elementType + " of type=" + type + " does not match repository=" + repository.getClass().getName()
+                            + "'s valueType=" + repository.getValueType());
+                }
+            })
+            .setRepositoryKeyConverter(TypeTokens::listToken)
+            .setValueRetriever((data) -> {
+                final ConfigElement<?> element = data.getElement();
+
+                final Collection<?> keyCollection = (Collection<?>) data.getKeyObject();
+                final List values = Lists.newArrayList();
+                for (Object key : keyCollection) {
+                    final Object value = data.getRepository().get(key);
+                    if (value != null) {
+                        values.add(value);
+                        continue;
+                    }
+                    if (element.hasAttribute(ElementAttributes.REQUIRED_KEY)) {
+                        throw new IllegalStateException("data=" + data + " has key=" + key + " that is missing from the Repository");
+                    }
+                }
+
+                try {
+                    final Class<?> collectionClass = element.getType().getRawType();
+                    try {
+                        for (Constructor<?> constructor : collectionClass.getDeclaredConstructors()) {
+                            if (constructor.getParameterCount() != 1 || !constructor.getParameterTypes()[0]
+                                .isAssignableFrom(List.class)) {
+                                continue;
+                            }
+                            return constructor.newInstance(values);
+                        }
+                        throw new Throwable();
+                    } catch (Throwable throwable) {
+                        final Collection<?> instance = (Collection<?>) collectionClass.newInstance();
+                        instance.addAll(values);
+                        return instance;
+                    }
+                } catch (Throwable throwable) {}
+                return collectionConverter.apply(values);
+            });
+    }
+
+    /**
+     * Creates a new {@link ElementRepositoryType.Builder} for a {@link Map} type.
+     *
+     * @param priority the priority
+     * @param mapType the {@link TypeToken} of the {@link Map} implementation
+     * @param mapConverter the {@link Function} that converts the {@link Map} of resolved
+     * values to the {@link Map} implementation to be used. This is only used if the specified type can
+     * not be instantiated via reflection.
+     * @return the created {@link ElementRepositoryType.Builder}
+     */
+    public static ElementRepositoryType.Builder createForMap(int priority, TypeToken<? extends Map<?, ?>> mapType,
+        Function<Map<?, ?>, Map<?, ?>> mapConverter) {
+        return ElementRepositoryType.builder()
+            .setPriority(priority)
+            .setTokenPredicate((type) -> type.isSubtypeOf(mapType))
+            .setTypeVerifier((type, repository) -> {
+                final TypeToken<?> keyType = type.resolveType(Map.class.getTypeParameters()[0]);
+                if (!keyType.isSupertypeOf(repository.getKeyType())) {
+                    throw new IllegalStateException(
+                        "type=" + type + "'s key Type does not match repository=" + repository.getClass().getName() + "'s keyType="
+                            + repository
+                            .getKeyType());
+                }
+                final TypeToken<?> valueType = type.resolveType(Map.class.getTypeParameters()[1]);
+                if (!valueType.isSupertypeOf(repository.getValueType())) {
+                    throw new IllegalStateException(
+                        "type=" + type + "'s value Type does not match repository=" + repository.getClass().getName() + "'s valueType="
+                            + repository
+                            .getValueType());
+                }
+            })
+            .setRepositoryKeyConverter(TypeTokens::listToken)
+            .setValueRetriever((data) -> {
+                final ConfigElement<?> element = data.getElement();
+
+                final Collection<?> keyCollection = (Collection<?>) data.getKeyObject();
+                final Map values = Maps.newHashMap();
+                for (Object key : keyCollection) {
+                    final Identifiable<?> value = data.getRepository().get(key);
+                    if (value != null) {
+                        values.put(value.getId(), value);
+                        continue;
+                    }
+                    if (element.hasAttribute(ElementAttributes.REQUIRED_KEY)) {
+                        throw new IllegalStateException("data=" + data + " has key=" + key + " that is missing from the Repository");
+                    }
+                }
+
+                try {
+                    final Class<?> mapClass = element.getType().getRawType();
+                    try {
+                        for (Constructor<?> constructor : mapClass.getDeclaredConstructors()) {
+                            if (constructor.getParameterCount() != 1 || !constructor.getParameterTypes()[0]
+                                .isAssignableFrom(Map.class)) {
+                                continue;
+                            }
+                            return constructor.newInstance(values);
+                        }
+                    } catch (Throwable throwable) {
+                        final Map<?, ?> instance = (Map<?, ?>) mapClass.newInstance();
+                        instance.putAll(values);
+                        return instance;
+                    }
+                } catch (Throwable throwable) {}
+                return mapConverter.apply(values);
+            });
+    }
+
+
     private final int priority;
     private final Predicate<TypeToken<?>> tokenPredicate;
     private final BiConsumer<TypeToken<?>, Repository<?, ?>> typeVerifier;
     private final Function<TypeToken<?>, TypeToken<?>> repositoryKeyConverter;
-    private final BiFunction<Repository, Object, Object> valueRetriever;
+    private final Function<ValueRetrieverData, Object> valueRetriever;
 
     private ElementRepositoryType(int priority, Predicate<TypeToken<?>> tokenPredicate,
         BiConsumer<TypeToken<?>, Repository<?, ?>> typeVerifier, Function<TypeToken<?>, TypeToken<?>> repositoryKeyConverter,
-        BiFunction<Repository, Object, Object> valueRetriever) {
+        Function<ValueRetrieverData, Object> valueRetriever) {
         Preconditions.checkNotNull(tokenPredicate, "tokenPredicate");
         Preconditions.checkNotNull(typeVerifier, "typeVerifier");
         Preconditions.checkNotNull(repositoryKeyConverter, "repositoryKeyConverter");
@@ -159,15 +358,14 @@ public class ElementRepositoryType implements Comparable<ElementRepositoryType> 
     }
 
     /**
-     * Gets the value(s) from the specified {@link Repository} and keyObject.<br>
-     * The keyObject is typically a singular key or multiple (in a {@link java.util.Collection}) depending on this implementation.
+     * Gets the value(s) from the specified {@link ValueRetrieverData}.<br>
+     * The {@link ValueRetrieverData#getKeyObject()} is typically a singular key or multiple (in a {@link java.util.Collection}) depending on this implementation.
      *
-     * @param repository the {@link Repository}
-     * @param keyObject the key(s)
+     * @param data the {@link ValueRetrieverData)
      * @return the value(s)
      */
-    public Object getValue(Repository repository, Object keyObject) {
-        return this.valueRetriever.apply(repository, keyObject);
+    public Object getValue(ValueRetrieverData data) {
+        return this.valueRetriever.apply(data);
     }
 
     @Override

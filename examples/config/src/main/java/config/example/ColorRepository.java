@@ -15,7 +15,8 @@ import javax.annotation.Nullable;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
-//TODO comment this class.
+// A Repository is simple a basic Object manager.
+// If the objects are configured, the Repository can typically be annotated with @Config to have the values loaded in.
 @Named(ColorRepository.NAME)
 @Config(fileName = "config.yml")
 @Singleton

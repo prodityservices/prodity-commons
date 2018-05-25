@@ -1,17 +1,28 @@
 package io.prodity.commons.config.inject.deserialize.repository;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.common.reflect.TypeToken;
 import io.prodity.commons.config.annotate.deserialize.LoadFromRepository;
 import io.prodity.commons.config.inject.ConfigInjectionContext;
 import io.prodity.commons.config.inject.deserialize.ElementDeserializer;
 import io.prodity.commons.config.inject.deserialize.registry.ElementDeserializerRegistry;
+import io.prodity.commons.config.inject.deserialize.repository.ElementRepositoryType.ValueRetrieverData;
 import io.prodity.commons.config.inject.element.ConfigElement;
 import io.prodity.commons.config.inject.element.attribute.ElementAttributes;
 import io.prodity.commons.repository.Repository;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.ConcurrentMap;
 import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -31,12 +42,12 @@ public class ElementRepositoryResolver {
     @Inject
     private ConfigInjectionContext injectionContext;
 
-    private final Set<ElementRepositoryType> supportedTypes = new ConcurrentSkipListSet<>(Comparator.reverseOrder());
+    private final List<ElementRepositoryType> supportedTypes = Lists.newCopyOnWriteArrayList();
 
     @PostConstruct
     private void registerDefaultTypes() {
-        final ElementRepositoryType singularObjectType = ElementRepositoryType.builder()
-            .setPriority(Integer.MAX_VALUE)
+        ElementRepositoryType.builder()
+            .setPriority(Integer.MIN_VALUE)
             .setTokenPredicate((type) -> true)
             .setTypeVerifier((type, repository) -> {
                 if (!type.isSupertypeOf(repository.getValueType())) {
@@ -46,15 +57,29 @@ public class ElementRepositoryResolver {
                 }
             })
             .setRepositoryKeyConverter((type) -> type)
-            .setValueRetriever(Repository::get)
-            .build();
+            .setValueRetriever((data) -> data.getRepository().get(data.getKeyObject()))
+            .register(this);
 
-        this.addSupportedType(singularObjectType);
+        ElementRepositoryType.createForCollection(0, new TypeToken<Collection<?>>() {}, Lists::newArrayList).register(this);
+        ElementRepositoryType.createForCollection(1, new TypeToken<Set<?>>() {}, Sets::newHashSet).register(this);
+
+        ElementRepositoryType.createForCollection(2, new TypeToken<ImmutableSet<?>>() {}, ImmutableSet::copyOf).register(this);
+        ElementRepositoryType.createForCollection(2, new TypeToken<ImmutableList<?>>() {}, ImmutableList::copyOf).register(this);
+
+        ElementRepositoryType.createForMap(0, new TypeToken<Map<?, ?>>() {}, Maps::newHashMap).register(this);
+        ElementRepositoryType.createForMap(1, new TypeToken<ConcurrentMap<?, ?>>() {}, (values) -> {
+            final Map map = Maps.newConcurrentMap();
+            map.putAll(values);
+            return map;
+        }).register(this);
+
+        ElementRepositoryType.createForMap(2, new TypeToken<ImmutableMap<?, ?>>() {}, ImmutableMap::copyOf).register(this);
     }
 
-    public void addSupportedType(ElementRepositoryType type) {
+    void addSupportedType(ElementRepositoryType type) {
         Preconditions.checkNotNull(type, "type");
         this.supportedTypes.add(type);
+        Collections.sort(this.supportedTypes, Comparator.reverseOrder());
     }
 
     /**
@@ -112,7 +137,9 @@ public class ElementRepositoryResolver {
         final ElementDeserializer<?> keyDeserializer = this.deserializerRegistry.get(keyType);
 
         final Object keyObject = keyDeserializer.deserialize(this.injectionContext, keyType, node);
-        final Object valueObject = repositoryType.getValue(repository, keyObject);
+
+        final ValueRetrieverData data = new ValueRetrieverData(element, repository, keyObject);
+        final Object valueObject = repositoryType.getValue(data);
 
         return valueObject;
     }

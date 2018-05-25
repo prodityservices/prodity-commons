@@ -17,6 +17,7 @@ import io.prodity.commons.config.inject.ConfigInjectionContext;
 import io.prodity.commons.spigot.inject.TimeUnit;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -76,26 +77,36 @@ public class ExampleConfig {
     //   - The IDs can only be defined in the config as a single node or list format
     //   - The loaded values can then be applied to a single Object, List, or Map
     //
+    // @Required specifies that the value is 100% required to be present in the config.yml. If it is not
+    // present an exception will be thrown.
+    //
+    // When @Required is used with @LoadFromRepository, if any of the keys are not present in the Repository, an exception will be thrown.
+    //
     // In this example, Color is an interface so it can not be directly injected without special handling.
     // Since Color is in commons, the default ElementDeserializerRegistry maps Color out to one of it's implementations
     // that is ImmutableColor. More information on how you can map your own interface types to their implementations can be seen below.
     //
     // As for collections, Set, List, ImmutableSet, ImmutableList, Arrays, & a few others have support built in by default.
-//    @ConfigPath("warm-colors")
-//    @LoadFromRepository(ColorRepository.class)
+    @ConfigPath("warm-colors")
+    @LoadFromRepository(ColorRepository.class)
+    @Required
     private ImmutableList<Color> warmColors;
+
+    // If using a Map type when using @LoadFromRepository, the keys will be the IDs of the values loaded from the Repository.
+    @ConfigPath("warm-colors")
+    @LoadFromRepository(ColorRepository.class)
+    @Required
+    private ImmutableMap<String, Color> warmColorsAsMap;
 
     @ConfigPath("main-color")
     @LoadFromRepository(ColorRepository.class)
+    @Required
     private Color mainColor;
 
     // @Colorize specifies that elements in the following cases should be colorized
     // 1) String types
     // 2) String types that are elements of lists, sets, & their guava immutable implementations
     // 3) String types that are values of maps & their guava immutable implementations
-    //
-    // @Required specifies that the value is 100% required to be present in the config.yml. If it is not
-    // present an exception will be thrown.
     @ConfigPath("messages")
     @Colorize
     @Required
@@ -160,6 +171,10 @@ public class ExampleConfig {
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
+            .add("warmColors", "[" + String.join(", ", this.warmColors.stream().map(Object::toString).collect(Collectors.toList())) + "]")
+            .add("warmColorsAsMap", "{" + String.join(", ",
+                this.warmColorsAsMap.entrySet().stream().map((entry) -> entry.getKey() + ": " + entry.getValue())
+                    .collect(Collectors.toList())) + "}")
             .add("mainColor", this.mainColor)
             .add("messages", this.messages)
             .add("broadcastUnit", this.broadcastUnit)

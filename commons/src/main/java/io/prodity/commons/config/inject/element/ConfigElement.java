@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import io.prodity.commons.config.annotate.inject.ConfigInject;
+import io.prodity.commons.config.annotate.inject.ConfigNodeKey;
 import io.prodity.commons.config.annotate.inject.ConfigPath;
 import io.prodity.commons.config.inject.ConfigObject;
 import io.prodity.commons.config.inject.ConfigResolvable;
@@ -34,11 +35,23 @@ public interface ConfigElement<T> extends ConfigResolvable<T>, NamedAnnotatedEle
     static List<String> resolvePath(NamedAnnotatedElement element) {
         Preconditions.checkNotNull(element, "element");
 
+        if (element.isAnnotationPresent(ConfigNodeKey.class)) {
+            throw new IllegalArgumentException(
+                "specified element=" + element + " does not have a path as it has the @ConfigNodeKey annotation");
+        }
+
         final String pathAsString = Optional.ofNullable(element.getAnnotation(ConfigPath.class))
             .map(ConfigPath::value)
             .orElseGet(element::getName);
 
         return ImmutableList.copyOf(pathAsString.split(ConfigElement.PERIOD_LITERAL));
+    }
+
+    static ElementInjectionStrategy resolveInjectionStrategy(NamedAnnotatedElement element) {
+        if (element.isAnnotationPresent(ConfigPath.class) && element.isAnnotationPresent(ConfigNodeKey.class)) {
+            throw new IllegalStateException("element=" + element + " has both @ConfigPath and @ConfigNodeKey annotations");
+        }
+        return element.isAnnotationPresent(ConfigNodeKey.class) ? ElementInjectionStrategy.NODE_KEY : ElementInjectionStrategy.NODE_PATH;
     }
 
     /**
@@ -48,17 +61,21 @@ public interface ConfigElement<T> extends ConfigResolvable<T>, NamedAnnotatedEle
      * @return true if the specified element is a {@link ConfigElement}, false if not
      */
     static boolean isElement(@Nullable AnnotatedElement element) {
-        return element != null && (element.isAnnotationPresent(ConfigPath.class) || element.isAnnotationPresent(ConfigInject.class));
+        return element != null && (element.isAnnotationPresent(ConfigNodeKey.class) || element.isAnnotationPresent(ConfigPath.class)
+            || element.isAnnotationPresent(ConfigInject.class));
     }
 
     TypeToken<T> getType();
+
+    ElementInjectionStrategy getInjectionStrategy();
 
     /**
      * Gets the element's path in a {@link ninja.leaping.configurate.ConfigurationNode}.
      *
      * @return an immutable {@link List} of the paths
+     * @throws IllegalStateException if there is no path of this {@link ConfigElement}
      */
-    List<String> getPath();
+    List<String> getPath() throws IllegalStateException;
 
     boolean hasAttribute(@Nullable ElementAttributeKey<?> key);
 
