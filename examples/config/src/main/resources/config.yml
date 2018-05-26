@@ -1,0 +1,43 @@
+# For ALL configs, a {variables} section can be defined.
+# - The section should be in the form of a map.
+#
+# Variables can be used when there is a lot of repeated values in the config (such as a lengthy decimal),
+# and you want to define a variable that has a constant value.
+variables:
+  <zero>: 0 # A (really useless) variable example
+
+colors:
+  aqua:
+    red: <zero> # this will be replaced with the <full_red> variable
+    green: 255
+    blue: 255
+  green:
+    red: <zero>
+    green: 255
+    blue: <zero>
+  red:
+    red: 255
+    green: <zero>
+    blue: <zero>
+  blue:
+    red: <zero>
+    green: <zero>
+    blue: 255
+  orange:
+    red: 255
+    green: 128
+    blue: <zero>
+
+warm-colors:
+  - "red"
+  - "orange"
+
+main-color: "aqua"
+
+messages:
+  error: "&cSomething went wrong!"
+  success: "&aSuccess!"
+
+handled-example:
+  mutable: "dog-420"
+  immutable: "cat-0"

@@ -11,6 +11,7 @@
         <module name="commons-spigot-v1_12_R1" />
         <module name="commons-spigot-v1_8_R3" />
         <module name="customfeature" />
+        <module name="examples-config" />
         <module name="examples-custom-feature" />
         <module name="examples-spigot" />
         <module name="spigot" />
@@ -26,6 +27,7 @@
       <module name="commons-spigot-v1_12_R1" target="1.8" />
       <module name="commons-spigot-v1_8_R3" target="1.8" />
       <module name="customfeature" target="1.8" />
+      <module name="examples-config" target="1.8" />
       <module name="examples-custom-feature" target="1.8" />
       <module name="examples-parent" target="1.5" />
       <module name="examples-spigot" target="1.8" />

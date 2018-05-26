@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface Config {
 
-    String fileName();
+    String fileName() default "";
 
     String fileDirectory() default "";
 

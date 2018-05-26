@@ -1,53 +1,32 @@
 package io.prodity.commons.spigot.inject;
 
 import com.google.common.collect.ImmutableSet;
-import io.prodity.commons.inject.impl.InjectUtils;
-import io.prodity.commons.inject.InjectionFeature;
-import io.prodity.commons.inject.impl.PluginBridge;
+import io.prodity.commons.inject.impl.InjectionContainer;
 import io.prodity.commons.plugin.ProdityPlugin;
 import io.prodity.commons.spigot.inject.impl.DefaultPluginBinder;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.logging.Level;
-
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.api.ServiceLocatorFactory;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 
 /**
- * InjectedPlugin should be extended by plugins wishing to utilize automatic dependency injection.
- * Initialization and cleanup logic should be performed by annotating methods with {@link javax.annotation.PostConstruct}
+ * InjectedPlugin should be extended byWithType plugins wishing to utilize automatic dependency injection.
+ * Initialization and cleanup logic should be performed byWithType annotating methods with {@link javax.annotation.PostConstruct}
  * and {@link javax.annotation.PreDestroy}. InjectedPlugin implements Listener and is automatically registered.
  */
 public class SpigotInjectedPlugin extends JavaPlugin implements Listener, ProdityPlugin {
 
+    private final InjectionContainer container = new InjectionContainer(this);
     private Set<String> softDependencies;
     private Set<String> dependencies;
-    private ServiceLocator serviceLocator;
-    private List<InjectionFeature> injectionFeatures = Collections.emptyList();
 
     @Override
     public final void onLoad() {
         this.softDependencies = ImmutableSet.copyOf(this.getDescription().getSoftDepend());
         this.dependencies = ImmutableSet.copyOf(this.getDescription().getDepend());
-        this.serviceLocator = ServiceLocatorFactory.getInstance().create(this.getName());
-        this.initialize();
-        this.injectionFeatures = InjectUtils.findFeaturesFor(this);
-        this.callEvent(InjectionFeature::preLoad);
-        if (!InjectUtils.loadDescriptors(this.getClassLoader(), this.serviceLocator)) {
-            this.serviceLocator.shutdown();
-            this.serviceLocator = null;
-            this.injectionFeatures = Collections.emptyList();
-            this.getLogger().severe("Failed to load injection inhabitants file.");
-            this.getLogger().severe("Disabling...");
-            return;
-        }
-        this.callEvent(InjectionFeature::postLoad);
+        this.container.load(this::initialize);
     }
 
     /**
@@ -62,15 +41,12 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
      */
     protected void initialize() {
         ServiceLocatorUtilities.bind(this.getServices(), new DefaultPluginBinder(this));
-        PluginBridge.bridge(this);
     }
 
     @Override
     public final void onEnable() {
-        if (this.serviceLocator != null) {
-            this.callEvent(InjectionFeature::preEnable);
-            this.callEvent(InjectionFeature::onEnable);
-            this.callEvent(InjectionFeature::postEnable);
+        if (this.container.isEnabled()) {
+            this.container.enable();
         } else {
             Bukkit.getPluginManager().disablePlugin(this);
         }
@@ -78,33 +54,18 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
 
     @Override
     public final void onDisable() {
-        if (this.serviceLocator != null) {
-            this.callEvent(InjectionFeature::preDisable);
-            PluginBridge.unbridge(this);
-            this.serviceLocator.shutdown();
-            this.serviceLocator = null;
-        }
-    }
-
-    private void callEvent(BiConsumer<InjectionFeature, ProdityPlugin> function) {
-        for (InjectionFeature feature : this.injectionFeatures) {
-            try {
-                function.accept(feature, this);
-            } catch (Exception e) {
-                this.getLogger().log(Level.SEVERE, "Exception from InjectionFeature", e);
-            }
-        }
+        this.container.disable();
     }
 
     /**
-     * Gets the ServiceLocator used by this plugin.  Returns null
+     * Gets the ServiceLocator used byWithType this plugin.  Returns null
      * if this plugin is disabled.
      *
      * @return nullable ServiceLocator
      */
     @Override
     public final ServiceLocator getServices() {
-        return this.serviceLocator;
+        return this.container.getServices();
     }
 
     @Override
@@ -116,7 +77,5 @@ public class SpigotInjectedPlugin extends JavaPlugin implements Listener, Prodit
     public Set<String> getSoftDependencies() {
         return this.softDependencies;
     }
-
-
 
 }

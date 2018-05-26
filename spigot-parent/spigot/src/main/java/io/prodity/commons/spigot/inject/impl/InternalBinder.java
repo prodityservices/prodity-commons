@@ -16,7 +16,7 @@ public class InternalBinder extends CoreBinder {
     @Override
     protected void configure() {
         super.configure();
-        this.addCoreFeatures(McVersionFeature.class, TaskFeature.class);
+        this.addCoreFeatures(McVersionFeature.class, TaskFeature.class, CommandFeature.class);
     }
 
 }

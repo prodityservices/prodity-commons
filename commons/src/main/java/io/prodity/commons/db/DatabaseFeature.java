@@ -9,7 +9,7 @@ public class DatabaseFeature implements InjectionFeature {
     @Override
     public void preLoad(ProdityPlugin plugin) {
         this.bind(plugin, binder -> {
-            binder.bind(UUIDFeature.class).to(JdbiFeature.class);
+            binder.bind(UUIDCustomizer.class).to(JdbiCustomizer.class);
             binder.bindFactory(JdbiFactory.class).to(Jdbi.class);
             binder.bind(DatabaseResolver.class).to(JustInTimeInjectionResolver.class);
         });

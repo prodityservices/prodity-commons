@@ -4,7 +4,7 @@ import io.prodity.commons.plugin.ProdityPlugin;
 import java.util.function.Consumer;
 
 /**
- * Utility class for creating bindings by applying a consumer
+ * Utility class for creating bindings byWithType applying a consumer
  * to the pluginbinder.
  */
 public class ConsumerBinder extends PluginBinder {

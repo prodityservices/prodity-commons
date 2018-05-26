@@ -1,31 +1,44 @@
 package io.prodity.commons.config.inject.deserialize;
 
 import com.google.common.base.Preconditions;
+import com.google.common.primitives.Primitives;
+import io.prodity.commons.config.inject.ConfigInjectionContext;
 import io.prodity.commons.config.inject.deserialize.registry.ElementDeserializerRegistry;
+import io.prodity.commons.config.inject.deserialize.repository.ElementRepositoryResolver;
 import io.prodity.commons.config.inject.element.ConfigElement;
 import io.prodity.commons.config.inject.element.attribute.ElementAttributes;
-import io.prodity.commons.message.color.Colorizer;
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import ninja.leaping.configurate.ConfigurationNode;
 import org.glassfish.hk2.api.ServiceLocator;
 
+@Singleton
 public class ElementResolver {
 
     @Inject
     private ElementDeserializerRegistry deserializerRegistry;
 
     @Inject
-    private Colorizer colorizer;
+    private ElementColorizer elementColorizer;
+
+    @Inject
+    private ElementRepositoryResolver repositoryLoader;
 
     @Inject
     private ServiceLocator serviceLocator;
+
+    @Inject
+    private ConfigInjectionContext injectionContext;
+
+    public ServiceLocator getServiceLocator() {
+        return this.serviceLocator;
+    }
 
     public ElementDeserializerRegistry getDeserializerRegistry() {
         return this.deserializerRegistry;
@@ -36,68 +49,89 @@ public class ElementResolver {
         Preconditions.checkNotNull(element, "element");
         Preconditions.checkNotNull(node, "node");
 
-
         final ElementDeserializer<? extends T> deserializer = this.deserializerRegistry.get(element.getType());
 
+        Object value = null;
+
         if (node.isVirtual()) {
-            if (element.getAttributeOrDefault(ElementAttributes.REQUIRED_KEY, false)) {
+            value = this.handleNullCheck(element, value, () -> {
                 final List<String> nodePath = Arrays.stream(node.getPath()).map(Object::toString).collect(Collectors.toList());
                 final String nodePathString = String.join(".", nodePath);
                 throw new IllegalStateException(
-                    "element=" + element.toString() + " is required but node=" + nodePathString + " is virtual (not present)");
-            }
+                    "element=" + element + " is required but node=" + nodePathString + " is virtual (not present)");
+            });
+        } else if (element.hasAttribute(ElementAttributes.REPOSITORY_KEY)) {
+            value = this.repositoryLoader.resolveFromRepository(element, node);
+        } else {
+            value = deserializer.deserialize(this.injectionContext, element.getType(), node);
+            value = this.handleNullCheck(element, value, () -> "element=" + element + " is required but deserialized value=null");
+        }
 
+        if (value == null) {
             return null;
         }
 
-        T object = deserializer.deserialize(this, element.getType(), node);
+        if (element.hasAttribute(ElementAttributes.COLORIZE_KEY)) {
+            value = this.elementColorizer.colorize(value);
+        }
 
+        if (value != null && !element.getType().wrap().getRawType().isInstance(value)) {
+            throw new IllegalStateException(
+                "element=" + element + " valueType=" + value.getClass().getName() + " is not an instance of the required type=" + element
+                    .getType());
+        }
+
+        return value == null ? null : (T) value;
+    }
+
+    @Nullable
+    Object handleNullCheck(ConfigElement<?> element, @Nullable Object currentValue, Supplier<String> requiredErrorMessage) {
+        if (currentValue != null) {
+            return currentValue;
+        }
+
+        if (element.hasAttribute(ElementAttributes.REQUIRED_KEY)) {
+            throw new IllegalStateException(requiredErrorMessage.get());
+        }
+
+        if (element.hasAttribute(ElementAttributes.DEFAULT_VALUE_KEY)) {
+            return this.resolveFromDefault(element);
+        }
+
+        return null;
+    }
+
+    private Object resolveFromDefault(ConfigElement<?> element) {
+        if (!element.hasAttribute(ElementAttributes.DEFAULT_VALUE_KEY)) {
+            throw new IllegalStateException(
+                "can't resolve default value from element=" + element + " as it does not have a default value");
+        }
+
+        final Class<? extends Supplier<?>> defaultSupplier = element.getAttribute(ElementAttributes.DEFAULT_VALUE_KEY).get();
+        final Supplier<?> supplierInstance;
+        try {
+            final Constructor<? extends Supplier<?>> constructor = defaultSupplier.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            supplierInstance = constructor.newInstance();
+        } catch (Throwable throwable) {
+            throw new IllegalStateException(
+                "defaultSupplier=" + defaultSupplier.getName() + " for element=" + element + " could not be instantiated",
+                throwable);
+        }
+
+        final Object object = supplierInstance.get();
         if (object == null) {
-            if (element.getAttribute(ElementAttributes.REQUIRED_KEY).orElse(false)) {
-                throw new IllegalStateException("element=" + element + " is required but deserialized value=null");
-            }
-
-            return null;
+            throw new IllegalStateException(
+                "element=" + element + " has a default supplier=" + defaultSupplier.getName() + " that returns a null value");
         }
 
-        if (element.getAttributeOrDefault(ElementAttributes.COLORIZE_KEY, false)) {
-            object = this.colorizeObject(object);
+        final Class<?> objectClass = Primitives.wrap(object.getClass());
+
+        if (!element.getType().wrap().isSupertypeOf(objectClass)) {
+            throw new IllegalStateException(
+                "defaultValue=" + object + " of element=" + element + " is not of the element's type=" + element.getType());
         }
 
-        //TODO default value attribute (invoke Supplier)
-        //TODO repository attribute (serviceLocator)
-        //TODO ImmutableMap, ImmutableList, & ImmutableSet colorization support
-        //TODO Map & Set Colorization support
-
-        return object;
-    }
-
-    private <T> T colorizeObject(T object) {
-        return (T) this.modifyObject(object, String.class::isInstance, (obj) -> this.colorizer.translateColors((String) obj));
-    }
-
-    private Object modifyObject(Object object, Predicate<Object> modifyPredicate, Function<Object, Object> modifier) {
-        if (modifyPredicate.test(object)) {
-            return modifier.apply(object);
-        }
-        if (object instanceof List) {
-            final List<Object> list = (List<Object>) object;
-            for (int i = 0; i < list.size(); i++) {
-                final Object element = list.get(i);
-                final Object modifiedElement = this.modifyObject(element, modifyPredicate, modifier);
-                list.set(i, modifiedElement);
-            }
-            return list;
-        }
-        if (object instanceof Map) {
-            final Map<?, Object> map = (Map<?, Object>) object;
-            for (Map.Entry<?, Object> entry : map.entrySet()) {
-                final Object value = entry.getValue();
-                final Object modifiedValue = this.modifyObject(value, modifyPredicate, modifier);
-                entry.setValue(modifiedValue);
-            }
-            return map;
-        }
         return object;
     }
 

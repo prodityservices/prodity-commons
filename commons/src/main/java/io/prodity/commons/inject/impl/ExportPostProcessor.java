@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import org.glassfish.hk2.api.DescriptorVisibility;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 
-public class ExportPostProcessor extends AnnotationProcessor<Export> {
+public class ExportPostProcessor extends QualifierProcessor<Export> {
 
     private final ProdityPlugin plugin;
 
@@ -17,7 +17,7 @@ public class ExportPostProcessor extends AnnotationProcessor<Export> {
     }
 
     @Override
-    protected DescriptorImpl doProcess(DescriptorImpl descriptor, Export value) {
+    protected DescriptorImpl present(DescriptorImpl descriptor) {
         descriptor.setDescriptorVisibility(DescriptorVisibility.NORMAL);
         descriptor.addMetadata(Export.PLUGIN_META_KEY, this.plugin.getName());
         return descriptor;

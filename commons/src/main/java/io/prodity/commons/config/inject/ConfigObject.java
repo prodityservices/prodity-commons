@@ -3,7 +3,6 @@ package io.prodity.commons.config.inject;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.config.inject.listen.ConfigListener;
 import io.prodity.commons.config.inject.listen.ConfigListenerMethod;
 import io.prodity.commons.config.inject.listen.ConfigListenerResolver;
@@ -92,27 +91,31 @@ public class ConfigObject<T> implements ConfigInjectable, ConfigListener {
     }
 
     @Override
-    public void callListeners(ListenerType type) throws IllegalStateException, InvocationTargetException, IllegalAccessException {
+    public void callListeners(ListenerType type, ConfigInjectionContext context)
+        throws IllegalStateException, InvocationTargetException, IllegalAccessException {
         if (this.objectInstance == null) {
             throw new IllegalStateException("inner object instance has not yet been instantiated");
         }
         for (ConfigListenerMethod method : this.getListenerMethods(type)) {
-            method.invoke(this.objectInstance);
+            method.invoke(this.objectInstance, context);
         }
     }
 
     @Override
-    public void inject(ElementResolver elementResolver, ConfigurationNode node) throws Throwable {
-        this.constructor.inject(elementResolver, node);
+    public void inject(ConfigInjectionContext context, ConfigurationNode node) throws Throwable {
+        this.constructor.inject(context, node);
 
-        this.objectInstance = this.constructor.instantiate(elementResolver, node);
+        this.objectInstance = this.constructor.instantiate(context, node);
 
-        this.callListeners(ListenerType.PRE_INJECT);
+        this.callListeners(ListenerType.PRE_INJECT, context);
+
+        context.getServiceLocator().inject(this.objectInstance);
+
         for (ConfigMember member : this.getMembers()) {
-            member.inject(elementResolver, node);
+            member.inject(context, node);
         }
-        
-        this.callListeners(ListenerType.POST_INJECT);
+
+        this.callListeners(ListenerType.POST_INJECT, context);
     }
 
 }

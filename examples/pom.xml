@@ -17,6 +17,7 @@
     <modules>
         <module>spigot</module>
         <module>custom-feature</module>
+        <module>config</module>
     </modules>
 
     <dependencyManagement>

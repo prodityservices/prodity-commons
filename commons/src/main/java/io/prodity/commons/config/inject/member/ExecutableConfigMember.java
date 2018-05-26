@@ -3,7 +3,7 @@ package io.prodity.commons.config.inject.member;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import io.prodity.commons.config.inject.deserialize.ElementResolver;
+import io.prodity.commons.config.inject.ConfigInjectionContext;
 import java.util.Collection;
 import java.util.List;
 import ninja.leaping.configurate.ConfigurationNode;
@@ -23,10 +23,10 @@ public abstract class ExecutableConfigMember implements ConfigMember {
     }
 
     @Override
-    public void inject(ElementResolver elementResolver, ConfigurationNode node) throws Throwable {
+    public void inject(ConfigInjectionContext context, ConfigurationNode node) throws Throwable {
         final List<Object> parameterValues = Lists.newArrayList();
         for (ConfigMemberParameter parameter : this.parameters) {
-            final Object value = parameter.resolve(elementResolver, node);
+            final Object value = parameter.resolve(context.getElementResolver(), node);
             parameterValues.add(value);
         }
 

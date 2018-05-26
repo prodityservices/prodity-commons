@@ -1,6 +1,7 @@
 package example;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import org.bukkit.entity.Player;
 import org.jvnet.hk2.annotations.Contract;
@@ -18,5 +19,5 @@ public interface RenownStorage {
 
     CompletableFuture<Void> decrementRenown(Player player, int amount);
 
-    CompletableFuture<Integer> getRenown(Player player);
+    CompletableFuture<Optional<Integer>> getRenown(Player player);
 }

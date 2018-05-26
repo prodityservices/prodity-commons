@@ -10,11 +10,11 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * InjectionFeatures are the core of PluginInject.  Nearly all
  * functionality is implemented through them.  Plugins can add
- * their own, or remove added InjectionFeatures by overriding
+ * their own, or remove added InjectionFeatures byWithType overriding
  * their platform-specific initialize method.
  * <p />
  * Plugins can provide InjectionFeatures for other plugins
- * by exporting them.  Plugins which explicitly depend or soft depend on
+ * byWithType exporting them.  Plugins which explicitly depend or soft depend on
  * another plugin will have all InjectionFeatures
  * that the plugin exports applied to it.  For example, if plugin A exports
  * an InjectionFeature, and plugin B depends on A, the InjectionFeature will
@@ -57,6 +57,7 @@ public interface InjectionFeature {
 
     /**
      * Performs initialization logic.
+     *
      * @param plugin the plugin
      */
     default void onEnable(ProdityPlugin plugin) {

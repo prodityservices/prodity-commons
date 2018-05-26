@@ -20,7 +20,7 @@ import org.glassfish.hk2.api.TypeLiteral;
 import javax.inject.Inject;
 
 /**
- * Common bindings useful to all plugins.  Added by default.
+ * Common bindings useful to all plugins.  Added byWithType default.
  */
 public class DefaultPluginBinder extends PluginBinder {
 

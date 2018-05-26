@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Sets;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.AnnotatedType;
-import java.util.Optional;
 import java.util.Set;
 
 public class ElementAttributeSet {
@@ -46,10 +45,11 @@ public class ElementAttributeSet {
         final Set<ElementAttributeValue<?>> values = Sets.newHashSet();
 
         for (ElementAttribute<?> attribute : this.attributes) {
-            final Optional<? extends ElementAttributeValue<?>> value = attribute.getValue(element);
-            if (!value.isPresent()) {
+            if (!attribute.isPresent(element)) {
                 continue;
             }
+            final ElementAttributeValue<?> value = attribute.getValue(element);
+
             for (ElementAttributeValue<?> possibleConflictingValue : values) {
                 if (attribute.isConflicting(possibleConflictingValue)) {
                     throw new IllegalStateException(
@@ -57,7 +57,8 @@ public class ElementAttributeSet {
                             .getAttributeKey() + "'");
                 }
             }
-            values.add(value.get());
+            
+            values.add(value);
         }
 
         return values;

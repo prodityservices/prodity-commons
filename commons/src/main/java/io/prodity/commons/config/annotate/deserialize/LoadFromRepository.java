@@ -1,5 +1,6 @@
 package io.prodity.commons.config.annotate.deserialize;
 
+import io.prodity.commons.repository.Repository;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -12,6 +13,8 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface LoadFromRepository {
 
-    String value();
+    Class<? extends Repository<?, ?>> value();
+
+    String name() default "";
 
 }

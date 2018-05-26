@@ -17,7 +17,7 @@ public class UUIDArgument implements Argument {
 
     @Override
     public void apply(int position, PreparedStatement statement, StatementContext ctx) throws SQLException {
-        statement.setBytes(position, UUIDFeature.toBytes(this.uuid));
+        statement.setBytes(position, UUIDCustomizer.toBytes(this.uuid));
     }
 
 

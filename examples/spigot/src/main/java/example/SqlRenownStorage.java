@@ -6,6 +6,7 @@ import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -38,7 +39,7 @@ public class SqlRenownStorage implements RenownStorage {
     }
 
     @Override
-    public CompletableFuture<Integer> getRenown(Player player) {
+    public CompletableFuture<Optional<Integer>> getRenown(Player player) {
         return this.async.get(dao -> dao.getRenown(player.getUniqueId())).whenComplete(this::printError);
     }
 

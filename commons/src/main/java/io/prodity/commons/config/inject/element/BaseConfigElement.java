@@ -1,6 +1,7 @@
 package io.prodity.commons.config.inject.element;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.base.MoreObjects.ToStringHelper;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
@@ -16,19 +17,19 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import ninja.leaping.configurate.ConfigurationNode;
+import ninja.leaping.configurate.SimpleConfigurationNode;
 
 public class BaseConfigElement<T> implements ConfigElement<T>, DelegateNamedAnnotatedElement {
 
     private final TypeToken<T> type;
     private final NamedAnnotatedElement element;
 
+    private final ElementInjectionStrategy injectionStrategy;
     private final List<String> path;
     private final Map<ElementAttributeKey<?>, ElementAttributeValue<?>> attributes;
 
     /**
      * Automatically resolves attributes & paths from the specified values.<br>
-     * Use {@link BaseConfigElement#BaseConfigElement(TypeToken, NamedAnnotatedElement, List, Iterable)}
-     * if specifying the path and attributes is necessary.
      *
      * @param type the {@link TypeToken} of the type
      * @param element the {@link NamedAnnotatedElement}
@@ -37,28 +38,15 @@ public class BaseConfigElement<T> implements ConfigElement<T>, DelegateNamedAnno
         Preconditions.checkNotNull(type, "type");
         Preconditions.checkNotNull(element, "element");
         this.element = element;
-        this.path = ConfigElement.resolvePath(element);
+        this.injectionStrategy = ConfigElement.resolveInjectionStrategy(element);
+        if (this.injectionStrategy == ElementInjectionStrategy.NODE_PATH) {
+            this.path = ConfigElement.resolvePath(element);
+        } else {
+            this.path = null;
+        }
         this.type = type;
         this.attributes = Maps.newConcurrentMap();
         this.resolveAttributes();
-    }
-
-    /**
-     * Uses the specified path and attributes.<br>
-     * Use {@link BaseConfigElement#BaseConfigElement(TypeToken, NamedAnnotatedElement)} if the values need to be resolved.
-     */
-    public BaseConfigElement(TypeToken<T> type, NamedAnnotatedElement element, List<String> path,
-        Iterable<ElementAttributeValue<?>> attributes) {
-        Preconditions.checkNotNull(type, "type");
-        Preconditions.checkNotNull(element, "element");
-        Preconditions.checkNotNull(path, "path");
-        Preconditions.checkNotNull(attributes, "attribute");
-
-        this.type = type;
-        this.element = element;
-        this.path = ImmutableList.copyOf(path);
-        this.attributes = Maps.newConcurrentMap();
-        attributes.forEach((attribute) -> this.attributes.put(attribute.getAttributeKey(), attribute));
     }
 
     private void resolveAttributes() {
@@ -76,7 +64,15 @@ public class BaseConfigElement<T> implements ConfigElement<T>, DelegateNamedAnno
     }
 
     @Override
-    public List<String> getPath() {
+    public ElementInjectionStrategy getInjectionStrategy() {
+        return this.injectionStrategy;
+    }
+
+    @Override
+    public List<String> getPath() throws IllegalStateException {
+        if (this.path == null) {
+            throw new IllegalStateException("element=" + this.toString() + " does not have a path");
+        }
         return this.path;
     }
 
@@ -105,17 +101,27 @@ public class BaseConfigElement<T> implements ConfigElement<T>, DelegateNamedAnno
 
     @Override
     public T resolve(ElementResolver elementResolver, ConfigurationNode node) throws Throwable {
-        final ConfigurationNode valueNode = node.getNode(this.path.toArray());
+        final ConfigurationNode valueNode;
+
+        if (this.injectionStrategy == ElementInjectionStrategy.NODE_KEY) {
+            valueNode = SimpleConfigurationNode.root().setValue(node.getKey());
+        } else {
+            valueNode = node.getNode(this.path.toArray());
+        }
+
         return elementResolver.resolveValue(this, valueNode);
     }
 
     @Override
     public String toString() {
-        return MoreObjects.toStringHelper(this.getClass())
-            .add("path", this.path)
+        final ToStringHelper toStringHelper = MoreObjects.toStringHelper(this.getClass())
             .add("type", this.type)
-            .add("attributes", this.attributes)
-            .toString();
+            .add("injectionStrategy", this.injectionStrategy)
+            .add("attributes", this.attributes);
+        if (this.path != null) {
+            toStringHelper.add("path", this.path);
+        }
+        return toStringHelper.toString();
     }
 
 }
