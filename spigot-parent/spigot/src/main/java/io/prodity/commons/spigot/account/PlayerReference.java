@@ -2,6 +2,7 @@ package io.prodity.commons.spigot.account;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.jdbi.v3.core.mapper.reflect.JdbiConstructor;
 
 import javax.annotation.Nullable;
 import java.time.Instant;
@@ -12,6 +13,7 @@ public class PlayerReference {
     private final String playerName;
     private final Instant lastSeen;
 
+    @JdbiConstructor
     public PlayerReference(UUID playerId, String playerName, @Nullable Instant lastSeen) {
         this.playerId = playerId;
         this.playerName = playerName;

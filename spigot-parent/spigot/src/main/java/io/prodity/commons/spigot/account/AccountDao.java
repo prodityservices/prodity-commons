@@ -12,7 +12,7 @@ import java.util.UUID;
 @RegisterConstructorMapper(PlayerReference.class)
 public interface AccountDao {
     @SqlUpdate(
-            "INSERT INTO name_cache(player_id, player_name, last_seen) VALUES(:id, :name, :lastSeen) " +
+            "INSERT INTO name_cache(player_id, player_name, last_seen) VALUES(:id, :name, :lastJoin) " +
             "ON DUPLICATE KEY UPDATE player_name = :name"
     )
     void updateCache(@BindBean PlayerReference reference);
