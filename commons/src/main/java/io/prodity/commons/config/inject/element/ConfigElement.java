@@ -2,15 +2,18 @@ package io.prodity.commons.config.inject.element;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.reflect.TypeToken;
 import io.prodity.commons.config.annotate.inject.ConfigInject;
 import io.prodity.commons.config.annotate.inject.ConfigNodeKey;
+import io.prodity.commons.config.annotate.inject.ConfigNodeValue;
 import io.prodity.commons.config.annotate.inject.ConfigPath;
 import io.prodity.commons.config.inject.ConfigObject;
 import io.prodity.commons.config.inject.ConfigResolvable;
 import io.prodity.commons.config.inject.element.attribute.ElementAttributeKey;
 import io.prodity.commons.config.inject.element.attribute.ElementAttributeValue;
 import io.prodity.commons.reflect.element.NamedAnnotatedElement;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +27,13 @@ import javax.annotation.Nullable;
  */
 public interface ConfigElement<T> extends ConfigResolvable<T>, NamedAnnotatedElement {
 
+    ImmutableSet<Class<? extends Annotation>> ELEMENT_ANNOTATIONS = ImmutableSet.<Class<? extends Annotation>>builder()
+        .add(ConfigInject.class)
+        .add(ConfigPath.class)
+        .add(ConfigNodeKey.class)
+        .add(ConfigNodeValue.class)
+        .build();
+
     String PERIOD_LITERAL = Pattern.quote(".");
 
     /**
@@ -32,12 +42,12 @@ public interface ConfigElement<T> extends ConfigResolvable<T>, NamedAnnotatedEle
      * @param element the element
      * @return an immutable {@link List} of the elements path
      */
-    static List<String> resolvePath(NamedAnnotatedElement element) {
+    static List<String> resolvePath(NamedAnnotatedElement element) throws IllegalStateException {
         Preconditions.checkNotNull(element, "element");
 
-        if (element.isAnnotationPresent(ConfigNodeKey.class)) {
-            throw new IllegalArgumentException(
-                "specified element=" + element + " does not have a path as it has the @ConfigNodeKey annotation");
+        if (!ElementInjectionStrategy.NODE_PATH.hasStrategy(element)) {
+            throw new IllegalStateException(
+                "element=" + element.getName() + " does not have the ElementInjectionStrategy#NODE_PATH strategy");
         }
 
         final String pathAsString = Optional.ofNullable(element.getAnnotation(ConfigPath.class))
@@ -47,13 +57,6 @@ public interface ConfigElement<T> extends ConfigResolvable<T>, NamedAnnotatedEle
         return ImmutableList.copyOf(pathAsString.split(ConfigElement.PERIOD_LITERAL));
     }
 
-    static ElementInjectionStrategy resolveInjectionStrategy(NamedAnnotatedElement element) {
-        if (element.isAnnotationPresent(ConfigPath.class) && element.isAnnotationPresent(ConfigNodeKey.class)) {
-            throw new IllegalStateException("element=" + element + " has both @ConfigPath and @ConfigNodeKey annotations");
-        }
-        return element.isAnnotationPresent(ConfigNodeKey.class) ? ElementInjectionStrategy.NODE_KEY : ElementInjectionStrategy.NODE_PATH;
-    }
-
     /**
      * Gets whether or not the specified {@link AnnotatedElement} is a {@link ConfigElement}.
      *
@@ -61,8 +64,15 @@ public interface ConfigElement<T> extends ConfigResolvable<T>, NamedAnnotatedEle
      * @return true if the specified element is a {@link ConfigElement}, false if not
      */
     static boolean isElement(@Nullable AnnotatedElement element) {
-        return element != null && (element.isAnnotationPresent(ConfigNodeKey.class) || element.isAnnotationPresent(ConfigPath.class)
-            || element.isAnnotationPresent(ConfigInject.class));
+        if (element == null) {
+            return false;
+        }
+        for (Class<? extends Annotation> annotation : ConfigElement.ELEMENT_ANNOTATIONS) {
+            if (element.isAnnotationPresent(annotation)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     TypeToken<T> getType();

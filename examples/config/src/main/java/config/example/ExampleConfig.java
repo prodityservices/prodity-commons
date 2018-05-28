@@ -21,6 +21,7 @@ import io.prodity.commons.config.inject.deserialize.registry.ElementDeserializer
 import io.prodity.commons.spigot.inject.TimeUnit;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -154,6 +155,10 @@ public class ExampleConfig {
     @Required
     private Set<HandledConfigObject> handledExamples;
 
+    @ConfigPath("string-number-example")
+    @Required
+    private List<StringNumberPair> stringNumberPairs;
+
     //Annotations @PreConfigInject and @PostConfigInject can be used on methods in the following cases:
     // 1) A class annotated with @Config that is directly injected by a ConfigInjector
     // 2) A class annotated with @ConfigDeserializable that is resolved by a ConfigInjector as a dependency
@@ -233,6 +238,8 @@ public class ExampleConfig {
             .add("messages", this.messages)
             .add("broadcastUnit", this.broadcastUnit)
             .add("broadcastDuration", this.broadcastDuration)
+            .add("stringNumberPairs",
+                "[" + String.join(", ", this.stringNumberPairs.stream().map(Object::toString).collect(Collectors.toList())) + "]")
             .toString();
     }
 

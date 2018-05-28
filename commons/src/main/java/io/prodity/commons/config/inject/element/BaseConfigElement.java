@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Optional;
 import javax.annotation.Nullable;
 import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.SimpleConfigurationNode;
 
 public class BaseConfigElement<T> implements ConfigElement<T>, DelegateNamedAnnotatedElement {
 
@@ -38,7 +37,7 @@ public class BaseConfigElement<T> implements ConfigElement<T>, DelegateNamedAnno
         Preconditions.checkNotNull(type, "type");
         Preconditions.checkNotNull(element, "element");
         this.element = element;
-        this.injectionStrategy = ConfigElement.resolveInjectionStrategy(element);
+        this.injectionStrategy = ElementInjectionStrategy.resolveStrategy(element);
         if (this.injectionStrategy == ElementInjectionStrategy.NODE_PATH) {
             this.path = ConfigElement.resolvePath(element);
         } else {
@@ -101,14 +100,7 @@ public class BaseConfigElement<T> implements ConfigElement<T>, DelegateNamedAnno
 
     @Override
     public T resolve(ElementResolver elementResolver, ConfigurationNode node) throws Throwable {
-        final ConfigurationNode valueNode;
-
-        if (this.injectionStrategy == ElementInjectionStrategy.NODE_KEY) {
-            valueNode = SimpleConfigurationNode.root().setValue(node.getKey());
-        } else {
-            valueNode = node.getNode(this.path.toArray());
-        }
-
+        final ConfigurationNode valueNode = this.injectionStrategy.resolveNode(this, node);
         return elementResolver.resolveValue(this, valueNode);
     }
 

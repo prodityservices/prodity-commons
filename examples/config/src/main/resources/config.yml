@@ -41,3 +41,9 @@ messages:
 handled-example:
   mutable: "dog-420"
   immutable: "cat-0"
+
+string-number-example:
+  1: "one"
+  2: "two"
+  3: "three"
+  4: "four"
