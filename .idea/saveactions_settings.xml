@@ -6,7 +6,6 @@
         <option value="activate" />
         <option value="organizeImports" />
         <option value="reformat" />
-        <option value="fieldCanBeFinal" />
         <option value="explicitTypeCanBeDiamond" />
         <option value="unqualifiedFieldAccess" />
         <option value="suppressAnnotation" />

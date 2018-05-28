@@ -1,6 +1,7 @@
 package io.prodity.commons.config.inject;
 
 import io.prodity.commons.config.inject.deserialize.ElementResolver;
+import javax.annotation.Nullable;
 import ninja.leaping.configurate.ConfigurationNode;
 
 /**
@@ -11,6 +12,7 @@ import ninja.leaping.configurate.ConfigurationNode;
 @FunctionalInterface
 public interface ConfigResolvable<T> {
 
+    @Nullable
     T resolve(ElementResolver elementResolver, ConfigurationNode node) throws Throwable;
 
 }

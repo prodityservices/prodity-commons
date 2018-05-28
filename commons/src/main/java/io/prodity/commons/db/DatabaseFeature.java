@@ -6,6 +6,7 @@ import org.glassfish.hk2.api.JustInTimeInjectionResolver;
 import org.jdbi.v3.core.Jdbi;
 
 public class DatabaseFeature implements InjectionFeature {
+
     @Override
     public void preLoad(ProdityPlugin plugin) {
         this.bind(plugin, binder -> {
@@ -14,4 +15,5 @@ public class DatabaseFeature implements InjectionFeature {
             binder.bind(DatabaseResolver.class).to(JustInTimeInjectionResolver.class);
         });
     }
+
 }

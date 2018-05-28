@@ -1,65 +1,55 @@
 package io.prodity.commons.db;
 
 import com.google.common.base.Preconditions;
-import io.prodity.commons.config.inject.ConfigInjector;
-import io.prodity.commons.config.inject.except.ConfigInjectException;
 import io.prodity.commons.inject.impl.InjectUtils;
 import io.prodity.commons.lazy.Lazy;
 import io.prodity.commons.lazy.SimpleLazy;
 import io.prodity.commons.plugin.ProdityPlugin;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationVersion;
 import org.glassfish.hk2.api.DescriptorVisibility;
 import org.glassfish.hk2.api.Factory;
-import org.glassfish.hk2.api.IterableProvider;
 import org.glassfish.hk2.api.Visibility;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
-import javax.inject.Singleton;
-import javax.sql.DataSource;
 
 
 public class JdbiFactory implements Factory<Jdbi> {
 
     private final Lazy<Jdbi> instance = new SimpleLazy<>(this::create);
-    private final Provider<ConfigInjector> injector;
     private final ProdityPlugin plugin;
+    private final DatabaseConfig databaseConfig;
 
     @Inject
-    public JdbiFactory(Provider<ConfigInjector> injector, ProdityPlugin plugin) {
-        this.injector = injector;
+    public JdbiFactory(ProdityPlugin plugin, DatabaseConfig config) {
         this.plugin = plugin;
+        this.databaseConfig = config;
     }
 
     private Jdbi create() {
-        try {
-            DataSource source = this.createDataSource();
-            this.performMigrations(source);
+        DataSource source = this.createDataSource();
+        this.performMigrations(source);
 
-            Jdbi jdbi = Jdbi.create(source);
-            jdbi.installPlugin(new SqlObjectPlugin());
-            // Now install from the ServiceLocator
-            for (JdbiCustomizer feature : InjectUtils.getDependentServices(this.plugin, JdbiCustomizer.class)) {
-                jdbi.installPlugin(feature);
-            }
-            return jdbi;
-        } catch (ConfigInjectException e) {
-            throw new RuntimeException(e);
+        Jdbi jdbi = Jdbi.create(source);
+        jdbi.installPlugin(new SqlObjectPlugin());
+        // Now install from the ServiceLocator
+        for (JdbiCustomizer feature : InjectUtils.getDependentServices(this.plugin, JdbiCustomizer.class)) {
+            jdbi.installPlugin(feature);
         }
+        return jdbi;
     }
 
-    private DataSource createDataSource() throws ConfigInjectException {
-        DatabaseConfig config = new DatabaseConfig();
-        return config.createDataSource(this.plugin);
+    private DataSource createDataSource() {
+        return this.databaseConfig.createDataSource(this.plugin);
     }
 
     private void performMigrations(DataSource dataSource) {
         Flyway migrations = new Flyway(this.plugin.getClass().getClassLoader());
         migrations.setBaselineVersion(MigrationVersion.fromVersion("0"));
-        migrations.setTable(JdbiFactory.toAlphaNumeric(this.plugin.getName())+"_schema_history");
+        migrations.setTable(JdbiFactory.toAlphaNumeric(this.plugin.getName()) + "_schema_history");
         migrations.setDataSource(dataSource);
         migrations.setBaselineOnMigrate(true);
         this.plugin.getLogger().info("Checking for database migrations...");
@@ -81,4 +71,5 @@ public class JdbiFactory implements Factory<Jdbi> {
     @Override
     public void dispose(Jdbi instance) {
     }
+    
 }

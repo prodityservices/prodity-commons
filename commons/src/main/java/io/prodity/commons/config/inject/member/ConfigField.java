@@ -58,6 +58,10 @@ public class ConfigField<T> extends BaseConfigElement<T> implements ConfigMember
     public void inject(ConfigInjectionContext context, ConfigurationNode node) throws Throwable {
         final T value = this.resolve(context.getElementResolver(), node);
 
+        if (value == null) {
+            return;
+        }
+
         final Object object = this.possessor.getObjectInstance();
 
         this.field.setAccessible(true);

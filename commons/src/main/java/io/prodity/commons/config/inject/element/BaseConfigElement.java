@@ -99,6 +99,7 @@ public class BaseConfigElement<T> implements ConfigElement<T>, DelegateNamedAnno
     }
 
     @Override
+    @Nullable
     public T resolve(ElementResolver elementResolver, ConfigurationNode node) throws Throwable {
         final ConfigurationNode valueNode = this.injectionStrategy.resolveNode(this, node);
         return elementResolver.resolveValue(this, valueNode);
