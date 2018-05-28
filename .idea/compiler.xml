@@ -31,6 +31,7 @@
       <module name="examples-custom-feature" target="1.8" />
       <module name="examples-parent" target="1.5" />
       <module name="examples-spigot" target="1.8" />
+      <module name="legacy" target="1.8" />
       <module name="spigot" target="1.8" />
     </bytecodeTargetLevel>
   </component>
