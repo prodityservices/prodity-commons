@@ -81,4 +81,19 @@ public class ColorRepository implements Repository<String, IdentifiableColor> {
         return colors;
     }
 
+    @Override
+    public Collection<IdentifiableColor> getValues() {
+        return this.colors.values();
+    }
+
+    @Override
+    public Collection<String> getKeys() {
+        return this.colors.keySet();
+    }
+
+    @Override
+    public Map<String, IdentifiableColor> getAll() {
+        return this.colors;
+    }
+
 }
