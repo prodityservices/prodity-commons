@@ -14,6 +14,7 @@
         <module name="examples-config" />
         <module name="examples-custom-feature" />
         <module name="examples-spigot" />
+        <module name="legacy" />
         <module name="spigot" />
       </profile>
     </annotationProcessing>

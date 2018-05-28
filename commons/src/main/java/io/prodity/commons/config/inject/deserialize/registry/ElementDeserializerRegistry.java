@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.annotation.PostConstruct;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.jvnet.hk2.annotations.Service;
 
 /***
@@ -100,6 +101,8 @@ public class ElementDeserializerRegistry {
             .withStrategy(MapperStrategy.SUB_TYPE)
             .from(new TypeToken<Map<?, ?>>() {})
             .by(ConcurrentHashMap::new);
+
+        this.mapValueOf(LevenshteinDistance.class).from(Integer.class).by(LevenshteinDistance::new);
     }
 
     public ElementDeserializerRegistry registerAll(ElementDeserializerRegistry registry) {
