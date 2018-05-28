@@ -141,8 +141,9 @@ public abstract class Gui<SELF extends Gui<SELF>> {
         return this.fallbackGui;
     }
 
-    public void setFallbackGui(Function<Player, Gui<?>> fallbackGui) {
+    public Gui setFallbackGui(Function<Player, Gui<?>> fallbackGui) {
         this.fallbackGui = fallbackGui;
+        return this;
     }
 
     /**
