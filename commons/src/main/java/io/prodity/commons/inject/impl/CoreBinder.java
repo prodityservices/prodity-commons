@@ -1,5 +1,6 @@
 package io.prodity.commons.inject.impl;
 
+import io.prodity.commons.config.inject.autoload.ConfigFeature;
 import io.prodity.commons.db.DatabaseFeature;
 import io.prodity.commons.inject.InjectionFeature;
 import io.prodity.commons.inject.bind.PluginBinder;
@@ -19,7 +20,7 @@ public abstract class CoreBinder extends PluginBinder {
     @Override
     protected void configure() {
         this.addCoreFeatures(ExportFeature.class, ListenerFeature.class, SoftDependFeature.class,
-                LifecycleFeature.class, DatabaseFeature.class);
+            LifecycleFeature.class, DatabaseFeature.class, ConfigFeature.class);
     }
 
     @SafeVarargs
