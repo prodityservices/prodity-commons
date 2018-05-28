@@ -1,6 +1,6 @@
 # This file is copied to the plugin data folder.
 # The server administrator can then configure it.
-hostname: localhost
+host: localhost
 port: 3306
 database: test
 username: admin
