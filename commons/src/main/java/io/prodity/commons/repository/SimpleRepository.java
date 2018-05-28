@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
  */
 public abstract class SimpleRepository<K, V extends Identifiable<K>> implements Repository<K, V> {
 
-    private final Map<K, V> map;
+    protected final Map<K, V> map;
     private final TypeToken<K> keyType;
     private final TypeToken<V> valueType;
 

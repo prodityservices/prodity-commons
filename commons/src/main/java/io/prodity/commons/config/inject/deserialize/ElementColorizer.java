@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import io.prodity.commons.message.color.Colorizer;
+import io.prodity.commons.effect.message.color.Colorizer;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;

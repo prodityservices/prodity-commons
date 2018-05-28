@@ -1,4 +1,4 @@
-package io.prodity.commons.message.color;
+package io.prodity.commons.effect.message.color;
 
 import org.jvnet.hk2.annotations.Contract;
 

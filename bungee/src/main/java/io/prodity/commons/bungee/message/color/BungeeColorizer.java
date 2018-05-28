@@ -1,7 +1,7 @@
 package io.prodity.commons.bungee.message.color;
 
+import io.prodity.commons.effect.message.color.Colorizer;
 import io.prodity.commons.inject.Export;
-import io.prodity.commons.message.color.Colorizer;
 import net.md_5.bungee.api.ChatColor;
 import org.jvnet.hk2.annotations.Service;
 
