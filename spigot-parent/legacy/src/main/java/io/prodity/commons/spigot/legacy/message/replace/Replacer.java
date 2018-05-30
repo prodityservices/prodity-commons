@@ -13,10 +13,6 @@ import org.bukkit.entity.Player;
 
 public class Replacer implements Cloneable {
 
-    public static Supplier<String> supplyObject(Object object) {
-        return () -> String.valueOf(object);
-    }
-
     public static Replacer create() {
         return new Replacer();
     }
@@ -63,13 +59,18 @@ public class Replacer implements Cloneable {
         return this.map.isEmpty();
     }
 
-    public Replacer add(String target, Supplier<String> replacement) {
-        this.map.put(target, replacement);
+    public Replacer add(String target, Supplier<Object> replacement) {
+        this.map.put(target, () -> String.valueOf(replacement.get()));
         return this;
     }
 
     public Replacer add(String target, String replacement) {
         this.map.put(target, () -> replacement);
+        return this;
+    }
+
+    public Replacer add(String target, Object replacement) {
+        this.map.put(target, () -> String.valueOf(replacement));
         return this;
     }
 
