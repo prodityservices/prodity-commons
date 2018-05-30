@@ -70,7 +70,13 @@ public class PlayerReplacer extends Replacer {
     }
 
     @Override
-    public PlayerReplacer add(String target, Supplier<String> replacement) {
+    public PlayerReplacer add(String target, Supplier<Object> replacement) {
+        super.add(target, replacement);
+        return this;
+    }
+
+    @Override
+    public PlayerReplacer add(String target, Object replacement) {
         super.add(target, replacement);
         return this;
     }
