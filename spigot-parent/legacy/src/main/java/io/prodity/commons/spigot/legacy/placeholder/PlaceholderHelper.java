@@ -23,7 +23,7 @@ public class PlaceholderHelper {
         Plugin placeholderApiPlugin = Bukkit.getPluginManager().getPlugin("PlaceholderAPI");
         if (placeholderApiPlugin != null) {
             if (placeholderApiPlugin instanceof PlaceholderAPIPlugin) {
-                usingPlaceholderAPI = true;
+                PlaceholderHelper.usingPlaceholderAPI = true;
             } else {
                 Bukkit.getLogger()
                     .severe(
@@ -31,14 +31,14 @@ public class PlaceholderHelper {
             }
         }
 
-        return usingPlaceholderAPI;
+        return PlaceholderHelper.usingPlaceholderAPI;
     }
 
     /**
      * This will filter the text which is inputted and return a version which has been altered by PlaceholderAPI.
      */
     public static String setPlaceholders(Player player, String text) {
-        if (usingPlaceholderAPI) {
+        if (PlaceholderHelper.usingPlaceholderAPI) {
             return PlaceholderAPI.setPlaceholders(player, text);
         } else {
             return text;
@@ -49,7 +49,7 @@ public class PlaceholderHelper {
      * This will filter text from a List, and will return a version which has been altered by PlaceholderAPI.
      */
     public static List<String> setPlaceholders(Player player, List<String> text) {
-        if (usingPlaceholderAPI) {
+        if (PlaceholderHelper.usingPlaceholderAPI) {
             return PlaceholderAPI.setPlaceholders(player, text);
         } else {
             return text;

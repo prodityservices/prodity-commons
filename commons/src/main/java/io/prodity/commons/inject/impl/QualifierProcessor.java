@@ -2,12 +2,10 @@ package io.prodity.commons.inject.impl;
 
 import io.prodity.commons.inject.DescriptorProcessor;
 import java.lang.annotation.Annotation;
-import org.glassfish.hk2.api.DescriptorType;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.utilities.DescriptorImpl;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.utilities.DescriptorImpl;
 
 public abstract class QualifierProcessor<T extends Annotation> implements DescriptorProcessor {
 

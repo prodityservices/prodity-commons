@@ -9,32 +9,8 @@ import java.util.function.Predicate;
 
 public abstract class ElementMapper<T, SELF extends ElementMapper<T, SELF>> {
 
-    public enum MapperStrategy {
-        ;
-
-        /**
-         * Strategy that returns true only if the two types are equal.
-         */
-        public static final BiPredicate<TypeToken<?>, TypeToken<?>> EQUALS = (token1, token2) -> token1.equals(token2);
-
-        /**
-         * Strategy that returns true if the type of the {@link ElementMapper} is a supertype of the specified token.<br>
-         * In other words the specified type is a sub type of the {@link ElementMapper}'s type.
-         */
-        public static final BiPredicate<TypeToken<?>, TypeToken<?>> SUB_TYPE = (token1, token2) -> token1.isSupertypeOf(token2);
-
-        /**
-         * Strategy that returns true if the two raw types of the specified {@link TypeToken}s are equal.
-         */
-        public static final BiPredicate<TypeToken<?>, TypeToken<?>> RAW_TYPE = (token1, token2) -> token1.getRawType()
-            .equals(token2.getRawType());
-
-
-    }
-
     protected final ElementDeserializerRegistry deserializerRegistry;
     protected final TypeToken<T> typeToMap;
-
     protected int priority = ElementDeserializers.DEFAULT_PRIORITY + 1;
     protected BiPredicate<TypeToken<?>, TypeToken<?>> strategy = MapperStrategy.EQUALS;
 
@@ -94,6 +70,29 @@ public abstract class ElementMapper<T, SELF extends ElementMapper<T, SELF>> {
         return MoreObjects.toStringHelper(this)
             .add("typeToMap", this.typeToMap)
             .toString();
+    }
+
+    public enum MapperStrategy {
+        ;
+
+        /**
+         * Strategy that returns true only if the two types are equal.
+         */
+        public static final BiPredicate<TypeToken<?>, TypeToken<?>> EQUALS = (token1, token2) -> token1.equals(token2);
+
+        /**
+         * Strategy that returns true if the type of the {@link ElementMapper} is a supertype of the specified token.<br>
+         * In other words the specified type is a sub type of the {@link ElementMapper}'s type.
+         */
+        public static final BiPredicate<TypeToken<?>, TypeToken<?>> SUB_TYPE = (token1, token2) -> token1.isSupertypeOf(token2);
+
+        /**
+         * Strategy that returns true if the two raw types of the specified {@link TypeToken}s are equal.
+         */
+        public static final BiPredicate<TypeToken<?>, TypeToken<?>> RAW_TYPE = (token1, token2) -> token1.getRawType()
+            .equals(token2.getRawType());
+
+
     }
 
 }

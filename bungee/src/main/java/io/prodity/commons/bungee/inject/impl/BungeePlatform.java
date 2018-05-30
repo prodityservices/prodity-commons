@@ -2,12 +2,11 @@ package io.prodity.commons.bungee.inject.impl;
 
 import io.prodity.commons.bungee.inject.BungeeInjectedPlugin;
 import io.prodity.commons.inject.impl.Platform;
+import java.util.concurrent.Executor;
+import javax.inject.Inject;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.PluginManager;
-
-import javax.inject.Inject;
-import java.util.concurrent.Executor;
 
 public class BungeePlatform implements Platform {
 

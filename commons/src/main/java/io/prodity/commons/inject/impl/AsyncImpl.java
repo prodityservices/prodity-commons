@@ -4,12 +4,12 @@ import io.prodity.commons.except.tryto.CheckedBiConsumer;
 import io.prodity.commons.except.tryto.CheckedConsumer;
 import io.prodity.commons.except.tryto.CheckedFunction;
 import io.prodity.commons.inject.Async;
-
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 public class AsyncImpl<T> implements Async<T> {
+
     private final T instance;
     private final Executor executor;
 
@@ -21,8 +21,8 @@ public class AsyncImpl<T> implements Async<T> {
     @Override
     public <IN> CompletableFuture<Void> forEach(Collection<IN> collection, CheckedBiConsumer<T, IN, Throwable> consumer) {
         return CompletableFuture.allOf(collection.stream()
-                .map(element -> this.run(inst -> consumer.accept(inst, element)))
-                .toArray(CompletableFuture[]::new));
+            .map(element -> this.run(inst -> consumer.accept(inst, element)))
+            .toArray(CompletableFuture[]::new));
     }
 
     @Override

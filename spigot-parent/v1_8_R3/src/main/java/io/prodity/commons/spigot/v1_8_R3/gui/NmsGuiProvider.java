@@ -16,28 +16,7 @@ import org.jvnet.hk2.annotations.Service;
 @Export
 @McVersion(ProdityVersions.V1_8)
 @Service
-@SuppressWarnings("Duplicates")
 public class NmsGuiProvider implements GuiProvider {
-
-    @Override
-    public void updateInventoryTitle(Player player, Inventory inventory, String newTitle) {
-        // It'd be cool if there was a nice way to do this other than copy+pasting shit
-        Preconditions.checkNotNull(player, "player");
-        Preconditions.checkNotNull(inventory, "inventory");
-        Preconditions.checkNotNull(newTitle, "newTitle");
-
-        final EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
-
-        final int windowId = entityPlayer.activeContainer.windowId;
-        final String protocolType = NmsGuiProvider.getProtocolType(inventory);
-        final ChatMessage titleMessage = new ChatMessage(newTitle);
-        final int size = inventory.getSize();
-
-        final PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(windowId, protocolType, titleMessage, size);
-
-        entityPlayer.playerConnection.sendPacket(packet);
-        entityPlayer.updateInventory(entityPlayer.activeContainer);
-    }
 
     private static String getProtocolType(Inventory inventory) {
         switch (inventory.getType()) {
@@ -66,5 +45,25 @@ public class NmsGuiProvider implements GuiProvider {
             default:
                 return "minecraft:container";
         }
+    }
+
+    @Override
+    public void updateInventoryTitle(Player player, Inventory inventory, String newTitle) {
+        // It'd be cool if there was a nice way to do this other than copy+pasting shit
+        Preconditions.checkNotNull(player, "player");
+        Preconditions.checkNotNull(inventory, "inventory");
+        Preconditions.checkNotNull(newTitle, "newTitle");
+
+        final EntityPlayer entityPlayer = ((CraftPlayer) player).getHandle();
+
+        final int windowId = entityPlayer.activeContainer.windowId;
+        final String protocolType = NmsGuiProvider.getProtocolType(inventory);
+        final ChatMessage titleMessage = new ChatMessage(newTitle);
+        final int size = inventory.getSize();
+
+        final PacketPlayOutOpenWindow packet = new PacketPlayOutOpenWindow(windowId, protocolType, titleMessage, size);
+
+        entityPlayer.playerConnection.sendPacket(packet);
+        entityPlayer.updateInventory(entityPlayer.activeContainer);
     }
 }

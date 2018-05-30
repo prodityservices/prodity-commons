@@ -3,7 +3,6 @@ package io.prodity.commons.spigot.gui.scheme.mapping;
 import io.prodity.commons.lazy.Lazy;
 import io.prodity.commons.lazy.SimpleLazy;
 import io.prodity.commons.spigot.gui.GuiItem;
-
 import java.util.Optional;
 
 class EmptySchemeMapping implements SchemeMapping {

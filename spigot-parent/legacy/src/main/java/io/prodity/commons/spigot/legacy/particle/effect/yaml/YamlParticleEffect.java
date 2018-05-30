@@ -1,5 +1,6 @@
 package io.prodity.commons.spigot.legacy.particle.effect.yaml;
 
+import com.google.common.collect.ImmutableMap;
 import io.prodity.commons.spigot.legacy.config.yaml.AbstractYamlType;
 import io.prodity.commons.spigot.legacy.config.yaml.YamlException;
 import io.prodity.commons.spigot.legacy.config.yaml.types.bukkit.YamlSection;
@@ -15,7 +16,6 @@ import io.prodity.commons.spigot.legacy.particle.effect.yaml.color.ordinary.Yaml
 import io.prodity.commons.spigot.legacy.particle.effect.yaml.data.YamlParticleData;
 import io.prodity.commons.spigot.legacy.vector.optional.OptionalVector;
 import io.prodity.commons.spigot.legacy.vector.yaml.YamlOptionalVector;
-import com.google.common.collect.ImmutableMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;

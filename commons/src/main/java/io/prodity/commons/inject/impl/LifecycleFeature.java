@@ -4,7 +4,6 @@ import io.prodity.commons.inject.Eager;
 import io.prodity.commons.inject.InjectionFeature;
 import io.prodity.commons.inject.PluginLifecycleListener;
 import io.prodity.commons.plugin.ProdityPlugin;
-
 import java.util.function.BiConsumer;
 import java.util.logging.Level;
 

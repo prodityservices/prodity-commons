@@ -1,22 +1,20 @@
 package io.prodity.commons.spigot.legacy.particle.effect.data;
 
+import com.google.common.base.Objects;
 import io.prodity.commons.spigot.legacy.lazy.LazyValue;
 import io.prodity.commons.spigot.legacy.lazy.SimpleLazyValue;
 import io.prodity.commons.spigot.legacy.particle.effect.data.block.MutableBlockParticleData;
 import io.prodity.commons.spigot.legacy.particle.effect.data.item.MutableItemParticleData;
-import com.google.common.base.Objects;
 import lombok.Getter;
 import org.bukkit.Material;
 
 public abstract class MutableParticleData<T> implements ParticleData<T> {
 
+    private final LazyValue<T> packetData = new SimpleLazyValue<>(this::createSpawnData);
     @Getter
     private Material material;
-
     @Getter
     private byte data;
-
-    private final LazyValue<T> packetData = new SimpleLazyValue<>(this::createSpawnData);
 
     public MutableParticleData(Material material, byte data) throws IllegalArgumentException {
         this.verify(material, data);

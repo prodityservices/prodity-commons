@@ -1,19 +1,19 @@
 package io.prodity.commons.spigot.legacy.gui.scheme.mapping;
 
-import io.prodity.commons.spigot.legacy.gui.GuiItem;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
+import io.prodity.commons.spigot.legacy.gui.GuiItem;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 public class SimpleSchemeMapping implements SchemeMapping {
 
-    private final ImmutableMap<Integer, GuiItem> mapping;
-
     public static SchemeMapping of(Map<Integer, GuiItem> mapping) {
         return new SimpleSchemeMapping(mapping);
     }
+
+    private final ImmutableMap<Integer, GuiItem> mapping;
 
     private SimpleSchemeMapping(Map<Integer, GuiItem> mapping) {
         Preconditions.checkNotNull(mapping, "mapping");

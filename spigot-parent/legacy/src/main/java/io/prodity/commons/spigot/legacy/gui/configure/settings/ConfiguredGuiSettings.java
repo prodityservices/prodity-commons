@@ -1,13 +1,13 @@
 package io.prodity.commons.spigot.legacy.gui.configure.settings;
 
+import com.google.common.collect.ImmutableCollection;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import io.prodity.commons.spigot.legacy.gui.configure.ConfiguredGui;
 import io.prodity.commons.spigot.legacy.item.repo.ItemRepository;
 import io.prodity.commons.spigot.legacy.message.replace.Replacer;
 import io.prodity.commons.spigot.legacy.placeholder.PlaceholderHelper;
 import io.prodity.commons.spigot.legacy.sound.playable.impl.ImmutablePlayableSound;
-import com.google.common.collect.ImmutableCollection;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 import java.util.Optional;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

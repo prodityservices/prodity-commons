@@ -1,5 +1,8 @@
 package io.prodity.commons.spigot.legacy.builder;
 
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import io.prodity.commons.spigot.legacy.builder.construct.BuilderConstruction;
 import io.prodity.commons.spigot.legacy.builder.meta.BuilderMeta;
 import io.prodity.commons.spigot.legacy.builder.meta.BuilderMetaKey;
@@ -7,9 +10,6 @@ import io.prodity.commons.spigot.legacy.builder.meta.ImmutableBuilderMeta;
 import io.prodity.commons.spigot.legacy.builder.meta.MutableBuilderMeta;
 import io.prodity.commons.spigot.legacy.builder.meta.modifier.MetaModifier;
 import io.prodity.commons.spigot.legacy.builder.meta.resolve.MetaResolver;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -23,12 +23,11 @@ public abstract class MutableBuilder<T, C extends BuilderConstruction<T>, SELF e
     AbstractBuilder<T, C, SELF> {
 
     @Getter
-    @Accessors(chain = true)
-    private Map<BuilderMetaKey<?, C, ?, ?>, MutableBuilderMeta<?, C>> metaMap;
-
-    @Getter
     @Setter
     private final Multimap<BuilderMetaKey<?, C, ?, ?>, MetaModifier<?>> metaModifiers;
+    @Getter
+    @Accessors(chain = true)
+    private Map<BuilderMetaKey<?, C, ?, ?>, MutableBuilderMeta<?, C>> metaMap;
 
     protected MutableBuilder(Builder<T, C, ?> builder) {
         super(builder);

@@ -1,11 +1,11 @@
 package io.prodity.commons.spigot.legacy.particle.effect;
 
+import com.google.common.collect.Sets;
 import io.prodity.commons.spigot.legacy.particle.spawn.ParticleSpawnStrategy;
 import io.prodity.commons.spigot.legacy.particle.spawn.ParticleSpawnStrategyGenerator;
 import io.prodity.commons.spigot.legacy.particle.spawn.ParticleSpawner;
 import io.prodity.commons.spigot.legacy.particle.spawn.PlayerParticleSpawner;
 import io.prodity.commons.spigot.legacy.particle.spawn.WorldParticleSpawner;
-import com.google.common.collect.Sets;
 import java.util.function.Consumer;
 import lombok.Getter;
 import org.bukkit.Location;

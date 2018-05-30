@@ -10,20 +10,6 @@ import org.bukkit.plugin.Plugin;
 
 public class MessageCompositeRepository extends YamlRepository<MessageComposite> {
 
-    public enum Keys {
-        ;
-
-        public static final String CHAT = "chat";
-        public static final String ACTION_BAR = "action-bar";
-        public static final String TITLE = "title";
-        public static final String SUB_TITLE = "sub-title";
-        public static final String TITLE_TIMES = "title-times";
-        public static final String TITLE_TIMES_SHOW = "show";
-        public static final String TITLE_TIMES_STAY = "stay";
-        public static final String TITLE_TIMES_FADE = "fade";
-
-    }
-
     public MessageCompositeRepository(Plugin plugin, String fileName) {
         super(plugin, fileName);
     }
@@ -70,6 +56,20 @@ public class MessageCompositeRepository extends YamlRepository<MessageComposite>
         }
 
         return builder.build();
+    }
+
+    public enum Keys {
+        ;
+
+        public static final String CHAT = "chat";
+        public static final String ACTION_BAR = "action-bar";
+        public static final String TITLE = "title";
+        public static final String SUB_TITLE = "sub-title";
+        public static final String TITLE_TIMES = "title-times";
+        public static final String TITLE_TIMES_SHOW = "show";
+        public static final String TITLE_TIMES_STAY = "stay";
+        public static final String TITLE_TIMES_FADE = "fade";
+
     }
 
 }

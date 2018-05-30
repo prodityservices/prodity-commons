@@ -18,9 +18,9 @@ public interface Slot {
 
     ItemStack getItem();
 
-    boolean hasItem();
-
     Slot setItem(ItemStack item);
+
+    boolean hasItem();
 
     Slot clear();
 

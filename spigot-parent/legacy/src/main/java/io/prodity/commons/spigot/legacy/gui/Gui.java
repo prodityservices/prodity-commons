@@ -1,13 +1,13 @@
 package io.prodity.commons.spigot.legacy.gui;
 
+import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import io.prodity.commons.spigot.legacy.gui.close.GuiCloseHandler;
 import io.prodity.commons.spigot.legacy.gui.close.GuiCloseReason;
 import io.prodity.commons.spigot.legacy.gui.slot.SimpleSlot;
 import io.prodity.commons.spigot.legacy.gui.slot.Slot;
 import io.prodity.commons.spigot.legacy.plugin.PluginUtil;
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -101,6 +101,14 @@ public abstract class Gui<SELF extends Gui<SELF>> {
         return this.title;
     }
 
+    public SELF setTitle(String title) {
+        this.title = title;
+        if (this.isValid()) {
+            GuiProvider.getInstance().updateInventoryTitle(this.player, this.inventory, this.title);
+        }
+        return this.getSelf();
+    }
+
     public Optional<GuiCloseReason> getCloseReason() {
         return Optional.ofNullable(this.closeReason);
     }
@@ -109,14 +117,6 @@ public abstract class Gui<SELF extends Gui<SELF>> {
         if (this.closeReason == null) {
             this.closeReason = closeReason;
         }
-    }
-
-    public SELF setTitle(String title) {
-        this.title = title;
-        if (this.isValid()) {
-            GuiProvider.getInstance().updateInventoryTitle(this.player, this.inventory, this.title);
-        }
-        return this.getSelf();
     }
 
     public boolean isFirstDraw() {

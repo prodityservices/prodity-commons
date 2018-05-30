@@ -12,6 +12,10 @@ import org.jdbi.v3.core.mapper.reflect.JdbiConstructor;
 
 public class PlayerReference {
 
+    public static PlayerReference of(Player player) {
+        return new PlayerReference(player.getUniqueId(), player.getName(), Instant.ofEpochMilli(player.getLastPlayed()));
+    }
+
     private final UUID playerId;
     private final String playerName;
     private final Instant lastSeen;
@@ -54,10 +58,6 @@ public class PlayerReference {
 
     public OfflinePlayer offlineDereference() {
         return Bukkit.getOfflinePlayer(this.playerId);
-    }
-
-    public static PlayerReference of(Player player) {
-        return new PlayerReference(player.getUniqueId(), player.getName(), Instant.ofEpochMilli(player.getLastPlayed()));
     }
 
     @Override

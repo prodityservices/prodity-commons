@@ -2,12 +2,11 @@ package io.prodity.commons.spigot.gui.slot;
 
 import io.prodity.commons.spigot.gui.Gui;
 import io.prodity.commons.spigot.gui.GuiItem;
+import java.util.Map;
+import java.util.function.Consumer;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Map;
-import java.util.function.Consumer;
 
 public interface Slot {
 
@@ -19,9 +18,9 @@ public interface Slot {
 
     ItemStack getItem();
 
-    boolean hasItem();
-
     Slot setItem(ItemStack item);
+
+    boolean hasItem();
 
     Slot clear();
 

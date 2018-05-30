@@ -18,6 +18,17 @@ import org.jdbi.v3.sqlobject.SqlOperation;
 
 public class DatabaseResolver implements JustInTimeInjectionResolver {
 
+    // Copied from JDBI
+    private static boolean looksLikeSqlObject(Class<?> type) {
+        if (SqlObject.class.isAssignableFrom(type)) {
+            return true;
+        }
+
+        return Stream.of(type.getMethods())
+            .flatMap(m -> Stream.of(m.getAnnotations()))
+            .anyMatch(a -> a.annotationType().isAnnotationPresent(SqlOperation.class));
+    }
+
     private final Set<Type> seenBefore = ConcurrentHashMap.newKeySet();
     private final ProdityPlugin plugin;
     private final ServiceLocator locator;
@@ -50,17 +61,6 @@ public class DatabaseResolver implements JustInTimeInjectionResolver {
             }
         });
         return true;
-    }
-
-    // Copied from JDBI
-    private static boolean looksLikeSqlObject(Class<?> type) {
-        if (SqlObject.class.isAssignableFrom(type)) {
-            return true;
-        }
-
-        return Stream.of(type.getMethods())
-            .flatMap(m -> Stream.of(m.getAnnotations()))
-            .anyMatch(a -> a.annotationType().isAnnotationPresent(SqlOperation.class));
     }
 
 }

@@ -3,16 +3,15 @@ package io.prodity.commons.spigot.gui.slot;
 import com.google.common.base.Preconditions;
 import io.prodity.commons.spigot.gui.Gui;
 import io.prodity.commons.spigot.gui.GuiItem;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.ItemStack;
-
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
 
 public class SimpleSlot implements Slot {

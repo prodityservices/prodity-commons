@@ -1,16 +1,15 @@
 package io.prodity.commons.spigot.inject.impl;
 
 import io.prodity.commons.inject.impl.Platform;
-import io.prodity.commons.plugin.ProdityPlugin;
 import io.prodity.commons.spigot.inject.SpigotInjectedPlugin;
+import java.util.concurrent.Executor;
+import javax.inject.Inject;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 
-import javax.inject.Inject;
-import java.util.concurrent.Executor;
-
 public class SpigotPlatform implements Platform {
+
     private final SpigotInjectedPlugin plugin;
 
     @Inject

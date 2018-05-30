@@ -1,26 +1,16 @@
 package io.prodity.commons.bungee.inject;
 
 import io.prodity.commons.bungee.inject.impl.DefaultPluginBinder;
-import io.prodity.commons.inject.impl.InjectUtils;
-import io.prodity.commons.inject.InjectionFeature;
 import io.prodity.commons.inject.impl.InjectionContainer;
-import io.prodity.commons.inject.impl.PluginBridge;
 import io.prodity.commons.plugin.ProdityPlugin;
-import java.util.Collections;
-import java.util.List;
+import java.io.InputStream;
+import java.util.Set;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.api.ServiceLocatorFactory;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
-
-
-import javax.annotation.Nonnull;
-import java.io.InputStream;
-import java.util.Set;
-import java.util.function.BiConsumer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public abstract class BungeeInjectedPlugin extends Plugin implements ProdityPlugin, Listener {
 

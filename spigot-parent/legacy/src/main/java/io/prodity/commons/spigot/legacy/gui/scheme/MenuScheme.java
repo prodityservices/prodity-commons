@@ -67,8 +67,8 @@ public class MenuScheme implements Cloneable {
 
     public MenuScheme maskEmpty(int lines) {
         for (int i = 0; i < lines; i++) {
-            this.maskRows.add(EMPTY_MASK);
-            this.schemeRows.add(EMPTY_SCHEME);
+            this.maskRows.add(MenuScheme.EMPTY_MASK);
+            this.schemeRows.add(MenuScheme.EMPTY_SCHEME);
         }
         return this;
     }
@@ -131,7 +131,7 @@ public class MenuScheme implements Cloneable {
     }
 
     public ImmutableList<Integer> getMaskedIndexesImmutable() {
-        return ImmutableList.copyOf(getMaskedIndexes());
+        return ImmutableList.copyOf(this.getMaskedIndexes());
     }
 
     public MenuPopulator populator(Gui<?> gui) {

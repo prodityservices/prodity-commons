@@ -14,12 +14,6 @@ public class ItemMetaCustomizer implements JdbiCustomizer {
 
     private static final TypeToken<ItemMeta> ITEM_META_TYPE = TypeToken.of(ItemMeta.class);
 
-    @Override
-    public void customizeJdbi(Jdbi jdbi) {
-        jdbi.registerArgument(new ItemMetaArgumentFactory());
-        jdbi.registerColumnMapper(new ItemMetaColumnMapper());
-    }
-
     public static byte[] toBytes(ItemMeta itemMeta) {
         return Try.to(() -> BukkitSerializer.objectToBytes(itemMeta)).get();
     }
@@ -30,6 +24,12 @@ public class ItemMetaCustomizer implements JdbiCustomizer {
             throw new IllegalArgumentException("Illegal byte array length: " + array.length);
         }
         return Try.to(() -> BukkitSerializer.objectFromBytes(ItemMetaCustomizer.ITEM_META_TYPE, array)).get();
+    }
+
+    @Override
+    public void customizeJdbi(Jdbi jdbi) {
+        jdbi.registerArgument(new ItemMetaArgumentFactory());
+        jdbi.registerColumnMapper(new ItemMetaColumnMapper());
     }
 
 }

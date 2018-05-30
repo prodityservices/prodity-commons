@@ -1,9 +1,9 @@
 package io.prodity.commons.spigot.legacy.item.builder.meta.enchantments;
 
+import com.google.common.collect.Maps;
 import io.prodity.commons.spigot.legacy.builder.meta.BuilderMetaKey;
 import io.prodity.commons.spigot.legacy.item.builder.construct.ItemConstruction;
 import io.prodity.commons.spigot.legacy.item.builder.meta.AbstractItemBuilderMeta;
-import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Stream;

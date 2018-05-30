@@ -28,7 +28,7 @@ public class LocalServiceFilter<T> implements IndexedFilter {
     @Override
     public boolean matches(Descriptor d) {
         return d.getDescriptorVisibility() == DescriptorVisibility.LOCAL
-                || InjectUtils.isFromPlugin(d, this.plugin);
+            || InjectUtils.isFromPlugin(d, this.plugin);
     }
 
 }

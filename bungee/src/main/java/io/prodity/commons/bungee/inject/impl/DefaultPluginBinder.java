@@ -2,18 +2,16 @@ package io.prodity.commons.bungee.inject.impl;
 
 import io.prodity.commons.bungee.inject.BungeeInjectedPlugin;
 import io.prodity.commons.inject.bind.PluginBinder;
-import java.util.logging.Logger;
-
 import io.prodity.commons.inject.impl.Platform;
 import io.prodity.commons.inject.impl.ProdityInjectionResolver;
+import java.util.logging.Logger;
+import javax.inject.Inject;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
 import org.glassfish.hk2.api.InjectionResolver;
 import org.glassfish.hk2.api.TypeLiteral;
-
-import javax.inject.Inject;
 
 public class DefaultPluginBinder extends PluginBinder {
 

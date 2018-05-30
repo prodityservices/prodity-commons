@@ -6,7 +6,6 @@ import com.google.common.collect.Lists;
 import io.prodity.commons.spigot.gui.Gui;
 import io.prodity.commons.spigot.gui.GuiItem;
 import io.prodity.commons.spigot.gui.slot.Slot;
-
 import java.util.List;
 import java.util.function.Consumer;
 

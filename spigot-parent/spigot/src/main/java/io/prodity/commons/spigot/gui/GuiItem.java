@@ -3,12 +3,11 @@ package io.prodity.commons.spigot.gui;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
+import java.util.Map;
+import java.util.function.Consumer;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.Map;
-import java.util.function.Consumer;
 
 public class GuiItem {
 

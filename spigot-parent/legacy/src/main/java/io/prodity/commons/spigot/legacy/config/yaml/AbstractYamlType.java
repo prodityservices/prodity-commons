@@ -54,7 +54,7 @@ public abstract class AbstractYamlType<T> implements YamlType<T> {
     }
 
     @Override
-    public T loadOrDefault(ConfigurationSection section, String path, T defaultValue) throws YamlException {
+    public T loadOrDefault(ConfigurationSection section, String path, T defaultValue) {
         if (!section.contains(path)) {
             return defaultValue;
         }

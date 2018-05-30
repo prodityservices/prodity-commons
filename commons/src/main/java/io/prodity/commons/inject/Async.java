@@ -3,15 +3,16 @@ package io.prodity.commons.inject;
 import io.prodity.commons.except.tryto.CheckedBiConsumer;
 import io.prodity.commons.except.tryto.CheckedConsumer;
 import io.prodity.commons.except.tryto.CheckedFunction;
-
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 /**
  * Wrapper for performing asynchronous operations on an injected service.
+ *
  * @param <T> the wrapped type
  */
 public interface Async<T> {
+
     /**
      * Concurrently applies the provided consumer to each element in the collection.  There is no guarantee
      * about the ordering of the application or what thread the consumer will be applied on.
@@ -25,6 +26,7 @@ public interface Async<T> {
 
     /**
      * Applies the provided consumer to the backing value asynchronously.
+     *
      * @param consumer consumer to apply
      * @return CompletableFuture that completes after the consumer has been applied.
      */
@@ -32,6 +34,7 @@ public interface Async<T> {
 
     /**
      * Applies the provided function to the backing value asynchronously.
+     *
      * @param function function to apply
      * @param <V> the return type of the function
      * @return CompletableFuture that completes with the return value of the function

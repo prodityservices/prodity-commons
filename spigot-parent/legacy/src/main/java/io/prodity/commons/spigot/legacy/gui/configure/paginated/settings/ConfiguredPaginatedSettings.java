@@ -1,13 +1,13 @@
 package io.prodity.commons.spigot.legacy.gui.configure.paginated.settings;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import io.prodity.commons.spigot.legacy.gui.configure.ConfiguredGui;
 import io.prodity.commons.spigot.legacy.gui.configure.paginated.settings.button.PaginatedButtonType;
 import io.prodity.commons.spigot.legacy.gui.configure.paginated.settings.button.PaginatedControlButton;
 import io.prodity.commons.spigot.legacy.gui.configure.settings.ConfiguredGuiSettings;
 import io.prodity.commons.spigot.legacy.item.builder.ImmutableItemBuilder;
 import io.prodity.commons.spigot.legacy.sound.playable.impl.ImmutablePlayableSound;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import java.util.Optional;
 import lombok.Getter;
 

@@ -59,21 +59,8 @@ public class ExampleConfig {
 
     }
 
-    // A custom constructor can be specified that allows the injection of config values as parameters.
-    // The constructor must be annotated with @ConfigInject, and only 1 constructor per class can have this annotation.
-    //
-    // The only pitfall of this is that HK2 dependency injection will not work as that is done after the instance is created.
-    // This will also be instantiated prior to @PreConfigInject methods being invoked.
-    //
-    // For this example I will leave this constructor empty, which has the same behavior as not defining a constructor.
-    @ConfigInject
-    private ExampleConfig() {
-
-    }
-
     @Inject
     private Logger logger;
-
     // @ConfigInject should be applied to all fields that are to be injected by the config injector, that
     // do not have @ConfigPath present. @ConfigPath automatically assumes the field is to be injected.
     //
@@ -102,18 +89,15 @@ public class ExampleConfig {
     @LoadFromRepository(ColorRepository.class)
     @Required
     private ImmutableList<Color> warmColors;
-
     // If using a Map type when using @LoadFromRepository, the keys will be the IDs of the values loaded from the Repository.
     @ConfigPath("warm-colors")
     @LoadFromRepository(ColorRepository.class)
     @Required
     private ImmutableMap<String, Color> warmColorsAsMap;
-
     @ConfigPath("main-color")
     @LoadFromRepository(ColorRepository.class)
     @Required
     private Color mainColor;
-
     // @Colorize specifies that elements in the following cases should be colorized
     // 1) String types
     // 2) String types that are elements of lists, sets, & their guava immutable implementations
@@ -122,7 +106,6 @@ public class ExampleConfig {
     @Colorize
     @Required
     private ImmutableMap<String, String> messages;
-
     // @ConfigDefault requires a Supplier class that will be instantiated and have the value supplied as the default
     // value for this element if no value could be loaded from the config.
     //  - Type safety can not be enforced at compile time, but it is enforced at run time, so be sure to use this wisely.
@@ -132,21 +115,17 @@ public class ExampleConfig {
     @ConfigPath("broadcast.unit")
     @ConfigDefault(BroadcastUnitDefault.class)
     private TimeUnit broadcastUnit;
-
     @ConfigPath("broadcast.duration")
     @ConfigDefault(BroadcastDurationDefault.class)
     private long broadcastDuration;
-
     // See #preInject
     @ConfigPath("handled-example.immutable")
     @Required
     private MutableHandledConfigObject mutableHandledExample;
-
     // See #preInject
     @ConfigPath("handled-example.mutable")
     @Required
     private ImmutableHandledConfigObject immutableHandledExample;
-
     // See #preInject
     //
     // When using a Collection for a configuration section that is defined in the map form,
@@ -154,10 +133,21 @@ public class ExampleConfig {
     @ConfigPath("handled-example")
     @Required
     private Set<HandledConfigObject> handledExamples;
-
     @ConfigPath("string-number-example")
     @Required
     private List<StringNumberPair> stringNumberPairs;
+
+    // A custom constructor can be specified that allows the injection of config values as parameters.
+    // The constructor must be annotated with @ConfigInject, and only 1 constructor per class can have this annotation.
+    //
+    // The only pitfall of this is that HK2 dependency injection will not work as that is done after the instance is created.
+    // This will also be instantiated prior to @PreConfigInject methods being invoked.
+    //
+    // For this example I will leave this constructor empty, which has the same behavior as not defining a constructor.
+    @ConfigInject
+    private ExampleConfig() {
+
+    }
 
     //Annotations @PreConfigInject and @PostConfigInject can be used on methods in the following cases:
     // 1) A class annotated with @Config that is directly injected by a ConfigInjector

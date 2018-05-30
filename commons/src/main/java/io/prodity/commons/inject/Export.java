@@ -5,9 +5,8 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import org.glassfish.hk2.api.DescriptorVisibility;
-
 import javax.inject.Qualifier;
+import org.glassfish.hk2.api.DescriptorVisibility;
 
 /**
  * Exported services are visible to other plugins.  To provide explicit bindings

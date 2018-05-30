@@ -3,7 +3,6 @@ package io.prodity.commons.spigot.gui.scheme;
 import com.google.common.collect.ImmutableList;
 import io.prodity.commons.spigot.gui.Gui;
 import io.prodity.commons.spigot.gui.scheme.mapping.SchemeMapping;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,8 +67,8 @@ public class MenuScheme implements Cloneable {
 
     public MenuScheme maskEmpty(int lines) {
         for (int i = 0; i < lines; i++) {
-            this.maskRows.add(EMPTY_MASK);
-            this.schemeRows.add(EMPTY_SCHEME);
+            this.maskRows.add(MenuScheme.EMPTY_MASK);
+            this.schemeRows.add(MenuScheme.EMPTY_SCHEME);
         }
         return this;
     }

@@ -2,27 +2,25 @@ package io.prodity.commons.inject.impl;
 
 import io.prodity.commons.inject.Async;
 import io.prodity.commons.plugin.ProdityPlugin;
+import java.lang.reflect.ParameterizedType;
+import java.util.Optional;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.Injectee;
 import org.glassfish.hk2.api.InjectionResolver;
 import org.glassfish.hk2.api.MultiException;
-import org.glassfish.hk2.api.Rank;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.UnsatisfiedDependencyException;
 import org.glassfish.hk2.utilities.InjecteeImpl;
 
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import java.lang.reflect.ParameterizedType;
-import java.util.Optional;
-
 /**
  * Functions identically to ThreeThirtyResolver, with a few additional behaviors:
  * - Async<T> can be injected anywhere T can be injected, with a new AsyncImpl wrapper
- *   being created around it.
+ * being created around it.
  * - Optional<T> can be injected anywhere T can be injected as an optional injection
- *   point.
+ * point.
  */
 public class ProdityInjectionResolver implements InjectionResolver<Inject> {
 
@@ -77,7 +75,7 @@ public class ProdityInjectionResolver implements InjectionResolver<Inject> {
         ActiveDescriptor<?> ad = this.locator.getInjecteeDescriptor(injectee);
 
         if (ad == null) {
-            if (injectee.isOptional()) return null;
+            if (injectee.isOptional()) { return null; }
 
             throw new MultiException(new UnsatisfiedDependencyException(injectee));
         }

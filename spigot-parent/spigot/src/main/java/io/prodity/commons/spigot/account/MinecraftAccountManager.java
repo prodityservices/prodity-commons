@@ -3,6 +3,15 @@ package io.prodity.commons.spigot.account;
 import io.prodity.commons.inject.Async;
 import io.prodity.commons.inject.Export;
 import io.prodity.commons.spigot.plugin.ProditySpigotPlugin;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.logging.Level;
+import javax.annotation.Nullable;
+import javax.inject.Inject;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,19 +22,10 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.json.simple.parser.ParseException;
 import org.jvnet.hk2.annotations.Service;
 
-import javax.annotation.Nullable;
-import javax.inject.Inject;
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-import java.util.logging.Level;
-
 @Service
 @Export
 public class MinecraftAccountManager implements Listener {
+
     private final Async<AccountDao> async;
     private final ProditySpigotPlugin plugin;
     private final BukkitScheduler scheduler;
@@ -40,14 +40,15 @@ public class MinecraftAccountManager implements Listener {
     /**
      * Retrieves a PlayerReference for the player with the given UUID. No
      * guarantee is provided for which thread this future will complete on.
+     *
      * @param id the uuid to lookup
      * @return a future that completes with the player reference
      */
     public CompletableFuture<Optional<PlayerReference>> getPlayer(UUID id) {
         return this.checkOnline(id)
-                .thenCompose(opt -> this.fallback(opt, id, this::checkCache))
-                .thenCompose(opt -> this.fallback(opt, id, this::fetchName))
-                ;
+            .thenCompose(opt -> this.fallback(opt, id, this::checkCache))
+            .thenCompose(opt -> this.fallback(opt, id, this::fetchName))
+            ;
     }
 
     private CompletableFuture<Optional<PlayerReference>> checkOnline(UUID id) {
@@ -63,21 +64,22 @@ public class MinecraftAccountManager implements Listener {
 
     private CompletableFuture<Optional<PlayerReference>> fetchName(UUID id) {
         return CompletableFuture.supplyAsync(() -> {
-                return this.fetchNewName(id).map(name -> new PlayerReference(id, name, null));
+            return this.fetchNewName(id).map(name -> new PlayerReference(id, name, null));
         }, this::async);
     }
 
     /**
      * Retrieves a PlayerReference for the player with the given name. No guarantee
      * is provided for which thread this future will complete on.
+     *
      * @param name the name to lookup
      * @return a future that completes with the player reference
      */
     public CompletableFuture<Optional<PlayerReference>> getPlayer(String name) {
         return this.checkOnline(name)
-                .thenCompose(opt -> this.fallback(opt, name, this::checkCache))
-                .thenCompose(opt -> this.fallback(opt, name, this::fetchUUID))
-                ;
+            .thenCompose(opt -> this.fallback(opt, name, this::checkCache))
+            .thenCompose(opt -> this.fallback(opt, name, this::fetchUUID))
+            ;
     }
 
     private CompletableFuture<Optional<PlayerReference>> checkOnline(String name) {
@@ -110,8 +112,8 @@ public class MinecraftAccountManager implements Listener {
     }
 
     private <KEY> CompletableFuture<Optional<PlayerReference>> fallback(Optional<PlayerReference> value,
-                                                                        KEY key,
-                                                                        Function<KEY, CompletableFuture<Optional<PlayerReference>>> fallback) {
+        KEY key,
+        Function<KEY, CompletableFuture<Optional<PlayerReference>>> fallback) {
         if (value.isPresent()) {
             return CompletableFuture.completedFuture(value);
         } else {

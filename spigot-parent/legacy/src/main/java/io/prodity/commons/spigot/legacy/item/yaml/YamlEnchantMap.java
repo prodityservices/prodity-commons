@@ -1,11 +1,11 @@
 package io.prodity.commons.spigot.legacy.item.yaml;
 
+import com.google.common.collect.Maps;
 import io.prodity.commons.spigot.legacy.config.yaml.AbstractYamlType;
 import io.prodity.commons.spigot.legacy.config.yaml.YamlException;
 import io.prodity.commons.spigot.legacy.config.yaml.YamlTypeCache;
 import io.prodity.commons.spigot.legacy.config.yaml.types.bukkit.YamlSection;
 import io.prodity.commons.spigot.legacy.config.yaml.types.primitive.YamlInt;
-import com.google.common.collect.Maps;
 import java.util.Map;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;

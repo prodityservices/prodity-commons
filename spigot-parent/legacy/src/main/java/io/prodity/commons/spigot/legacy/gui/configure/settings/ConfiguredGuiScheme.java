@@ -1,12 +1,12 @@
 package io.prodity.commons.spigot.legacy.gui.configure.settings;
 
-import io.prodity.commons.spigot.legacy.gui.configure.ConfiguredGui;
-import io.prodity.commons.spigot.legacy.gui.scheme.MenuScheme;
-import io.prodity.commons.spigot.legacy.sound.playable.impl.ImmutablePlayableSound;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterators;
+import io.prodity.commons.spigot.legacy.gui.configure.ConfiguredGui;
+import io.prodity.commons.spigot.legacy.gui.scheme.MenuScheme;
+import io.prodity.commons.spigot.legacy.sound.playable.impl.ImmutablePlayableSound;
 import java.util.Iterator;
 import java.util.Objects;
 import java.util.Optional;

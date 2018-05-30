@@ -1,11 +1,11 @@
 package io.prodity.commons.spigot.legacy.item;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import io.prodity.commons.spigot.legacy.lazy.LazyValue;
 import io.prodity.commons.spigot.legacy.lazy.SimpleLazyValue;
 import io.prodity.commons.spigot.legacy.tryto.Try;
 import io.prodity.commons.spigot.legacy.version.Version;
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import java.lang.reflect.Field;
 import java.util.Base64;
 import java.util.Optional;

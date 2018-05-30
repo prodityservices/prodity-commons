@@ -12,56 +12,6 @@ import ninja.leaping.configurate.ConfigurationNode;
 
 public class ValueMapper<T> extends ElementMapper<T, ValueMapper<T>> {
 
-    /**
-     * Specifies which {@link TypeToken} is supplied to the {@link ElementDeserializer}.
-     */
-    public enum TypeStrategy {
-
-        /**
-         * The type used is the type supplied to the {@link ElementDeserializer#deserialize(ConfigInjectionContext, TypeToken, ConfigurationNode)}
-         */
-        DESERIALIZED,
-
-        /**
-         * The type used is the type the value is being mapped from.
-         */
-        MAP_FROM,
-
-        /**
-         * The type used is the type the value is being mapped to.
-         */
-        MAP_TO
-
-    }
-
-    public ValueMapper(ElementDeserializerRegistry deserializerRegistry, TypeToken<T> typeToMap) {
-        super(deserializerRegistry, typeToMap);
-    }
-
-    /**
-     * Sets the type values are mapped from.
-     *
-     * @param typeToMapFrom the {@link TypeToken} of the type to mape values from
-     * @param <R> the type to map values from
-     * @return the {@link PreparedValueMapper} used to complete the mapping process
-     */
-    public <R> PreparedValueMapper<T, R> from(TypeToken<R> typeToMapFrom) {
-        Preconditions.checkNotNull(typeToMapFrom, "typeToMapFrom");
-        return new PreparedValueMapper<>(this, typeToMapFrom);
-    }
-
-    /**
-     * Sets the type values are mapped from.
-     *
-     * @param typeToMapFrom the {@link Class} of the type to mape values from
-     * @param <R> the type to map values from
-     * @return the {@link PreparedValueMapper} used to complete the mapping process
-     */
-    public <R> PreparedValueMapper<T, R> from(Class<R> typeToMapFrom) {
-        Preconditions.checkNotNull(typeToMapFrom, "typeToMapFrom");
-        return new PreparedValueMapper<>(this, TypeToken.of(typeToMapFrom));
-    }
-
     public static class PreparedValueMapper<T, R> {
 
         private final ValueMapper<T> valueMapper;
@@ -190,6 +140,56 @@ public class ValueMapper<T> extends ElementMapper<T, ValueMapper<T>> {
                 .add("typeToMapFrom", this.typeToMapFrom)
                 .toString();
         }
+
+    }
+
+    public ValueMapper(ElementDeserializerRegistry deserializerRegistry, TypeToken<T> typeToMap) {
+        super(deserializerRegistry, typeToMap);
+    }
+
+    /**
+     * Sets the type values are mapped from.
+     *
+     * @param typeToMapFrom the {@link TypeToken} of the type to mape values from
+     * @param <R> the type to map values from
+     * @return the {@link PreparedValueMapper} used to complete the mapping process
+     */
+    public <R> PreparedValueMapper<T, R> from(TypeToken<R> typeToMapFrom) {
+        Preconditions.checkNotNull(typeToMapFrom, "typeToMapFrom");
+        return new PreparedValueMapper<>(this, typeToMapFrom);
+    }
+
+    /**
+     * Sets the type values are mapped from.
+     *
+     * @param typeToMapFrom the {@link Class} of the type to mape values from
+     * @param <R> the type to map values from
+     * @return the {@link PreparedValueMapper} used to complete the mapping process
+     */
+    public <R> PreparedValueMapper<T, R> from(Class<R> typeToMapFrom) {
+        Preconditions.checkNotNull(typeToMapFrom, "typeToMapFrom");
+        return new PreparedValueMapper<>(this, TypeToken.of(typeToMapFrom));
+    }
+
+    /**
+     * Specifies which {@link TypeToken} is supplied to the {@link ElementDeserializer}.
+     */
+    public enum TypeStrategy {
+
+        /**
+         * The type used is the type supplied to the {@link ElementDeserializer#deserialize(ConfigInjectionContext, TypeToken, ConfigurationNode)}
+         */
+        DESERIALIZED,
+
+        /**
+         * The type used is the type the value is being mapped from.
+         */
+        MAP_FROM,
+
+        /**
+         * The type used is the type the value is being mapped to.
+         */
+        MAP_TO
 
     }
 

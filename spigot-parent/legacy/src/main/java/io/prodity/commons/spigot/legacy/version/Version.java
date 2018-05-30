@@ -33,7 +33,7 @@ public enum Version {
     }
 
     public static <T extends VersionProvider> T getUtilitiesProvider(Class<T> providerClazz, String providerClassName) {
-        return Version.getProvider(providerClazz, UTILITIES_PROVIDER_PACKAGE, providerClassName);
+        return Version.getProvider(providerClazz, Version.UTILITIES_PROVIDER_PACKAGE, providerClassName);
     }
 
     public static <T extends VersionProvider> T getProvider(Class<T> providerClazz, String providersPackage, String providerClassName) {

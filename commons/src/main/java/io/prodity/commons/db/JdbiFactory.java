@@ -19,9 +19,13 @@ import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
 public class JdbiFactory implements Factory<Jdbi> {
 
-    private final Lazy<Jdbi> instance = new SimpleLazy<>(this::create);
+    private static String toAlphaNumeric(String input) {
+        return input.toLowerCase().replace('-', '_').replaceAll("[^a-z0-9_]", "");
+    }
+
     private final ProdityPlugin plugin;
     private final DatabaseConfig databaseConfig;
+    private final Lazy<Jdbi> instance = new SimpleLazy<>(this::create);
 
     @Inject
     public JdbiFactory(ProdityPlugin plugin, DatabaseConfig config) {
@@ -57,10 +61,6 @@ public class JdbiFactory implements Factory<Jdbi> {
         this.plugin.getLogger().info("Finished migrations.");
     }
 
-    private static String toAlphaNumeric(String input) {
-        return input.toLowerCase().replace('-', '_').replaceAll("[^a-z0-9_]", "");
-    }
-
     @Singleton
     @Visibility(DescriptorVisibility.LOCAL)
     @Override
@@ -71,5 +71,5 @@ public class JdbiFactory implements Factory<Jdbi> {
     @Override
     public void dispose(Jdbi instance) {
     }
-    
+
 }

@@ -4,8 +4,6 @@ import io.prodity.commons.inject.impl.QualifierProcessor;
 import io.prodity.commons.spigot.inject.McVersion;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 
-import javax.annotation.Nullable;
-
 public class McVersionProcessor extends QualifierProcessor<McVersion> {
 
     public McVersionProcessor() {

@@ -19,7 +19,7 @@ public interface Reference<T> {
      * @return true if the referent object is not null
      */
     boolean isPresent();
-    
+
     void apply(Consumer<T> consumer);
 
 }

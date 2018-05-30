@@ -1,5 +1,7 @@
 package io.prodity.commons.spigot.legacy.item.builder;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import io.prodity.commons.spigot.legacy.builder.ImmutableBuilder;
 import io.prodity.commons.spigot.legacy.builder.meta.BuilderMetaKey;
 import io.prodity.commons.spigot.legacy.builder.meta.modifier.MetaModifier;
@@ -10,8 +12,6 @@ import io.prodity.commons.spigot.legacy.item.builder.meta.ItemBuilderMeta;
 import io.prodity.commons.spigot.legacy.item.builder.meta.ItemMetaResolver;
 import io.prodity.commons.spigot.legacy.lazy.LazyValue;
 import io.prodity.commons.spigot.legacy.lazy.SimpleLazyValue;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 import java.util.function.Function;
 import lombok.Getter;
 import lombok.NonNull;
@@ -116,7 +116,7 @@ public class ImmutableItemBuilder extends ImmutableBuilder<ItemStack, ItemConstr
         if (this.cachedItem.isInitialized()) {
             return this.cachedItem.get().clone();
         }
-        final ItemStack item = super.construct(ItemConstruction::start);
+        final ItemStack item = construct(ItemConstruction::start);
         this.cachedItem.setAndInit(item);
         return item.clone();
     }

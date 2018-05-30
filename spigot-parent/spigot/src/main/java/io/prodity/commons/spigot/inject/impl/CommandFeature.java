@@ -7,7 +7,6 @@ import io.prodity.commons.inject.impl.InjectUtils;
 import io.prodity.commons.plugin.ProdityPlugin;
 import io.prodity.commons.spigot.inject.CommandManagerCustomizer;
 import io.prodity.commons.spigot.inject.SpigotInjectedPlugin;
-
 import java.util.List;
 
 public class CommandFeature implements InjectionFeature {

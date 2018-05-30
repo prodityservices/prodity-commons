@@ -1,8 +1,8 @@
 package io.prodity.commons.spigot.legacy.message.replace;
 
-import io.prodity.commons.spigot.legacy.utils.StringUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import io.prodity.commons.spigot.legacy.utils.StringUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -141,7 +141,7 @@ public class PlayerReplacer extends Replacer {
         if (message == null || message.isEmpty() || this.isEmpty()) {
             return message;
         }
-        message = super.replace(message);
+        message = replace(message);
         for (Entry<String, Function<Player, String>> entry : this.playerMap.entrySet()) {
             final Supplier<String> supplier = () -> entry.getValue().apply(player);
             message = StringUtils.fastReplace(message, entry.getKey(), supplier);

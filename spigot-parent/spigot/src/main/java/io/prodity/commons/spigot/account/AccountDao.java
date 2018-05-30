@@ -1,18 +1,18 @@
 package io.prodity.commons.spigot.account;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.jdbi.v3.sqlobject.config.RegisterConstructorMapper;
 import org.jdbi.v3.sqlobject.customizer.BindBean;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 @RegisterConstructorMapper(PlayerReference.class)
 public interface AccountDao {
+
     @SqlUpdate(
-            "INSERT INTO name_cache(player_id, player_name, last_seen) VALUES(:id, :name, :lastJoin) " +
+        "INSERT INTO name_cache(player_id, player_name, last_seen) VALUES(:id, :name, :lastJoin) " +
             "ON DUPLICATE KEY UPDATE player_name = :name"
     )
     void updateCache(@BindBean PlayerReference reference);
@@ -33,4 +33,5 @@ public interface AccountDao {
      */
     @SqlQuery("SELECT * FROM name_cache WHERE player_name = :name ORDER BY last_seen DESC LIMIT 1,10000")
     List<PlayerReference> getDuplicates(String name);
+    
 }

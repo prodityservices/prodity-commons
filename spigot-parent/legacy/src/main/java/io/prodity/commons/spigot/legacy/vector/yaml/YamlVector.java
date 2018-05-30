@@ -1,11 +1,11 @@
 package io.prodity.commons.spigot.legacy.vector.yaml;
 
+import com.google.common.collect.ImmutableSet;
 import io.prodity.commons.spigot.legacy.config.yaml.AbstractYamlType;
 import io.prodity.commons.spigot.legacy.config.yaml.YamlException;
 import io.prodity.commons.spigot.legacy.config.yaml.YamlTypeCache;
 import io.prodity.commons.spigot.legacy.config.yaml.types.bukkit.YamlSection;
 import io.prodity.commons.spigot.legacy.config.yaml.types.primitive.YamlDouble;
-import com.google.common.collect.ImmutableSet;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.util.Vector;
 

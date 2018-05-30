@@ -1,8 +1,7 @@
 package io.prodity.commons.inject.impl;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.util.concurrent.Executor;
+import org.jvnet.hk2.annotations.Contract;
 
 @Contract
 public interface Platform {

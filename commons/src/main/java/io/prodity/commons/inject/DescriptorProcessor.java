@@ -1,12 +1,10 @@
 package io.prodity.commons.inject;
 
+import javax.annotation.Nullable;
 import org.glassfish.hk2.api.PopulatorPostProcessor;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 import org.jvnet.hk2.annotations.Contract;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Processes Descriptors for a plugin as they're loaded. Plugins
@@ -20,6 +18,7 @@ import javax.annotation.Nullable;
  */
 @Contract
 public interface DescriptorProcessor extends PopulatorPostProcessor {
+
     @Override
     @Nullable
     DescriptorImpl process(ServiceLocator serviceLocator, DescriptorImpl descriptorImpl);

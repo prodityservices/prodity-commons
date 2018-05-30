@@ -1,16 +1,16 @@
 package example;
 
 import io.prodity.commons.inject.Async;
-import org.bukkit.entity.Player;
-import org.jvnet.hk2.annotations.Service;
-
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import javax.inject.Inject;
+import org.bukkit.entity.Player;
+import org.jvnet.hk2.annotations.Service;
 
 @Service
 public class SqlRenownStorage implements RenownStorage {
+
     // Async is an automatically created wrapper class for performing async operations.
     // It can be injected around any type.
     private final Async<RenownDao> async;
@@ -23,7 +23,8 @@ public class SqlRenownStorage implements RenownStorage {
     @Override
     public CompletableFuture<Void> bulkIncrement(Collection<Player> players, int amount) {
         // If this was a real plugin we'd want to do a batched update
-        return this.async.forEach(players, (dao, player) -> dao.incrementRenown(player.getUniqueId(), amount)).whenComplete(this::printError);
+        return this.async.forEach(players, (dao, player) -> dao.incrementRenown(player.getUniqueId(), amount))
+            .whenComplete(this::printError);
     }
 
     @Override

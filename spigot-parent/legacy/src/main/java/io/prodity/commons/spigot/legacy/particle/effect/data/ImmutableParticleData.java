@@ -1,8 +1,8 @@
 package io.prodity.commons.spigot.legacy.particle.effect.data;
 
+import com.google.common.base.Objects;
 import io.prodity.commons.spigot.legacy.particle.effect.data.block.ImmutableBlockParticleData;
 import io.prodity.commons.spigot.legacy.particle.effect.data.item.ImmutableItemParticleData;
-import com.google.common.base.Objects;
 import lombok.Getter;
 import org.bukkit.Material;
 

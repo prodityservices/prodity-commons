@@ -1,10 +1,10 @@
 package io.prodity.commons.spigot.legacy.builder.meta.resolve;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import io.prodity.commons.spigot.legacy.builder.construct.BuilderConstruction;
 import io.prodity.commons.spigot.legacy.builder.meta.BuilderMeta;
 import io.prodity.commons.spigot.legacy.builder.meta.BuilderMetaKey;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;

@@ -1,10 +1,10 @@
 package io.prodity.commons.spigot.legacy.effect;
 
+import com.google.common.collect.Lists;
 import io.prodity.commons.spigot.legacy.message.composite.MessageComposite;
 import io.prodity.commons.spigot.legacy.message.replace.Replacer;
 import io.prodity.commons.spigot.legacy.particle.effect.ParticleEffect;
 import io.prodity.commons.spigot.legacy.sound.playable.PlayableSound;
-import com.google.common.collect.Lists;
 import java.util.Optional;
 import java.util.function.Consumer;
 import org.bukkit.command.CommandSender;

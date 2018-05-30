@@ -9,10 +9,6 @@ import ninja.leaping.configurate.ConfigurationNode;
 // This will act as a type that is handled manually when being deserialized from a config.
 public interface HandledConfigObject {
 
-    String getName();
-
-    int getAmount();
-
     final class MutableHandledConfigObject implements HandledConfigObject {
 
         //TypeElementDeserializer is an implementation of ElementDeserializer that deserializes based on the specified TypeToken
@@ -93,6 +89,10 @@ public interface HandledConfigObject {
         }
 
     }
+
+    String getName();
+
+    int getAmount();
 
 
 }

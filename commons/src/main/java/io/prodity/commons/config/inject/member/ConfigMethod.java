@@ -44,5 +44,5 @@ public class ConfigMethod extends ExecutableConfigMember {
         this.method.setAccessible(true);
         this.method.invoke(this.possessor.getObjectInstance(), parameters);
     }
-    
+
 }

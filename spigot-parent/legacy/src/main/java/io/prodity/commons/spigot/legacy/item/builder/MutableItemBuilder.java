@@ -118,7 +118,7 @@ public class MutableItemBuilder extends MutableBuilder<ItemStack, ItemConstructi
 
     @Override
     public ItemStack build() {
-        return super.construct(ItemConstruction::start);
+        return construct(ItemConstruction::start);
     }
 
 }

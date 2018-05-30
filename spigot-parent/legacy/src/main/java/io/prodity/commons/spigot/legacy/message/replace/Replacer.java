@@ -13,6 +13,10 @@ import org.bukkit.entity.Player;
 
 public class Replacer implements Cloneable {
 
+    public static Supplier<String> supplyObject(Object object) {
+        return () -> String.valueOf(object);
+    }
+
     public static Replacer create() {
         return new Replacer();
     }

@@ -1,5 +1,6 @@
 package io.prodity.commons.spigot.legacy.item.builder;
 
+import com.google.common.collect.Multimap;
 import io.prodity.commons.spigot.legacy.builder.Builder;
 import io.prodity.commons.spigot.legacy.builder.meta.BuilderMetaKey;
 import io.prodity.commons.spigot.legacy.builder.meta.modifier.MetaModifier;
@@ -9,7 +10,6 @@ import io.prodity.commons.spigot.legacy.item.builder.meta.displayname.DisplayNam
 import io.prodity.commons.spigot.legacy.item.builder.meta.lore.LoreMeta;
 import io.prodity.commons.spigot.legacy.message.replace.Replacer;
 import io.prodity.commons.spigot.legacy.placeholder.PlaceholderHelper;
-import com.google.common.collect.Multimap;
 import java.util.List;
 import java.util.function.Function;
 import org.bukkit.Material;

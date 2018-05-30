@@ -268,7 +268,8 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
         private final Class<? extends Factory<T>> factoryClass;
         private final Class<? extends Annotation> factoryScope;
 
-        public FactoryTypeBasedBindingBuilder(Class<? extends Factory<T>> factoryClass, @Nullable Class<? extends Annotation> factoryScope) {
+        public FactoryTypeBasedBindingBuilder(Class<? extends Factory<T>> factoryClass,
+            @Nullable Class<? extends Annotation> factoryScope) {
             this.factoryClass = factoryClass;
             this.factoryScope = factoryScope;
         }

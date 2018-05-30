@@ -10,8 +10,8 @@ public enum MathUtil {
     static {
         for (int i = 0; i <= 360; i++) {
             final double radians = Math.toRadians(i);
-            COS_CACHE[i] = Math.cos(radians);
-            SIN_CACHE[i] = Math.sin(radians);
+            MathUtil.COS_CACHE[i] = Math.cos(radians);
+            MathUtil.SIN_CACHE[i] = Math.sin(radians);
         }
     }
 
@@ -31,12 +31,12 @@ public enum MathUtil {
 
     public static double fastCos(int angle) {
         MathUtil.verifyAngle(angle);
-        return COS_CACHE[angle];
+        return MathUtil.COS_CACHE[angle];
     }
 
     public static double fastSin(int angle) {
         MathUtil.verifyAngle(angle);
-        return SIN_CACHE[angle];
+        return MathUtil.SIN_CACHE[angle];
     }
 
     private static void verifyAngle(int angle) throws IllegalArgumentException {

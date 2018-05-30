@@ -1,10 +1,10 @@
 package io.prodity.commons.spigot.legacy.item.builder.meta.lore;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import io.prodity.commons.spigot.legacy.builder.meta.BuilderMetaKey;
 import io.prodity.commons.spigot.legacy.item.builder.construct.ItemConstruction;
 import io.prodity.commons.spigot.legacy.item.builder.meta.AbstractItemBuilderMeta;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.function.Function;
 import org.bukkit.ChatColor;

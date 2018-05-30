@@ -17,5 +17,5 @@ public class UUIDColumnMapper implements ColumnMapper<UUID> {
     public UUID map(ResultSet r, String columnLabel, StatementContext ctx) throws SQLException {
         return UUIDCustomizer.fromBytes(r.getBytes(columnLabel));
     }
-    
+
 }

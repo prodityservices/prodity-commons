@@ -9,12 +9,6 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class UUIDCustomizer implements JdbiCustomizer {
 
-    @Override
-    public void customizeJdbi(Jdbi jdbi) {
-        jdbi.registerArgument(new UUIDArgumentFactory());
-        jdbi.registerColumnMapper(new UUIDColumnMapper());
-    }
-
     public static byte[] toBytes(UUID uuid) {
         ByteBuffer byteBuffer = ByteBuffer.wrap(new byte[16]);
         byteBuffer.putLong(uuid.getMostSignificantBits());
@@ -30,6 +24,12 @@ public class UUIDCustomizer implements JdbiCustomizer {
         long mostSignificant = byteBuffer.getLong();
         long leastSignificant = byteBuffer.getLong();
         return new UUID(mostSignificant, leastSignificant);
+    }
+
+    @Override
+    public void customizeJdbi(Jdbi jdbi) {
+        jdbi.registerArgument(new UUIDArgumentFactory());
+        jdbi.registerColumnMapper(new UUIDColumnMapper());
     }
 
 }

@@ -1,8 +1,8 @@
 package io.prodity.commons.spigot.legacy.sound.playable.collect.list;
 
-import io.prodity.commons.spigot.legacy.sound.playable.PlayableSound;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import io.prodity.commons.spigot.legacy.sound.playable.PlayableSound;
 import java.util.Collection;
 import java.util.List;
 

@@ -1,7 +1,7 @@
 package io.prodity.commons.spigot.legacy.particle.effect.collect.list;
 
-import io.prodity.commons.spigot.legacy.particle.effect.ParticleEffect;
 import com.google.common.collect.Lists;
+import io.prodity.commons.spigot.legacy.particle.effect.ParticleEffect;
 import java.util.List;
 
 public class ParticleEffectArrayList<T extends ParticleEffect> extends AbstractParticleEffectList<T> {

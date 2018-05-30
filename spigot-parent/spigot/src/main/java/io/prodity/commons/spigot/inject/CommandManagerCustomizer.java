@@ -10,5 +10,6 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface CommandManagerCustomizer {
+
     void customize(BukkitCommandManager commandManager);
 }

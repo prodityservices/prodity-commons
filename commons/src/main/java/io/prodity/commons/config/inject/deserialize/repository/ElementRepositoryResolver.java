@@ -33,16 +33,13 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class ElementRepositoryResolver {
 
+    private final List<ElementRepositoryType> supportedTypes = Lists.newCopyOnWriteArrayList();
     @Inject
     private ServiceLocator serviceLocator;
-
     @Inject
     private ElementDeserializerRegistry deserializerRegistry;
-
     @Inject
     private ConfigInjectionContext injectionContext;
-
-    private final List<ElementRepositoryType> supportedTypes = Lists.newCopyOnWriteArrayList();
 
     @PostConstruct
     private void registerDefaultTypes() {

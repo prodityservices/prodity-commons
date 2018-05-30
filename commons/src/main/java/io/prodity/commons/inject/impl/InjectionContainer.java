@@ -3,15 +3,14 @@ package io.prodity.commons.inject.impl;
 import io.prodity.commons.inject.DescriptorProcessor;
 import io.prodity.commons.inject.InjectionFeature;
 import io.prodity.commons.plugin.ProdityPlugin;
-import org.glassfish.hk2.api.DynamicConfigurationService;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder;
-
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.logging.Level;
+import org.glassfish.hk2.api.DynamicConfigurationService;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder;
 
 public class InjectionContainer {
 
@@ -59,7 +58,8 @@ public class InjectionContainer {
         List<DescriptorProcessor> processors = this.serviceLocator.getAllServices(DescriptorProcessor.class);
         DynamicConfigurationService dcs = this.serviceLocator.getService(DynamicConfigurationService.class);
         try {
-            dcs.getPopulator().populate(new ClasspathDescriptorFileFinder(this.plugin.getClass().getClassLoader()), processors.toArray(new DescriptorProcessor[0]));
+            dcs.getPopulator().populate(new ClasspathDescriptorFileFinder(this.plugin.getClass().getClassLoader()),
+                processors.toArray(new DescriptorProcessor[0]));
         } catch (IOException e) {
             this.plugin.getLogger().log(Level.SEVERE, "Failed to load Service Descriptors", e);
             this.plugin.getLogger().severe("Disabling...");

@@ -57,7 +57,7 @@ public class ElementAttributeSet {
                             .getAttributeKey() + "'");
                 }
             }
-            
+
             values.add(value);
         }
 

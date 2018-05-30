@@ -1,9 +1,9 @@
 package io.prodity.commons.spigot.legacy.item.builder.meta.itemflags;
 
+import com.google.common.collect.Sets;
 import io.prodity.commons.spigot.legacy.builder.meta.BuilderMetaKey;
 import io.prodity.commons.spigot.legacy.item.builder.construct.ItemConstruction;
 import io.prodity.commons.spigot.legacy.item.builder.meta.AbstractItemBuilderMeta;
-import com.google.common.collect.Sets;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;

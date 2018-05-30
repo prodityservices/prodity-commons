@@ -6,7 +6,7 @@ import org.bukkit.inventory.Inventory;
 import org.jvnet.hk2.annotations.Contract;
 
 @Contract
-public interface GuiProvider  {
+public interface GuiProvider {
 
     void updateInventoryTitle(Player player, Inventory inventory, String newTitle);
 }
