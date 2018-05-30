@@ -80,6 +80,20 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>de.shadowhunt.maven.plugins</groupId>
+                <artifactId>package-info-maven-plugin</artifactId>
+                <configuration>
+                    <packages>
+                        <package>
+                            <annotations>
+                                <annotation>@io.prodity.commons.NonNullByDefault</annotation>
+                                <annotation>@java.lang.Deprecated</annotation>
+                            </annotations>
+                        </package>
+                    </packages>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
