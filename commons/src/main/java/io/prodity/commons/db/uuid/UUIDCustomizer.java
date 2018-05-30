@@ -1,11 +1,14 @@
-package io.prodity.commons.db;
+package io.prodity.commons.db.uuid;
 
-import org.jdbi.v3.core.Jdbi;
-
+import io.prodity.commons.db.JdbiCustomizer;
 import java.nio.ByteBuffer;
 import java.util.UUID;
+import org.jdbi.v3.core.Jdbi;
+import org.jvnet.hk2.annotations.Service;
 
+@Service
 public class UUIDCustomizer implements JdbiCustomizer {
+
     @Override
     public void customizeJdbi(Jdbi jdbi) {
         jdbi.registerArgument(new UUIDArgumentFactory());
@@ -28,4 +31,5 @@ public class UUIDCustomizer implements JdbiCustomizer {
         long leastSignificant = byteBuffer.getLong();
         return new UUID(mostSignificant, leastSignificant);
     }
+
 }

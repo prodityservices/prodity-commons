@@ -1,11 +1,10 @@
-package io.prodity.commons.db;
-
-import org.jdbi.v3.core.mapper.ColumnMapper;
-import org.jdbi.v3.core.statement.StatementContext;
+package io.prodity.commons.db.uuid;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
+import org.jdbi.v3.core.mapper.ColumnMapper;
+import org.jdbi.v3.core.statement.StatementContext;
 
 public class UUIDColumnMapper implements ColumnMapper<UUID> {
 
@@ -18,4 +17,5 @@ public class UUIDColumnMapper implements ColumnMapper<UUID> {
     public UUID map(ResultSet r, String columnLabel, StatementContext ctx) throws SQLException {
         return UUIDCustomizer.fromBytes(r.getBytes(columnLabel));
     }
+    
 }

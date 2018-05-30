@@ -2,6 +2,12 @@ package io.prodity.commons.db;
 
 import io.prodity.commons.inject.bind.PluginBinder;
 import io.prodity.commons.plugin.ProdityPlugin;
+import java.lang.reflect.Type;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
+import javax.inject.Inject;
+import javax.inject.Provider;
 import org.glassfish.hk2.api.Injectee;
 import org.glassfish.hk2.api.JustInTimeInjectionResolver;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -9,13 +15,6 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObject;
 import org.jdbi.v3.sqlobject.SqlOperation;
-
-import javax.inject.Inject;
-import javax.inject.Provider;
-import java.lang.reflect.Type;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
 
 public class DatabaseResolver implements JustInTimeInjectionResolver {
 
@@ -33,7 +32,7 @@ public class DatabaseResolver implements JustInTimeInjectionResolver {
 
     @Override
     public boolean justInTimeResolution(Injectee failedInjectionPoint) {
-        if (failedInjectionPoint.getRequiredType() instanceof  Class<?> && this.seenBefore.add(failedInjectionPoint.getRequiredType())) {
+        if (failedInjectionPoint.getRequiredType() instanceof Class<?> && this.seenBefore.add(failedInjectionPoint.getRequiredType())) {
             Class<?> requiredType = ((Class) failedInjectionPoint.getRequiredType());
             if (requiredType.isInterface() && DatabaseResolver.looksLikeSqlObject(requiredType)) {
                 return this.createOnDemand(requiredType);
@@ -53,7 +52,6 @@ public class DatabaseResolver implements JustInTimeInjectionResolver {
         return true;
     }
 
-
     // Copied from JDBI
     private static boolean looksLikeSqlObject(Class<?> type) {
         if (SqlObject.class.isAssignableFrom(type)) {
@@ -61,7 +59,8 @@ public class DatabaseResolver implements JustInTimeInjectionResolver {
         }
 
         return Stream.of(type.getMethods())
-                .flatMap(m -> Stream.of(m.getAnnotations()))
-                .anyMatch(a -> a.annotationType().isAnnotationPresent(SqlOperation.class));
+            .flatMap(m -> Stream.of(m.getAnnotations()))
+            .anyMatch(a -> a.annotationType().isAnnotationPresent(SqlOperation.class));
     }
+
 }
