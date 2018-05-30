@@ -1,6 +1,8 @@
 package io.prodity.commons.spigot.account;
 
+import com.google.common.base.MoreObjects;
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 import javax.annotation.Nullable;
 import org.bukkit.Bukkit;
@@ -57,4 +59,30 @@ public class PlayerReference {
     public static PlayerReference of(Player player) {
         return new PlayerReference(player.getUniqueId(), player.getName(), Instant.ofEpochMilli(player.getLastPlayed()));
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.playerId, this.playerName, this.lastSeen);
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (!(object instanceof PlayerReference)) {
+            return false;
+        }
+        final PlayerReference that = (PlayerReference) object;
+        return Objects.equals(this.playerId, that.playerId) &&
+            Objects.equals(this.playerName, that.playerName) &&
+            Objects.equals(this.lastSeen, that.lastSeen);
+    }
+
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+            .add("playerId", this.playerId)
+            .add("playerName", this.playerId)
+            .add("lastSeen", this.lastSeen)
+            .toString();
+    }
+
 }
