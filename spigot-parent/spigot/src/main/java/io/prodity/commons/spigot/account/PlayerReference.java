@@ -1,14 +1,15 @@
 package io.prodity.commons.spigot.account;
 
+import java.time.Instant;
+import java.util.UUID;
+import javax.annotation.Nullable;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jdbi.v3.core.mapper.reflect.JdbiConstructor;
 
-import javax.annotation.Nullable;
-import java.time.Instant;
-import java.util.UUID;
-
 public class PlayerReference {
+
     private final UUID playerId;
     private final String playerName;
     private final Instant lastSeen;
@@ -47,6 +48,10 @@ public class PlayerReference {
     @Nullable
     public Player dereference() {
         return Bukkit.getPlayer(this.playerId);
+    }
+
+    public OfflinePlayer offlineDereference() {
+        return Bukkit.getOfflinePlayer(this.playerId);
     }
 
     public static PlayerReference of(Player player) {
