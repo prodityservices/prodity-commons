@@ -33,5 +33,5 @@ public interface AccountDao {
      */
     @SqlQuery("SELECT * FROM name_cache WHERE player_name = :name ORDER BY last_seen DESC LIMIT 1,10000")
     List<PlayerReference> getDuplicates(String name);
-    
+
 }

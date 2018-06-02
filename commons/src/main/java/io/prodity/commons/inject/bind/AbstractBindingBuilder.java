@@ -81,7 +81,7 @@ abstract class AbstractBindingBuilder<T> implements BindingBuilder<T> {
         }
 
         @Override
-        void complete(final DynamicConfiguration configuration, final HK2Loader defaultLoader) {
+        void complete(DynamicConfiguration configuration, HK2Loader defaultLoader) {
             if (this.loader == null) {
                 this.loader = defaultLoader;
             }

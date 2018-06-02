@@ -141,22 +141,20 @@ public class YamlConfig implements Loadable {
         return type.loadOrDefault(section, path, defaultValue);
     }
 
-    public <E extends Enum<E>> E loadEnumOrDefault(String path, Class<E> enumClazz, E defaultValue) throws YamlException {
+    public <E extends Enum<E>> E loadEnumOrDefault(String path, Class<E> enumClazz, E defaultValue) {
         return this.loadEnumOrDefault(this.get(), path, enumClazz, defaultValue);
     }
 
-    public <E extends Enum<E>> E loadEnumOrDefault(ConfigurationSection section, String path, Class<E> enumClazz, E defaultValue)
-        throws YamlException {
+    public <E extends Enum<E>> E loadEnumOrDefault(ConfigurationSection section, String path, Class<E> enumClazz, E defaultValue) {
         return YamlEnum.get(enumClazz).loadOrDefault(section, path, defaultValue);
     }
 
-    public <E extends Enum<E>> List<E> loadEnumListOrDefault(String path, Class<E> enumClazz, List<E> defaultValue)
-        throws YamlException {
+    public <E extends Enum<E>> List<E> loadEnumListOrDefault(String path, Class<E> enumClazz, List<E> defaultValue) {
         return this.loadEnumListOrDefault(this.get(), path, enumClazz, defaultValue);
     }
 
     public <E extends Enum<E>> List<E> loadEnumListOrDefault(ConfigurationSection section, String path, Class<E> enumClazz,
-        List<E> defaultValue) throws YamlException {
+        List<E> defaultValue) {
         return YamlEnumList.get(enumClazz).loadOrDefault(section, path, defaultValue);
     }
 

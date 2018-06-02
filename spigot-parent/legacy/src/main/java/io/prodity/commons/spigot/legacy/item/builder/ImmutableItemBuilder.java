@@ -116,7 +116,7 @@ public class ImmutableItemBuilder extends ImmutableBuilder<ItemStack, ItemConstr
         if (this.cachedItem.isInitialized()) {
             return this.cachedItem.get().clone();
         }
-        final ItemStack item = construct(ItemConstruction::start);
+        final ItemStack item = this.construct(ItemConstruction::start);
         this.cachedItem.setAndInit(item);
         return item.clone();
     }

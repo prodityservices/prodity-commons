@@ -147,7 +147,7 @@ public class PlayerReplacer extends Replacer {
         if (message == null || message.isEmpty() || this.isEmpty()) {
             return message;
         }
-        message = replace(message);
+        message = this.replace(message);
         for (Entry<String, Function<Player, String>> entry : this.playerMap.entrySet()) {
             final Supplier<String> supplier = () -> entry.getValue().apply(player);
             message = StringUtils.fastReplace(message, entry.getKey(), supplier);

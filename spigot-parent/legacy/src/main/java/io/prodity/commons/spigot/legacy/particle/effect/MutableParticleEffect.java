@@ -19,38 +19,38 @@ public interface MutableParticleEffect extends ParticleEffect {
     @Override
     ImmutableOptionalVector getOffsets();
 
+    MutableParticleEffect setOffsets(OptionalVector vector);
+
     default MutableParticleEffect setOffsets(Vector vector) {
         return this.setOffsets(MutableOptionalVector.fromVector(vector));
     }
 
-    MutableParticleEffect setOffsets(OptionalVector vector);
-
     @Override
     Optional<ImmutableParticleColor> getColor();
+
+    MutableParticleEffect setColor(Optional<ParticleColor> color);
 
     default MutableParticleEffect setColor(ParticleColor color) {
         return this.setColor(Optional.ofNullable(color));
     }
 
-    MutableParticleEffect setColor(Optional<ParticleColor> color);
-
     @Override
     Optional<ImmutableOptionalVector> getDirection();
+
+    MutableParticleEffect setDirection(OptionalVector vector);
 
     default MutableParticleEffect setDirection(Vector direction) {
         return this.setDirection(MutableOptionalVector.fromVector(direction));
     }
 
-    MutableParticleEffect setDirection(OptionalVector vector);
-
     @Override
     Optional<ImmutableParticleData<?>> getData();
+
+    MutableParticleEffect setData(Optional<? extends ParticleData<?>> particleData);
 
     default MutableParticleEffect setData(ParticleData<?> particleData) {
         return this.setData(Optional.ofNullable(particleData));
     }
-
-    MutableParticleEffect setData(Optional<? extends ParticleData<?>> particleData);
 
     MutableParticleEffect setParticle(Particle particle);
 

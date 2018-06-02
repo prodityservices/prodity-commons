@@ -92,7 +92,7 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder enchant(Enchantment enchantment, final int level) {
+    public ItemBuilder enchant(Enchantment enchantment, int level) {
         this.item.addUnsafeEnchantment(enchantment, level);
         return this;
     }

@@ -40,7 +40,7 @@ public abstract class Gui<SELF extends Gui<SELF>> {
 
     private final Plugin plugin;
     private final Player player;
-    private final Map<Integer, SimpleSlot> slots;
+    private final Map<Integer, Slot> slots;
     private final List<GuiCloseHandler> closeHandlers;
     private final List<Listener> listeners;
     private final Listener listener;
@@ -53,13 +53,15 @@ public abstract class Gui<SELF extends Gui<SELF>> {
     private boolean valid;
     private GuiCloseReason closeReason;
 
-    public Gui(UUID uniqueId, Plugin plugin, Player player, int lines, String initialTitle) {
+    protected Gui(UUID uniqueId, Plugin plugin, Player player, int lines, String initialTitle) {
+        this(uniqueId, plugin, player, Bukkit.createInventory(player, lines * 9, initialTitle));
+    }
+
+    protected Gui(UUID uniqueId, Plugin plugin, Player player, Inventory inventory) {
         Preconditions.checkNotNull(uniqueId, "uniqueId");
         Preconditions.checkNotNull(plugin, "plugin");
         Preconditions.checkNotNull(player, "player");
-        Preconditions.checkArgument(lines >= 1, "lines<1");
-        Preconditions.checkNotNull(initialTitle, "initialTitle");
-
+        Preconditions.checkNotNull(inventory, "inventory");
         this.uniqueId = uniqueId;
         this.plugin = plugin;
         this.player = player;
@@ -67,9 +69,8 @@ public abstract class Gui<SELF extends Gui<SELF>> {
         this.closeHandlers = Lists.newLinkedList();
         this.listeners = Lists.newArrayList();
         this.listener = new GuiListener();
-        this.title = initialTitle;
-        this.inventory = Bukkit.createInventory(this.player, lines * 9, this.title);
-
+        this.title = inventory.getTitle();
+        this.inventory = inventory;
         this.firstDraw = true;
         this.valid = false;
     }
@@ -135,12 +136,16 @@ public abstract class Gui<SELF extends Gui<SELF>> {
         this.fallbackGui = fallbackGui;
     }
 
+    protected Slot createSlot(int slot) {
+        return new SimpleSlot(this, slot);
+    }
+
     public Slot getSlot(int slot) {
         if (slot < 0 || slot >= this.inventory.getSize()) {
             throw new IllegalArgumentException("Invalid slot id: " + slot);
         }
 
-        return this.slots.computeIfAbsent(slot, i -> new SimpleSlot(this, i));
+        return this.slots.computeIfAbsent(slot, i -> this.createSlot(i));
     }
 
     public void setItem(GuiItem item, int slot) {

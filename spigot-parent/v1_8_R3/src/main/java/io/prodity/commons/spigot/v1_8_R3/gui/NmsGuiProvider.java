@@ -6,6 +6,7 @@ import io.prodity.commons.spigot.gui.GuiProvider;
 import io.prodity.commons.spigot.inject.McVersion;
 import io.prodity.commons.spigot.inject.ProdityVersions;
 import net.minecraft.server.v1_8_R3.ChatMessage;
+import net.minecraft.server.v1_8_R3.ContainerAnvil;
 import net.minecraft.server.v1_8_R3.EntityPlayer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutOpenWindow;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
@@ -19,6 +20,8 @@ import org.jvnet.hk2.annotations.Service;
 public class NmsGuiProvider implements GuiProvider {
 
     private static String getProtocolType(Inventory inventory) {
+
+        ContainerAnvil containerAnvil;
         switch (inventory.getType()) {
             case ANVIL:
                 return "minecraft:anvil";

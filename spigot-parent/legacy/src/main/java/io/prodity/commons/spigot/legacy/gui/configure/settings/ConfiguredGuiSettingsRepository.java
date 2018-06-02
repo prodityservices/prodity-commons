@@ -216,7 +216,7 @@ public class ConfiguredGuiSettingsRepository extends YamlRepository<ConfiguredGu
     }
 
     public <T extends ConfiguredGui<T>> ConfiguredGuiSettings<T> getForType(String key) {
-        return (ConfiguredGuiSettings<T>) get(key);
+        return (ConfiguredGuiSettings<T>) this.get(key);
     }
 
     public ConfiguredPaginatedSettings getAsPaginated(String key) throws IllegalArgumentException {

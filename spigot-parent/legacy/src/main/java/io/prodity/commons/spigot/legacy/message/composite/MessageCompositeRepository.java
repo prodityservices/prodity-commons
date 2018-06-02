@@ -1,6 +1,5 @@
 package io.prodity.commons.spigot.legacy.message.composite;
 
-import io.prodity.commons.spigot.legacy.config.yaml.YamlException;
 import io.prodity.commons.spigot.legacy.config.yaml.repo.YamlRepository;
 import io.prodity.commons.spigot.legacy.config.yaml.types.primitive.YamlColorizedString;
 import io.prodity.commons.spigot.legacy.message.send.TitleTimes;
@@ -31,7 +30,7 @@ public class MessageCompositeRepository extends YamlRepository<MessageComposite>
     }
 
     @Override
-    protected MessageComposite load(ConfigurationSection section, String path) throws YamlException {
+    protected MessageComposite load(ConfigurationSection section, String path) {
         final ConfigurationSection compositeSection = section.getConfigurationSection(path);
 
         final MessageComposite.Builder builder = MessageComposite.builder();

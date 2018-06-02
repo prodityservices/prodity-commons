@@ -19,7 +19,7 @@ public class DatabaseConfig {
     private String host;
 
     @ConfigInject
-    private int port = 3306;
+    private final int port = 3306;
 
     @ConfigInject
     @Required
