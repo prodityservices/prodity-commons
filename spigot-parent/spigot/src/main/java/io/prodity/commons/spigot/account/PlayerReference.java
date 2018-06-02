@@ -16,14 +16,14 @@ public class PlayerReference {
         return new PlayerReference(player.getUniqueId(), player.getName(), Instant.ofEpochMilli(player.getLastPlayed()));
     }
 
-    private final UUID playerId;
-    private final String playerName;
+    private final UUID id;
+    private final String name;
     private final Instant lastSeen;
 
     @JdbiConstructor
-    public PlayerReference(UUID playerId, String playerName, @Nullable Instant lastSeen) {
-        this.playerId = playerId;
-        this.playerName = playerName;
+    public PlayerReference(UUID id, String name, @Nullable Instant lastSeen) {
+        this.id = id;
+        this.name = name;
         this.lastSeen = lastSeen;
     }
 
@@ -32,11 +32,11 @@ public class PlayerReference {
     }
 
     public UUID getId() {
-        return this.playerId;
+        return this.id;
     }
 
     public String getName() {
-        return this.playerName;
+        return this.name;
     }
 
     /**
@@ -53,16 +53,16 @@ public class PlayerReference {
 
     @Nullable
     public Player dereference() {
-        return Bukkit.getPlayer(this.playerId);
+        return Bukkit.getPlayer(this.id);
     }
 
     public OfflinePlayer offlineDereference() {
-        return Bukkit.getOfflinePlayer(this.playerId);
+        return Bukkit.getOfflinePlayer(this.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.playerId, this.playerName, this.lastSeen);
+        return Objects.hash(this.id, this.name, this.lastSeen);
     }
 
     @Override
@@ -71,16 +71,16 @@ public class PlayerReference {
             return false;
         }
         final PlayerReference that = (PlayerReference) object;
-        return Objects.equals(this.playerId, that.playerId) &&
-            Objects.equals(this.playerName, that.playerName) &&
+        return Objects.equals(this.id, that.id) &&
+            Objects.equals(this.name, that.name) &&
             Objects.equals(this.lastSeen, that.lastSeen);
     }
 
     @Override
     public String toString() {
         return MoreObjects.toStringHelper(this)
-            .add("playerId", this.playerId)
-            .add("playerName", this.playerId)
+            .add("id", this.id)
+            .add("name", this.id)
             .add("lastSeen", this.lastSeen)
             .toString();
     }
