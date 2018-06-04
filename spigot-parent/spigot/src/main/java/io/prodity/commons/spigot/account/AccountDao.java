@@ -13,7 +13,7 @@ public interface AccountDao {
 
     @SqlUpdate(
         "INSERT INTO name_cache(player_id, player_name, player_last_seen) VALUES(:id, :name, :lastSeen) " +
-            "ON DUPLICATE KEY UPDATE player_name = :name"
+            "ON DUPLICATE KEY UPDATE player_name=:name, player_last_seen=:lastSeen"
     )
     void updateCache(@BindBean PlayerReference reference);
 
