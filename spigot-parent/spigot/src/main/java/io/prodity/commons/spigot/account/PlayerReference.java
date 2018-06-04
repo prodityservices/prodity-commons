@@ -47,7 +47,7 @@ public class PlayerReference {
      * @return the last time the player joined
      */
     @Nullable
-    public Instant getLastJoin() {
+    public Instant getLastSeen() {
         return this.lastSeen;
     }
 

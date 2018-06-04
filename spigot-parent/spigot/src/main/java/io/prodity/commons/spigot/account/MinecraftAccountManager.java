@@ -133,7 +133,7 @@ public class MinecraftAccountManager implements Eager, Listener {
             for (PlayerReference duplicate : duplicates) {
                 // If we fail to get a new name, I guess we'll take care of it next time
                 Optional<String> newName = this.fetchNewName(duplicate.getId());
-                newName.ifPresent(s -> dao.updateCache(new PlayerReference(duplicate.getId(), s, duplicate.getLastJoin())));
+                newName.ifPresent(s -> dao.updateCache(new PlayerReference(duplicate.getId(), s, duplicate.getLastSeen())));
             }
         });
     }
