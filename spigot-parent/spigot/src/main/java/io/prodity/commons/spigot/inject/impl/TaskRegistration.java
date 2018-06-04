@@ -119,10 +119,10 @@ public class TaskRegistration implements InstanceLifecycleListener, PluginLifecy
             Preconditions.checkState(this.task == null, "Attempted to start a running task.");
             long periodInTicks = this.taskInfo.unit().toTicks(this.taskInfo.period());
             if (this.taskInfo.async()) {
-                this.task = Bukkit.getScheduler().runTaskTimer(TaskRegistration.this.plugin, this, periodInTicks, periodInTicks);
-            } else {
                 this.task = Bukkit.getScheduler()
                     .runTaskTimerAsynchronously(TaskRegistration.this.plugin, this, periodInTicks, periodInTicks);
+            } else {
+                this.task = Bukkit.getScheduler().runTaskTimer(TaskRegistration.this.plugin, this, periodInTicks, periodInTicks);
             }
             return this.task;
         }
