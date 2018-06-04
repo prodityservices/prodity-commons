@@ -12,7 +12,7 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 public interface AccountDao {
 
     @SqlUpdate(
-        "INSERT INTO name_cache(player_id, player_name, last_seen) VALUES(:id, :name, :lastJoin) " +
+        "INSERT INTO name_cache(player_id, player_name, player_last_seen) VALUES(:id, :name, :lastSeen) " +
             "ON DUPLICATE KEY UPDATE player_name = :name"
     )
     void updateCache(@BindBean PlayerReference reference);
@@ -20,7 +20,7 @@ public interface AccountDao {
     @SqlQuery("SELECT * FROM name_cache WHERE player_id = :id")
     Optional<PlayerReference> getPlayer(UUID id);
 
-    @SqlQuery("SELECT * FROM name_cache WHERE player_name = :name ORDER BY last_seen DESC LIMIT 1")
+    @SqlQuery("SELECT * FROM name_cache WHERE player_name = :name ORDER BY player_last_seen DESC LIMIT 1")
     Optional<PlayerReference> getPlayer(String name);
 
     /**
@@ -31,7 +31,7 @@ public interface AccountDao {
      * @param name the name to look up
      * @return possible empty list of all duplicates
      */
-    @SqlQuery("SELECT * FROM name_cache WHERE player_name = :name ORDER BY last_seen DESC LIMIT 1,10000")
+    @SqlQuery("SELECT * FROM name_cache WHERE player_name = :name ORDER BY player_last_seen DESC LIMIT 1,10000")
     List<PlayerReference> getDuplicates(String name);
 
 }

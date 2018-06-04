@@ -21,10 +21,10 @@ public class PlayerReference {
     private final Instant lastSeen;
 
     @JdbiConstructor
-    public PlayerReference(UUID id, String name, @Nullable Instant lastSeen) {
-        this.id = id;
-        this.name = name;
-        this.lastSeen = lastSeen;
+    public PlayerReference(UUID playerId, String playerName, @Nullable Instant playerLastSeen) {
+        this.id = playerId;
+        this.name = playerName;
+        this.lastSeen = playerLastSeen;
     }
 
     public PlayerReference(UUID playerId, String playerName) {

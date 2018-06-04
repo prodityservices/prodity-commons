@@ -1,6 +1,7 @@
 package io.prodity.commons.spigot.account;
 
 import io.prodity.commons.inject.Async;
+import io.prodity.commons.inject.Eager;
 import io.prodity.commons.inject.Export;
 import io.prodity.commons.spigot.plugin.ProditySpigotPlugin;
 import java.io.IOException;
@@ -24,7 +25,7 @@ import org.jvnet.hk2.annotations.Service;
 
 @Service
 @Export
-public class MinecraftAccountManager implements Listener {
+public class MinecraftAccountManager implements Eager, Listener {
 
     private final Async<AccountDao> async;
     private final ProditySpigotPlugin plugin;

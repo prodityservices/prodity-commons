@@ -18,6 +18,7 @@ public class CommandFeature implements InjectionFeature {
 
         if (!commands.isEmpty()) {
             BukkitCommandManager manager = new BukkitCommandManager(spigotPlugin);
+            manager.enableUnstableAPI("help");
             List<CommandManagerCustomizer> customizers = InjectUtils.getDependentServices(plugin, CommandManagerCustomizer.class);
             for (CommandManagerCustomizer customizer : customizers) {
                 customizer.customize(manager);
