@@ -1,8 +1,8 @@
-package io.prodity.commons.db;
+package io.prodity.commons.future;
 
 import javax.annotation.Nullable;
 
-public enum Daos {
+public enum Futures {
 
     ;
 
@@ -13,5 +13,5 @@ public enum Daos {
         }
         return value;
     }
-
+    
 }
