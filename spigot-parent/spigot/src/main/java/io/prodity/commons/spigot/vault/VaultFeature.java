@@ -15,7 +15,7 @@ public class VaultFeature implements InjectionFeature {
     @Override
     public void preLoad(ProdityPlugin plugin) {
         this.bind(plugin, (binder) -> {
-            binder.bind(VaultEconomyFactory.class).to(Economy.class);
+            binder.bindFactory(VaultEconomyFactory.class).to(Economy.class);
         });
     }
 
