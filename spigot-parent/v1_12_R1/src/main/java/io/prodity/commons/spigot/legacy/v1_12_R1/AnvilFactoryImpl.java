@@ -7,13 +7,15 @@ import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import io.prodity.commons.inject.Eager;
+import io.prodity.commons.inject.Export;
 import io.prodity.commons.spigot.inject.McVersion;
+import io.prodity.commons.spigot.inject.ProdityVersions;
 import io.prodity.commons.spigot.legacy.gui.anvil.AnvilFactory;
 import io.prodity.commons.spigot.legacy.gui.anvil.AnvilGUI;
 import io.prodity.commons.spigot.legacy.gui.anvil.AnvilGuiInventory;
-import io.prodity.commons.spigot.v1_12_R1.McVersionConstant;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.inject.Inject;
@@ -23,7 +25,6 @@ import net.minecraft.server.v1_12_R1.NetworkManager;
 import net.minecraft.server.v1_12_R1.PacketPlayInCustomPayload;
 import net.minecraft.server.v1_12_R1.PacketPlayOutSetSlot;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
@@ -34,7 +35,8 @@ import org.bukkit.scheduler.BukkitScheduler;
 import org.jvnet.hk2.annotations.Service;
 
 @Service
-@McVersion(McVersionConstant.VERSION)
+@Export
+@McVersion(ProdityVersions.V1_12)
 public class AnvilFactoryImpl implements AnvilFactory, Listener, Eager {
 
     @Inject
@@ -42,6 +44,9 @@ public class AnvilFactoryImpl implements AnvilFactory, Listener, Eager {
 
     @Inject
     private BukkitScheduler scheduler;
+
+    @Inject
+    private Logger logger;
 
     private final List<AnvilGUI> anvilGuis = Lists.newArrayList();
 
@@ -71,6 +76,7 @@ public class AnvilFactoryImpl implements AnvilFactory, Listener, Eager {
 
     @PostConstruct
     private void injectServer() {
+        this.logger.info("Injecting Anvil packet handler into all online players...");
         Bukkit.getOnlinePlayers().forEach(this::injectPlayer);
     }
 
@@ -166,12 +172,6 @@ public class AnvilFactoryImpl implements AnvilFactory, Listener, Eager {
             String value = null;
             if ((msg.b() != null) && (msg.b().readableBytes() >= 1)) {
                 value = this.filterInput(msg.b().e(Short.MAX_VALUE));
-                if (value.trim().equals(ChatColor.COLOR_CHAR)) {
-                    value = "";
-                } else if (value.startsWith(ChatColor.RESET.toString())) {
-                    value = value.substring(2);
-                }
-                value = ChatColor.stripColor(value);
                 if (value.length() > 30) {
                     container.invalidNameReceived(value);
                     return false;

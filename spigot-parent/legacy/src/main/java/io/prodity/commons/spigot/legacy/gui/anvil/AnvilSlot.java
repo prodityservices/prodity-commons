@@ -59,7 +59,7 @@ public class AnvilSlot extends Number {
      * @return The array of {@link AnvilSlot} values.
      */
     public static AnvilSlot[] values() {
-        return new AnvilSlot[]{INPUT, MIDDLE, OUTPUT};
+        return new AnvilSlot[]{AnvilSlot.INPUT, AnvilSlot.MIDDLE, AnvilSlot.OUTPUT};
     }
 
     /**
@@ -70,7 +70,7 @@ public class AnvilSlot extends Number {
      */
     @Nullable
     public static AnvilSlot fromNumerical(int slot) {
-        return (slot == 0) ? INPUT : ((slot == 1) ? MIDDLE : ((slot == 2) ? OUTPUT : null));
+        return (slot == 0) ? AnvilSlot.INPUT : ((slot == 1) ? AnvilSlot.MIDDLE : ((slot == 2) ? AnvilSlot.OUTPUT : null));
     }
 
     /**

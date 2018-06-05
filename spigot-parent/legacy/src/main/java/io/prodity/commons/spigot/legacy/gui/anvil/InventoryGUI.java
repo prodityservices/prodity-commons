@@ -34,7 +34,7 @@ public interface InventoryGUI {
      * @param item The {@link ItemStack} to set.
      * @throws IndexOutOfBoundsException If the specified slot is < 0 or >= the {@link Inventory}'s size.
      */
-    void setItem(final int slot, final ItemStack item) throws IndexOutOfBoundsException;
+    void setItem(int slot, ItemStack item) throws IndexOutOfBoundsException;
 
     /**
      * Gets the size of this {@link InventoryGUI}.
@@ -51,7 +51,7 @@ public interface InventoryGUI {
      * @param clickables The {@link GUIClickable}s to add.
      * @return This {@link InventoryGUI} instance.
      */
-    InventoryGUI addClickable(final GUIClickable... clickables);
+    InventoryGUI addClickable(GUIClickable... clickables);
 
     /**
      * Adds the specified {@link GUIClickable}(s) to this {@link InventoryGUI}.
@@ -61,7 +61,7 @@ public interface InventoryGUI {
      * @param clickables The {@link Collection} of {@link GUIClickable}s to add.
      * @return This {@link InventoryGUI} instance.
      */
-    InventoryGUI addClickable(final Collection<GUIClickable> clickables);
+    InventoryGUI addClickable(Collection<GUIClickable> clickables);
 
     /**
      * Removes the specified {@link GUIClickable}(s).
@@ -69,7 +69,7 @@ public interface InventoryGUI {
      * @param clickables The {@link Collection} of {@link GUIClickable}s to remove.
      * @return This {@link InventoryGUI} instance.
      */
-    InventoryGUI removeClickable(final Collection<GUIClickable> clickables);
+    InventoryGUI removeClickable(Collection<GUIClickable> clickables);
 
     /**
      * Removes the specified {@link GUIClickable}(s).
@@ -77,7 +77,7 @@ public interface InventoryGUI {
      * @param clickables The {@link GUIClickable}s to remove.
      * @return This {@link InventoryGUI} instance.
      */
-    InventoryGUI removeClickable(final GUIClickable... clickables);
+    InventoryGUI removeClickable(GUIClickable... clickables);
 
     /**
      * Removes the specified {@link GUIClickable}(s) at the specified slot(s).
@@ -85,7 +85,7 @@ public interface InventoryGUI {
      * @param slots The {@link Collection} of slots of the {@link GUIClickable}s to remove.
      * @return This {@link InventoryGUI} instance.
      */
-    InventoryGUI removeClickableSlot(final Collection<? extends Number> slots);
+    InventoryGUI removeClickableSlot(Collection<? extends Number> slots);
 
     /**
      * Removes the specified {@link GUIClickable}(s) at the specified slot(s).
@@ -93,7 +93,7 @@ public interface InventoryGUI {
      * @param slots The slots of the {@link GUIClickable}s to remove.
      * @return This {@link InventoryGUI} instance.
      */
-    InventoryGUI removeClickableSlot(final Number... slots);
+    InventoryGUI removeClickableSlot(Number... slots);
 
     /**
      * Gets the {@link GUIClickable} associated with the specified slot.
@@ -101,7 +101,7 @@ public interface InventoryGUI {
      * @param slot The slot.
      * @return The {@link GUIClickable}, or null if one doesn't exist for the specified slot.
      */
-    GUIClickable getClickable(@NonNull final Number slot);
+    GUIClickable getClickable(@NonNull Number slot);
 
     /**
      * Gets a {@link List} of all {@link GUIClickable}s for this {@link InventoryGUI}.
@@ -124,7 +124,7 @@ public interface InventoryGUI {
      * @param clickingEnabled True to enable clicking, false to disable it.
      * @return This {@link InventoryGUI} instance.
      */
-    InventoryGUI setClickingEnabled(final boolean clickingEnabled);
+    InventoryGUI setClickingEnabled(boolean clickingEnabled);
 
     /**
      * Gets whether or not dragging is enabled in the {@link InventoryGUI}.
@@ -140,21 +140,21 @@ public interface InventoryGUI {
      * @param draggingEnabled True to enable dragging, false to disable it.
      * @return This {@link InventoryGUI} instance.
      */
-    InventoryGUI setDraggingEnabled(final boolean draggingEnabled);
+    InventoryGUI setDraggingEnabled(boolean draggingEnabled);
 
     /**
      * Handles an {@link InventoryClickEvent} when it occurs in this {@link InventoryGUI}.
      *
      * @param event The {@link InventoryClickEvent}.
      */
-    void handleClickEvent(final InventoryClickEvent event);
+    void handleClickEvent(InventoryClickEvent event);
 
     /**
      * Handles an {@link InventoryDragEvent} when it occurs in this {@link InventoryGUI}.
      *
      * @param event The {@link InventoryDragEvent}.
      */
-    void handleDragEvent(final InventoryDragEvent event);
+    void handleDragEvent(InventoryDragEvent event);
 
     /**
      * Called when the {@link InventoryGUI} is closed. Can be overridden, as it has no default functionality.
@@ -173,14 +173,14 @@ public interface InventoryGUI {
      *
      * @param slots The slots.
      */
-    void updateClickables(@NonNull final Number... slots);
+    void updateClickables(@NonNull Number... slots);
 
     /**
      * Updates the {@link GUIClickable}s at the specified slots if they exists.
      *
      * @param slots The slots.
      */
-    void updateClickables(@NonNull final Collection<? extends Number> slots);
+    void updateClickables(@NonNull Collection<? extends Number> slots);
 
     /**
      * Gets the {@link Cooldown} for clicks in this {@link InventoryGUI}.
@@ -202,6 +202,6 @@ public interface InventoryGUI {
      * @param clickCooldown The {@link Cooldown}. Null to disable the click cooldown (not reccomended!).
      * @return This {@link InventoryGUI} instance.
      */
-    InventoryGUI setClickCooldown(final Cooldown clickCooldown);
+    InventoryGUI setClickCooldown(Cooldown clickCooldown);
 
 }

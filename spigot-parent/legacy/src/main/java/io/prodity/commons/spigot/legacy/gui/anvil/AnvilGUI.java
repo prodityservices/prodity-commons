@@ -3,6 +3,7 @@ package io.prodity.commons.spigot.legacy.gui.anvil;
 
 import io.prodity.commons.spigot.legacy.gui.anvil.click.GUIClickable;
 import java.util.stream.Stream;
+import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
@@ -69,39 +70,39 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
      * Opens the {@link Inventory} of this {@link AnvilGUI}.
      *
      * @param player The {@link Player} to open the {@link Inventory} for.
-     * @param title The title to set. Currently does not work.
      * @param defaultText The default text for the anvil.
      */
-    public final void open(@NonNull final Player player, @NonNull final String title, final String defaultText) {
+    public final void open(@NonNull Player player, @Nullable String defaultText) {
         this.defaultText = defaultText;
         this.player = player;
 
-        if (!isOpen()) {
+        if (!this.isOpen()) {
             this.inventory = this.anvilFactory.createInventory(this.player);
+            this.inventory.open();
         }
-
 
         this.anvilFactory.registerGui(this);
         Bukkit.getPluginManager().registerEvents(this.listener = new AnvilGUIListener(), this.plugin);
 
-        setClickableItems();
+        this.setClickableItems();
 
-        onOpen();
+        this.onOpen();
 
         this.inventory.addListener(new AnvilInputListener() {
 
             @Override
-            public void onNameChange(final String oldName, final String name) {
+            public void onNameChange(String oldName, String name) {
                 AnvilGUI.this.updateSlot(AnvilSlot.OUTPUT);
                 AnvilGUI.this.handleInput(oldName);
             }
 
             @Override
-            public void onInvalidName(final String name) {
+            public void onInvalidName(String name) {
                 AnvilGUI.this.handleInvalidInput(name);
             }
         });
-        updateAll();
+
+        this.updateAll();
         this.inventory.setCurrentText((defaultText == null) ? "" : ChatColor.stripColor(defaultText.trim()));
     }
 
@@ -116,8 +117,8 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
         this.isDisposing = true;
 
         if (this.inventory != null) {
-            onClose();
-            close();
+            this.onClose();
+            this.close();
             this.inventory = null;
         }
 
@@ -148,8 +149,8 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
     }
 
     @Override
-    public void setItem(final int slot, final ItemStack item) throws IndexOutOfBoundsException {
-        if (isOpen()) {
+    public void setItem(int slot, ItemStack item) throws IndexOutOfBoundsException {
+        if (this.isOpen()) {
             AnvilSlot.fromNumerical(slot).setItem(this, item);
         }
     }
@@ -161,12 +162,12 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
      *
      * @param oldText The text that was replaced by the current text (which was inputted).
      */
-    public void handleInput(final String oldText) {
-        updateSlot(AnvilSlot.OUTPUT);
+    public void handleInput(String oldText) {
+        this.updateSlot(AnvilSlot.OUTPUT);
     }
 
-    public void handleInvalidInput(final String invalidInput) {
-        updateSlot(AnvilSlot.OUTPUT);
+    public void handleInvalidInput(String invalidInput) {
+        this.updateSlot(AnvilSlot.OUTPUT);
     }
 
     /**
@@ -180,30 +181,30 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
     }
 
     @Override
-    public final void handleClickEvent(final InventoryClickEvent event) {
-        if (!isClickingEnabled() || ((getClickCooldown() != null) && !getClickCooldown().test())) {
+    public final void handleClickEvent(InventoryClickEvent event) {
+        if (!this.isClickingEnabled() || ((this.getClickCooldown() != null) && !this.getClickCooldown().test())) {
             event.setCancelled(true);
-            updateSlot(AnvilSlot.MIDDLE);
+            this.updateSlot(AnvilSlot.MIDDLE);
             return;
         }
 
-        final GUIClickable clickable = getClickable(event.getSlot());
-        if ((clickable != null) && clickable.handlesClicks() && (!clickable.isRequireTopInventory() || getInventory().equals(event
+        final GUIClickable clickable = this.getClickable(event.getSlot());
+        if ((clickable != null) && clickable.handlesClicks() && (!clickable.isRequireTopInventory() || this.getInventory().equals(event
             .getClickedInventory()))) {
             clickable.handleClick(this, event);
             return;
         }
 
-        unhandledClick(event);
+        this.unhandledClick(event);
     }
 
     /**
      * Invokes the super method and also updates the {@link AnvilSlot#OUTPUT}.
      */
     @Override
-    protected void unhandledClick(final InventoryClickEvent event) {
+    protected void unhandledClick(InventoryClickEvent event) {
         event.setCancelled(true);
-        updateSlot(AnvilSlot.MIDDLE);
+        this.updateSlot(AnvilSlot.MIDDLE);
     }
 
     /**
@@ -249,19 +250,19 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
     }
 
     ItemStack getInputItem0() {
-        final ItemStack item = getInputItem();
+        final ItemStack item = this.getInputItem();
         this.inventory.setItem(0, item);
         return item;
     }
 
     ItemStack getMiddleItem0() {
-        final ItemStack item = getMiddleItem();
+        final ItemStack item = this.getMiddleItem();
         this.inventory.setItem(1, item);
         return item;
     }
 
     ItemStack getOutputItem0() {
-        final ItemStack item = getOutputItem();
+        final ItemStack item = this.getOutputItem();
         this.inventory.setItem(2, item);
         return item;
     }
@@ -272,9 +273,9 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
      * @param slots The {@link AnvilSlot}(s).
      * @return This {@link AnvilGUI} instance.
      */
-    public AnvilGUI updateSlot(final AnvilSlot... slots) {
-        if (isOpen()) {
-            Stream.of(slots).forEach(slot -> setItem(slot.intValue(), slot.fetchItem(this)));
+    public AnvilGUI updateSlot(AnvilSlot... slots) {
+        if (this.isOpen()) {
+            Stream.of(slots).forEach(slot -> this.setItem(slot.intValue(), slot.fetchItem(this)));
         }
         return this;
     }
@@ -285,7 +286,7 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
      * @return This {@link AnvilGUI} instance.
      */
     public AnvilGUI updateAll() {
-        updateSlot(AnvilSlot.MIDDLE, AnvilSlot.INPUT, AnvilSlot.OUTPUT);
+        this.updateSlot(AnvilSlot.MIDDLE, AnvilSlot.INPUT, AnvilSlot.OUTPUT);
         return this;
     }
 
@@ -308,21 +309,21 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
         }
 
         @EventHandler(priority = EventPriority.HIGHEST)
-        public void onInvClick(final InventoryClickEvent event) {
-            if (event.getInventory().equals(AnvilGUI.this.inventory) && isOpen()) {
-                handleClickEvent(event);
+        public void onInvClick(InventoryClickEvent event) {
+            if (event.getInventory().equals(AnvilGUI.this.inventory) && AnvilGUI.this.isOpen()) {
+                AnvilGUI.this.handleClickEvent(event);
             }
         }
 
         @EventHandler(priority = EventPriority.HIGHEST)
-        public void invDragEvent(final InventoryDragEvent event) {
-            if (event.getInventory().equals(AnvilGUI.this.inventory) && isOpen()) {
-                handleDragEvent(event);
+        public void invDragEvent(InventoryDragEvent event) {
+            if (event.getInventory().equals(AnvilGUI.this.inventory) && AnvilGUI.this.isOpen()) {
+                AnvilGUI.this.handleDragEvent(event);
             }
         }
 
         @EventHandler(priority = EventPriority.MONITOR)
-        public void invClose(final InventoryCloseEvent event) {
+        public void invClose(InventoryCloseEvent event) {
             if (!event.getInventory().equals(AnvilGUI.this.inventory)) {
                 return;
             }

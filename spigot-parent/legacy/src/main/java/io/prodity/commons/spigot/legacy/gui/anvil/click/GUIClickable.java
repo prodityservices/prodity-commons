@@ -57,14 +57,14 @@ public class GUIClickable {
     /**
      * @param slots The {@link Collection} of slots that this {@link GUIClickable} is applicable for.
      */
-    public GUIClickable(final Collection<? extends Number> slots) {
+    public GUIClickable(Collection<? extends Number> slots) {
         this(null, slots);
     }
 
     /**
      * @param slots The slots that this {@link GUIClickable} is applicable for.
      */
-    public GUIClickable(final Number... slots) {
+    public GUIClickable(Number... slots) {
         this(null, slots);
     }
 
@@ -72,7 +72,7 @@ public class GUIClickable {
      * @param clickHandler The {@link GUIClickHandler} used by this {@link GUIClickable}.
      * @param slots The {@link Collection} of slots that this {@link GUIClickable} is applicable for.
      */
-    public GUIClickable(final GUIClickHandler clickHandler, final Collection<? extends Number> slots) {
+    public GUIClickable(GUIClickHandler clickHandler, Collection<? extends Number> slots) {
         this.clickHandler = clickHandler;
         this.slots = ImmutableList.<Integer>builder().addAll(slots.stream().mapToInt(Number::intValue).iterator()).build();
     }
@@ -81,7 +81,7 @@ public class GUIClickable {
      * @param clickHandler The {@link GUIClickHandler} used by this {@link GUIClickable}.
      * @param slots The slots that this {@link GUIClickable} is applicable for.
      */
-    public GUIClickable(final GUIClickHandler clickHandler, final Number... slots) {
+    public GUIClickable(GUIClickHandler clickHandler, Number... slots) {
         this.clickHandler = clickHandler;
 
         final Builder<Integer> builder = ImmutableList.builder();
@@ -97,11 +97,11 @@ public class GUIClickable {
      * @param gui The {@link InventoryGUI} the {@link InventoryClickEvent} occured in.
      * @param event The {@link InventoryClickEvent}.
      */
-    public void handleClick(@NonNull final InventoryGUI gui, @NonNull final InventoryClickEvent event) {
+    public void handleClick(@NonNull InventoryGUI gui, @NonNull InventoryClickEvent event) {
         if (this.clickHandler != null) {
             this.clickHandler.handleClick(new GUIClickEvent(gui, this, event));
         }
-        if (isAutoCancel()) {
+        if (this.isAutoCancel()) {
             event.setCancelled(true);
         }
     }
@@ -113,8 +113,8 @@ public class GUIClickable {
      * @param item The {@link ItemStack} to set.
      * @return This {@link GUIClickable} instance.
      */
-    public GUIClickable setItemToSlots(final InventoryGUI inventory, final ItemStack item) {
-        getSlots().stream().filter(slot -> slot < inventory.getSize()).forEach(slot -> inventory.setItem(slot, item));
+    public GUIClickable setItemToSlots(InventoryGUI inventory, ItemStack item) {
+        this.getSlots().stream().filter(slot -> slot < inventory.getSize()).forEach(slot -> inventory.setItem(slot, item));
         return this;
     }
 
@@ -134,8 +134,8 @@ public class GUIClickable {
      * @param slot The slot of the {@link InventoryGUI} the {@link ItemStack} is for.
      * @return The cached {@link ItemStack}, or null if there is no cached {@link ItemStack} or the cached item fetcher returns null.
      */
-    public ItemStack getCachedItem(@NonNull final InventoryGUI inventory, @NonNull final Number slot) {
-        return hasCachedItem() ? this.cachedItem.apply(inventory, slot.intValue()) : null;
+    public ItemStack getCachedItem(@NonNull InventoryGUI inventory, @NonNull Number slot) {
+        return this.hasCachedItem() ? this.cachedItem.apply(inventory, slot.intValue()) : null;
     }
 
     /**
@@ -145,10 +145,10 @@ public class GUIClickable {
      * @param inventory The {@link InventoryGUI} to set the {@link ItemStack}s in.
      * @return This {@link GUIClickable} instance.
      */
-    public GUIClickable applyCachedItem(final InventoryGUI inventory) {
-        if (hasCachedItem()) {
-            getSlots().stream().filter(slot -> slot < inventory.getSize())
-                .forEach(slot -> inventory.setItem(slot, getCachedItem(inventory, slot)));
+    public GUIClickable applyCachedItem(InventoryGUI inventory) {
+        if (this.hasCachedItem()) {
+            this.getSlots().stream().filter(slot -> slot < inventory.getSize())
+                .forEach(slot -> inventory.setItem(slot, this.getCachedItem(inventory, slot)));
         }
         return this;
     }
@@ -169,8 +169,8 @@ public class GUIClickable {
      * @param item The {@link ItemStack}.
      * @return This {@link GUIClickable} instance.
      */
-    public GUIClickable setCachedItem(final ItemStack item) {
-        return setCachedItem((inv, slot) -> item);
+    public GUIClickable setCachedItem(ItemStack item) {
+        return this.setCachedItem((inv, slot) -> item);
     }
 
     /**
@@ -179,8 +179,8 @@ public class GUIClickable {
      * @param itemSupplier The {@link ItemStack} {@link Supplier} to be used.
      * @return This {@link GUIClickable} instance.
      */
-    public GUIClickable setCachedItem(@NonNull final Supplier<ItemStack> itemSupplier) {
-        return setCachedItem((inv, slot) -> itemSupplier.get());
+    public GUIClickable setCachedItem(@NonNull Supplier<ItemStack> itemSupplier) {
+        return this.setCachedItem((inv, slot) -> itemSupplier.get());
     }
 
     /**
@@ -189,7 +189,7 @@ public class GUIClickable {
      * @param cachedItem The {@link ItemStack} {@link BiFunction} to be used.
      * @return This {@link GUIClickable} instance.
      */
-    public GUIClickable setCachedItem(final BiFunction<InventoryGUI, Integer, ItemStack> cachedItem) {
+    public GUIClickable setCachedItem(BiFunction<InventoryGUI, Integer, ItemStack> cachedItem) {
         this.cachedItem = cachedItem;
         return this;
     }

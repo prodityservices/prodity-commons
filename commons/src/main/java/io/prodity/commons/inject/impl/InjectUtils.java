@@ -27,8 +27,6 @@ public enum InjectUtils {
             : null;
     }
 
-
-
     public static <T> List<T> getLocalServices(ProdityPlugin plugin, Class<T> tClass) {
         return (List<T>) plugin.getServices().getAllServices(new LocalServiceFilter<>(plugin, tClass));
     }
@@ -40,4 +38,5 @@ public enum InjectUtils {
     public static ServiceLocator createLocator(ProdityPlugin plugin) {
         return ServiceLocatorFactory.getInstance().create(plugin.getName());
     }
+    
 }

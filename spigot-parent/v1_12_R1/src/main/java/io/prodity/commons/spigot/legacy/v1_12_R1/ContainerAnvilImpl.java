@@ -16,7 +16,6 @@ import net.minecraft.server.v1_12_R1.ItemStack;
 import net.minecraft.server.v1_12_R1.PlayerInventory;
 import net.minecraft.server.v1_12_R1.Slot;
 import net.minecraft.server.v1_12_R1.World;
-import org.bukkit.ChatColor;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventory;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftInventoryView;
 
@@ -118,15 +117,7 @@ public class ContainerAnvilImpl extends ContainerAnvil {
 
     @Override
     public void a(String newName) {
-        if (newName.startsWith(ChatColor.RESET.toString())) {
-            newName = newName.substring(2);
-        } else if (newName.trim().equals(ChatColor.COLOR_CHAR)) {
-            newName = "";
-        }
-        String oldName = this.currentName;
-        //		if (oldName.equals(newName)) {
-        //			return;
-        //		}
+        final String oldName = this.currentName;
         this.currentName = newName;
         this.listeners.forEach((listener) -> listener.onNameChange(oldName, this.currentName));
     }

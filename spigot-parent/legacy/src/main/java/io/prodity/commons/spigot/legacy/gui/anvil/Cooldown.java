@@ -30,7 +30,7 @@ public class Cooldown {
      */
     private long cooldownMillis;
 
-    public Cooldown(final Number ticks) {
+    public Cooldown(Number ticks) {
         this(TimeUnit.MILLISECONDS, ticks.longValue() * 50);
     }
 
@@ -38,7 +38,7 @@ public class Cooldown {
      * @param unit The {@link TimeUnit} of the specified time amount.
      * @param timeAmount The amount of time the {@link Cooldown} is set to.
      */
-    public Cooldown(@NonNull final TimeUnit unit, @NonNull final Number timeAmount) {
+    public Cooldown(@NonNull TimeUnit unit, @NonNull Number timeAmount) {
         this.cooldownMillis = unit.toMillis(timeAmount.longValue());
         this.lastCalled = System.currentTimeMillis() - this.cooldownMillis;
     }
@@ -49,10 +49,10 @@ public class Cooldown {
      * @return False if the {@link Cooldown} is still active, true if it passed and the {@link Cooldown} was reset.
      */
     public boolean test() {
-        if (!testNoReset()) {
+        if (!this.testNoReset()) {
             return false;
         }
-        reset();
+        this.reset();
         return true;
     }
 
@@ -78,7 +78,7 @@ public class Cooldown {
      * @param unit The {@link TimeUnit} of the specified time.
      * @param time The time amount to be set.
      */
-    public void setTimeLeft(@NonNull final TimeUnit unit, final int time) {
+    public void setTimeLeft(@NonNull TimeUnit unit, int time) {
         this.lastCalled = (System.currentTimeMillis() - this.cooldownMillis) + unit.toMillis(time);
     }
 
@@ -88,9 +88,9 @@ public class Cooldown {
      * @param unit The {@link TimeUnit} of the specified time.
      * @param time The time amount to be added.
      */
-    public void addTimeLeft(@NonNull final TimeUnit unit, final int time) {
-        if (testNoReset()) {
-            setTimeLeft(unit, time);
+    public void addTimeLeft(@NonNull TimeUnit unit, int time) {
+        if (this.testNoReset()) {
+            this.setTimeLeft(unit, time);
         } else {
             this.lastCalled += unit.toMillis(time);
         }

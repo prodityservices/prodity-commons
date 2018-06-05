@@ -6,14 +6,10 @@ import io.prodity.commons.config.inject.SimpleConfigInjector;
 import io.prodity.commons.config.inject.deserialize.ElementColorizer;
 import io.prodity.commons.config.inject.deserialize.ElementResolver;
 import io.prodity.commons.config.inject.deserialize.repository.ElementRepositoryResolver;
-import io.prodity.commons.inject.Export;
 import io.prodity.commons.inject.InjectionFeature;
 import io.prodity.commons.plugin.ProdityPlugin;
 import org.glassfish.hk2.api.JustInTimeInjectionResolver;
-import org.jvnet.hk2.annotations.Service;
 
-@Export
-@Service
 public class ConfigFeature implements InjectionFeature {
 
     @Override

@@ -46,7 +46,7 @@ public class GUIClickEvent {
      * @param clickable The {@link GUIClickable} that was clicked and is handling this {@link GUIClickEvent}.
      * @param event The {@link InventoryClickEvent} being wrapped.
      */
-    public GUIClickEvent(@NonNull final InventoryGUI gui, @NonNull final GUIClickable clickable, @NonNull final InventoryClickEvent event) {
+    public GUIClickEvent(@NonNull InventoryGUI gui, @NonNull GUIClickable clickable, @NonNull InventoryClickEvent event) {
         this.gui = gui;
         this.clickable = clickable;
         this.wrappedEvent = event;
@@ -68,7 +68,7 @@ public class GUIClickEvent {
      * @return True the top {@link Inventory} was clicked, false if not.
      */
     public boolean wasTopClicked() {
-        return wasAnyClicked() && this.wrappedEvent.getView().getTopInventory().equals(this.wrappedEvent.getClickedInventory());
+        return this.wasAnyClicked() && this.wrappedEvent.getView().getTopInventory().equals(this.wrappedEvent.getClickedInventory());
     }
 
     /**
@@ -85,7 +85,7 @@ public class GUIClickEvent {
      *
      * @param cancelled True to cancel, false to not.
      */
-    public void setCancelled(final boolean cancelled) {
+    public void setCancelled(boolean cancelled) {
         this.wrappedEvent.setCancelled(cancelled);
     }
 

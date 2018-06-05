@@ -35,4 +35,5 @@ public abstract class QualifierProcessor<T extends Annotation> implements Descri
     protected DescriptorImpl notPresent(DescriptorImpl descriptor) {
         return descriptor;
     }
+
 }
