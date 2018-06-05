@@ -3,6 +3,8 @@ package io.prodity.commons.spigot.inject.impl;
 import io.prodity.commons.inject.impl.CoreBinder;
 import io.prodity.commons.plugin.ProdityPlugin;
 import io.prodity.commons.spigot.db.SpigotDatabaseFeature;
+import io.prodity.commons.spigot.depend.protocollib.ProtocolLibFeature;
+import io.prodity.commons.spigot.depend.vault.VaultFeature;
 
 /**
  * This is the PluginBinder that Commons uses to export all the default features
@@ -16,7 +18,8 @@ public class InternalBinder extends CoreBinder {
     @Override
     protected void configure() {
         super.configure();
-        this.addCoreFeatures(McVersionFeature.class, TaskFeature.class, CommandFeature.class, SpigotDatabaseFeature.class);
+        this.addCoreFeatures(McVersionFeature.class, TaskFeature.class, CommandFeature.class, SpigotDatabaseFeature.class,
+            VaultFeature.class, ProtocolLibFeature.class);
     }
 
 }

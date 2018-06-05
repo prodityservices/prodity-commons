@@ -14,7 +14,7 @@ import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 @PluginAuthor("Nate Mortensen")
 @PluginDependency(value = "PlaceholderAPI", soft = true)
 @PluginDependency(value = "Vault", soft = true)
-@PluginDependency(value = "ProtocolLib")
+@PluginDependency(value = "ProtocolLib", soft = true)
 public class ProdityCommonsSpigot extends ProditySpigotPlugin {
 
     @Override

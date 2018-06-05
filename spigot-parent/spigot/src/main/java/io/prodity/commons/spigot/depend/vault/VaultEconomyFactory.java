@@ -1,4 +1,4 @@
-package io.prodity.commons.spigot.vault;
+package io.prodity.commons.spigot.depend.vault;
 
 import javax.inject.Inject;
 import net.milkbowl.vault.economy.Economy;

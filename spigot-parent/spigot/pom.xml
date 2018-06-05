@@ -60,6 +60,11 @@
             <artifactId>VaultAPI</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>com.comphenix.protocol</groupId>
+            <artifactId>ProtocolLib-API</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
