@@ -10,7 +10,6 @@ import lombok.NonNull;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -100,10 +99,11 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
             public void onInvalidName(String name) {
                 AnvilGUI.this.handleInvalidInput(name);
             }
+            
         });
 
         this.updateAll();
-        this.inventory.setCurrentText((defaultText == null) ? "" : ChatColor.stripColor(defaultText.trim()));
+        this.inventory.setCurrentText((defaultText == null) ? " " : defaultText);
     }
 
     public String getCurrentText() {
