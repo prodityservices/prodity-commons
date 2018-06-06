@@ -53,6 +53,11 @@ public class AnvilInputGui<T> extends AnvilGUI {
     }
 
     @Override
+    public void onClose(CloseReason closeReason) {
+        this.data.callCloseCallbacks(closeReason);
+    }
+
+    @Override
     public ItemStack getInputItem() {
         final AnvilInputResult<T> result = this.data.parseResult(this.getCurrentText());
         final Replacer replacer = this.createReplacer(result);

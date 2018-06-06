@@ -60,6 +60,8 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
     @Setter(AccessLevel.NONE)
     private String defaultText = "";
 
+    private CloseReason closeReason = CloseReason.PLAYER;
+
     public AnvilGUI(AnvilFactory anvilFactory, JavaPlugin plugin) {
         this.anvilFactory = anvilFactory;
         this.plugin = plugin;
@@ -117,8 +119,10 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
         }
         this.isDisposing = true;
 
+        this.anvilFactory.unregisterGui(this);
+
         if (this.inventory != null) {
-            this.onClose();
+            this.onClose(this.closeReason);
             this.close();
             this.inventory = null;
         }
@@ -142,6 +146,7 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
      * @return This instance of {@link AnvilGUI}.
      */
     public final AnvilGUI close() {
+        this.closeReason = CloseReason.FORCED;
         if ((this.inventory != null) && (this.player != null)) {
             this.inventory.clear();
             this.player.closeInventory();
@@ -328,7 +333,7 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
             if (!event.getInventory().equals(AnvilGUI.this.inventory)) {
                 return;
             }
-            AnvilGUI.this.anvilFactory.unregisterGui(AnvilGUI.this);
+            AnvilGUI.this.terminate();
         }
 
     }

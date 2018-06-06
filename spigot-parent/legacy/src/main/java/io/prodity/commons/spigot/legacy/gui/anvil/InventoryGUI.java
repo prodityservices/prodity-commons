@@ -20,6 +20,13 @@ import org.bukkit.inventory.ItemStack;
  */
 public interface InventoryGUI {
 
+    public enum CloseReason {
+
+        FORCED,
+        PLAYER
+
+    }
+
     /**
      * Gets whether or not the {@link InventoryGUI} is open.
      *
@@ -159,7 +166,7 @@ public interface InventoryGUI {
     /**
      * Called when the {@link InventoryGUI} is closed. Can be overridden, as it has no default functionality.
      */
-    default void onClose() {
+    default void onClose(CloseReason closeReason) {
     }
 
     /**
