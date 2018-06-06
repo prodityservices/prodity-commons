@@ -22,37 +22,37 @@ public class AnvilInputData<T> {
 
         }
 
-        public Builder<T> setFailureCallback(BiConsumer<AnvilInputGui<T>, String> failureCallback) {
+        public Builder<T> setFailureCallback(@Nullable BiConsumer<AnvilInputGui<T>, String> failureCallback) {
             this.failureCallback = failureCallback;
             return this;
         }
 
-        public Builder<T> setSuccessCallback(BiConsumer<AnvilInputGui<T>, T> successCallback) {
+        public Builder<T> setSuccessCallback(@Nullable BiConsumer<AnvilInputGui<T>, T> successCallback) {
             this.successCallback = successCallback;
             return this;
         }
 
-        public Builder<T> setInputCallback(Runnable inputCallback) {
+        public Builder<T> setInputCallback(@Nullable Runnable inputCallback) {
             this.inputCallback = inputCallback;
             return this;
         }
 
-        public Builder<T> setResultParser(Function<String, AnvilInputResult<T>> resultParser) {
+        public Builder<T> setResultParser(@Nullable Function<String, AnvilInputResult<T>> resultParser) {
             this.resultParser = resultParser;
             return this;
         }
 
-        public Builder<T> setReplacerModifier(BiConsumer<Replacer, AnvilInputResult<T>> replacerModifier) {
+        public Builder<T> setReplacerModifier(@Nullable BiConsumer<Replacer, AnvilInputResult<T>> replacerModifier) {
             this.replacerModifier = replacerModifier;
             return this;
         }
 
-        public Builder<T> setInputItemKey(String inputItemKey) {
+        public Builder<T> setInputItemKey(@Nullable String inputItemKey) {
             this.inputItemKey = inputItemKey;
             return this;
         }
 
-        public Builder<T> setOutputValidItemKey(String outputValidItemKey) {
+        public Builder<T> setOutputValidItemKey(@Nullable String outputValidItemKey) {
             this.outputValidItemKey = outputValidItemKey;
             return this;
         }
