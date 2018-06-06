@@ -118,7 +118,7 @@ public class ContainerAnvilImpl extends ContainerAnvil {
     @Override
     public void a(String newName) {
         final String oldName = this.currentName;
-        this.currentName = newName == null ? "" : newName;
+        this.currentName = newName;
         this.listeners.forEach((listener) -> listener.onNameChange(oldName, this.currentName));
     }
 

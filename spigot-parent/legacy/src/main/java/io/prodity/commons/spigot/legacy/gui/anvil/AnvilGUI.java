@@ -99,7 +99,7 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
             public void onInvalidName(String name) {
                 AnvilGUI.this.handleInvalidInput(name);
             }
-            
+
         });
 
         this.updateAll();
@@ -107,7 +107,8 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
     }
 
     public String getCurrentText() {
-        return this.inventory.getCurrentText();
+        final String text = this.inventory.getCurrentText();
+        return text == null ? "" : text;
     }
 
     public void terminate() {
