@@ -64,15 +64,17 @@ public class MutableItemBuilder extends MutableBuilder<ItemStack, ItemConstructi
     @Getter
     @Setter
     @Accessors(chain = true)
-    private final Material material;
+    private Material material;
+
     @Getter
     @Setter
     @Accessors(chain = true)
-    private final int amount;
+    private int amount;
+
     @Getter
     @Setter
     @Accessors(chain = true)
-    private final int data;
+    private int data;
 
     private MutableItemBuilder(@NonNull Material material, int amount, int data, @NonNull Iterable<ItemBuilderMeta<?>> metaIterable) {
         super(metaIterable);
