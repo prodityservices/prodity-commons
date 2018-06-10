@@ -39,6 +39,10 @@ public class PlayerReference {
         return this.name;
     }
 
+    public boolean isOnline() {
+        return Bukkit.getPlayer(this.id) != null;
+    }
+
     /**
      * Gets the last time the player logged into a server sharing the database.
      * If the player has never joined the server then the returned value is
