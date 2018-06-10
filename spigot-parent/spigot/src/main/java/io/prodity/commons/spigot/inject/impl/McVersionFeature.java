@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 
 public class McVersionFeature implements InjectionFeature {
 
-    public static String CURRENT = Bukkit.getServer().getClass().getPackage().getName().replace("org.bukkit.craftbukkit.v", "");
+    public static final String CURRENT = Bukkit.getServer().getClass().getPackage().getName().replace("org.bukkit.craftbukkit.v", "");
 
     @Override
     public void preLoad(ProdityPlugin plugin) {
