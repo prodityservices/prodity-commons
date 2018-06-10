@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import javax.annotation.Nullable;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -132,7 +133,7 @@ public abstract class Gui<SELF extends Gui<SELF>> {
         return this.fallbackGui;
     }
 
-    public void setFallbackGui(Function<Player, Gui<?>> fallbackGui) {
+    public void setFallbackGui(@Nullable Function<Player, Gui<?>> fallbackGui) {
         this.fallbackGui = fallbackGui;
     }
 
@@ -384,7 +385,6 @@ public abstract class Gui<SELF extends Gui<SELF>> {
             if (slot != null) {
                 slot.handle(event);
             }
-
         }
 
         @EventHandler

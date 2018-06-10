@@ -8,6 +8,7 @@ import io.prodity.commons.spigot.legacy.gui.anvil.click.GUIClickable;
 import io.prodity.commons.spigot.legacy.item.builder.ItemBuilder;
 import io.prodity.commons.spigot.legacy.item.repo.ItemRepository;
 import io.prodity.commons.spigot.legacy.message.replace.Replacer;
+import java.util.UUID;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -19,12 +20,13 @@ public class AnvilInputGui<T> extends AnvilGUI {
     private final AnvilInputData<T> data;
 
     public AnvilInputGui(
+        UUID uniqueId,
         ItemRepository items,
         AnvilFactory anvilFactory,
         JavaPlugin plugin,
         AnvilInputData<T> data
     ) {
-        super(anvilFactory, plugin);
+        super(uniqueId, anvilFactory, plugin);
         Preconditions.checkNotNull(items, "items");
         Preconditions.checkNotNull(data, "data");
         this.items = items;

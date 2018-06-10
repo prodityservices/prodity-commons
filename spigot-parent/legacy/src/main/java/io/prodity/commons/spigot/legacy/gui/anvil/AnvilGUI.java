@@ -1,7 +1,10 @@
 
 package io.prodity.commons.spigot.legacy.gui.anvil;
 
+import io.prodity.commons.spigot.legacy.gui.Gui;
 import io.prodity.commons.spigot.legacy.gui.anvil.click.GUIClickable;
+import io.prodity.commons.spigot.legacy.plugin.PluginUtil;
+import java.util.UUID;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import lombok.AccessLevel;
@@ -20,7 +23,10 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -33,6 +39,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 @Getter
 @Accessors(chain = true)
 public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
+
+    private final UUID uniqueId;
 
     @Getter
     private final AnvilFactory anvilFactory;
@@ -62,7 +70,8 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
 
     private CloseReason closeReason = CloseReason.PLAYER;
 
-    public AnvilGUI(AnvilFactory anvilFactory, JavaPlugin plugin) {
+    public AnvilGUI(UUID uniqueId, AnvilFactory anvilFactory, JavaPlugin plugin) {
+        this.uniqueId = uniqueId;
         this.anvilFactory = anvilFactory;
         this.plugin = plugin;
     }
@@ -77,15 +86,24 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
         this.defaultText = defaultText;
         this.player = player;
 
+        final MetadataValue metadataValue = this.createMetadataValue();
+        this.player.setMetadata(Gui.METADATA_KEY, metadataValue);
+
+        final InventoryView activeInventory = this.player.getOpenInventory();
+        if (activeInventory != null) {
+            activeInventory.close();
+        }
+
         if (!this.isOpen()) {
             this.inventory = this.anvilFactory.createInventory(this.player);
-            this.inventory.open();
         }
 
         this.anvilFactory.registerGui(this);
         Bukkit.getPluginManager().registerEvents(this.listener = new AnvilGUIListener(), this.plugin);
 
         this.setClickableItems();
+
+        this.inventory.open();
 
         this.onOpen();
 
@@ -106,6 +124,11 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
 
         this.updateAll();
         this.inventory.setCurrentText((defaultText == null) ? " " : defaultText);
+    }
+
+    private MetadataValue createMetadataValue() {
+        final JavaPlugin providingPlugin = PluginUtil.getProvidingPlugin();
+        return new FixedMetadataValue(providingPlugin, this.uniqueId);
     }
 
     public String getCurrentText() {
