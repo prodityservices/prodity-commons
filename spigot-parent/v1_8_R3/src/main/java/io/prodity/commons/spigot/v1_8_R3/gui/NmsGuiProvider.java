@@ -19,7 +19,8 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class NmsGuiProvider implements GuiProvider {
 
-    private static String getProtocolType(Inventory inventory) {
+    @SuppressWarnings("Duplicates")
+    public static String getProtocolType(Inventory inventory) {
 
         ContainerAnvil containerAnvil;
         switch (inventory.getType()) {
@@ -50,6 +51,8 @@ public class NmsGuiProvider implements GuiProvider {
         }
     }
 
+
+    @SuppressWarnings("Duplicates")
     @Override
     public void updateInventoryTitle(Player player, Inventory inventory, String newTitle) {
         // It'd be cool if there was a nice way to do this other than copy+pasting shit

@@ -18,7 +18,8 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class NmsGuiProvider implements GuiProvider {
 
-    private static String getProtocolType(Inventory inventory) {
+    @SuppressWarnings("Duplicates")
+    public static String getProtocolType(Inventory inventory) {
         switch (inventory.getType()) {
             case ANVIL:
                 return "minecraft:anvil";
@@ -48,6 +49,7 @@ public class NmsGuiProvider implements GuiProvider {
     }
 
     @Override
+    @SuppressWarnings("Duplicates")
     public void updateInventoryTitle(Player player, Inventory inventory, String newTitle) {
         Preconditions.checkNotNull(player, "player");
         Preconditions.checkNotNull(inventory, "inventory");
@@ -65,4 +67,5 @@ public class NmsGuiProvider implements GuiProvider {
         entityPlayer.playerConnection.sendPacket(packet);
         entityPlayer.updateInventory(entityPlayer.activeContainer);
     }
+
 }

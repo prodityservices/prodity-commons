@@ -8,7 +8,6 @@
         <option value="reformat" />
         <option value="explicitTypeCanBeDiamond" />
         <option value="unqualifiedFieldAccess" />
-        <option value="suppressAnnotation" />
         <option value="finalPrivateMethod" />
         <option value="unnecessarySemicolon" />
         <option value="missingOverrideAnnotation" />
