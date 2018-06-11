@@ -8,14 +8,18 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="commons" />
-        <module name="commons-spigot-plugin" />
+        <module name="commons-spigot-legacy-v1_8_R3" />
+        <module name="commons-spigot-legacy_v1_12_R1" />
+        <module name="commons-spigot-plugin-v1_12_R1" />
+        <module name="commons-spigot-plugin_v1_12_R1" />
         <module name="commons-spigot-v1_12_R1" />
         <module name="commons-spigot-v1_8_R3" />
         <module name="customfeature" />
         <module name="examples-config" />
         <module name="examples-custom-feature" />
         <module name="examples-spigot" />
-        <module name="legacy" />
+        <module name="legacy_v1_12_R1" />
+        <module name="plugin-v1_8_R3" />
         <module name="spigot" />
       </profile>
     </annotationProcessing>
@@ -24,8 +28,11 @@
       <module name="commons-bungee" target="1.8" />
       <module name="commons-parent" target="1.5" />
       <module name="commons-spigot" target="1.8" />
+      <module name="commons-spigot-legacy-v1_8_R3" target="1.8" />
+      <module name="commons-spigot-legacy_v1_12_R1" target="1.8" />
       <module name="commons-spigot-parent" target="1.5" />
-      <module name="commons-spigot-plugin" target="1.8" />
+      <module name="commons-spigot-plugin-v1_12_R1" target="1.8" />
+      <module name="commons-spigot-plugin_v1_12_R1" target="1.8" />
       <module name="commons-spigot-v1_12_R1" target="1.8" />
       <module name="commons-spigot-v1_8_R3" target="1.8" />
       <module name="customfeature" target="1.8" />
@@ -33,7 +40,8 @@
       <module name="examples-custom-feature" target="1.8" />
       <module name="examples-parent" target="1.5" />
       <module name="examples-spigot" target="1.8" />
-      <module name="legacy" target="1.8" />
+      <module name="legacy_v1_12_R1" target="1.8" />
+      <module name="plugin-v1_8_R3" target="1.8" />
       <module name="spigot" target="1.8" />
     </bytecodeTargetLevel>
   </component>

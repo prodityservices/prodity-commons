@@ -181,7 +181,12 @@
             </dependency>
             <dependency>
                 <groupId>io.prodity</groupId>
-                <artifactId>commons-spigot-legacy</artifactId>
+                <artifactId>commons-spigot-legacy-v1_12_R1</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.prodity</groupId>
+                <artifactId>commons-spigot-legacy-v1_8_R3</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
