@@ -102,7 +102,7 @@
             <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
-                <version>21.0</version>
+                <version>25.1-jre</version>
             </dependency>
             <dependency>
                 <groupId>com.rethinkdb</groupId>
@@ -258,6 +258,12 @@
                             </transformer>
                             <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                         </transformers>
+                        <relocations>
+                            <relocation>
+                                <pattern>com.google.common</pattern>
+                                <shadedPattern>io.prodity.commons.com.google.common</shadedPattern>
+                            </relocation>
+                        </relocations>
                     </configuration>
                 </plugin>
                 <plugin>
