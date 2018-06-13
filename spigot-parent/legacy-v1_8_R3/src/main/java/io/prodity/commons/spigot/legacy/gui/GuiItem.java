@@ -77,7 +77,7 @@ public class GuiItem {
 
     }
 
-    public static GuiItem.Builder builder(ItemStack itemStack) {
+    public static Builder builder(ItemStack itemStack) {
         return new Builder(itemStack);
     }
 

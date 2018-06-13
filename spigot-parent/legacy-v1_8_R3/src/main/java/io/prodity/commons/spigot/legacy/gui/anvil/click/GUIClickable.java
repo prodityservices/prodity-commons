@@ -3,7 +3,7 @@ package io.prodity.commons.spigot.legacy.gui.anvil.click;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
-import io.prodity.commons.spigot.legacy.gui.anvil.InventoryGUI;
+import io.prodity.commons.spigot.legacy.gui.anvil.AbstractInventoryGUI;
 import java.util.Collection;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
@@ -44,10 +44,10 @@ public class GUIClickable {
     private boolean requireTopInventory = true;
 
     /**
-     * The {@link BiFunction} used to retrieve the {@link ItemStack}, if any, that is to be set to the specified slot of the specified {@link InventoryGUI}.
+     * The {@link BiFunction} used to retrieve the {@link ItemStack}, if any, that is to be set to the specified slot of the specified {@link AbstractInventoryGUI}.
      */
     @Setter(AccessLevel.NONE)
-    private BiFunction<InventoryGUI, Integer, ItemStack> cachedItem;
+    private BiFunction<AbstractInventoryGUI, Integer, ItemStack> cachedItem;
 
     /**
      * Whether or not this {@link GUIClickable} should automatically cancel the event after it is handled. Defaults to true.
@@ -92,12 +92,12 @@ public class GUIClickable {
     }
 
     /**
-     * Handles an {@link InventoryClickEvent} in an {@link InventoryGUI}.
+     * Handles an {@link InventoryClickEvent} in an {@link AbstractInventoryGUI}.
      *
-     * @param gui The {@link InventoryGUI} the {@link InventoryClickEvent} occured in.
+     * @param gui The {@link AbstractInventoryGUI} the {@link InventoryClickEvent} occured in.
      * @param event The {@link InventoryClickEvent}.
      */
-    public void handleClick(@NonNull InventoryGUI gui, @NonNull InventoryClickEvent event) {
+    public void handleClick(@NonNull AbstractInventoryGUI gui, @NonNull InventoryClickEvent event) {
         if (this.clickHandler != null) {
             this.clickHandler.handleClick(new GUIClickEvent(gui, this, event));
         }
@@ -107,13 +107,13 @@ public class GUIClickable {
     }
 
     /**
-     * Sets the specified {@link ItemStack} to all of the {@link GUIClickable#getSlots()} in the specified {@link InventoryGUI}.
+     * Sets the specified {@link ItemStack} to all of the {@link GUIClickable#getSlots()} in the specified {@link AbstractInventoryGUI}.
      *
-     * @param inventory The {@link InventoryGUI} to set the {@link ItemStack}s in.
+     * @param inventory The {@link AbstractInventoryGUI} to set the {@link ItemStack}s in.
      * @param item The {@link ItemStack} to set.
      * @return This {@link GUIClickable} instance.
      */
-    public GUIClickable setItemToSlots(InventoryGUI inventory, ItemStack item) {
+    public GUIClickable setItemToSlots(AbstractInventoryGUI inventory, ItemStack item) {
         this.getSlots().stream().filter(slot -> slot < inventory.getSize()).forEach(slot -> inventory.setItem(slot, item));
         return this;
     }
@@ -130,22 +130,22 @@ public class GUIClickable {
     /**
      * Gets the cached {@link ItemStack} of this {@link GUIClickable}.
      *
-     * @param inventory The {@link InventoryGUI} the {@link ItemStack} is for.
-     * @param slot The slot of the {@link InventoryGUI} the {@link ItemStack} is for.
+     * @param inventory The {@link AbstractInventoryGUI} the {@link ItemStack} is for.
+     * @param slot The slot of the {@link AbstractInventoryGUI} the {@link ItemStack} is for.
      * @return The cached {@link ItemStack}, or null if there is no cached {@link ItemStack} or the cached item fetcher returns null.
      */
-    public ItemStack getCachedItem(@NonNull InventoryGUI inventory, @NonNull Number slot) {
+    public ItemStack getCachedItem(@NonNull AbstractInventoryGUI inventory, @NonNull Number slot) {
         return this.hasCachedItem() ? this.cachedItem.apply(inventory, slot.intValue()) : null;
     }
 
     /**
-     * Sets the {@link #getCachedItem()} of this {@link GUIClickable} to all of the {@link GUIClickable#getSlots()} in the specified {@link InventoryGUI}, but
+     * Sets the {@link #getCachedItem()} of this {@link GUIClickable} to all of the {@link GUIClickable#getSlots()} in the specified {@link AbstractInventoryGUI}, but
      * only if this {@link GUIClickable}'s {@link #hasCachedItem()} returns true.
      *
-     * @param inventory The {@link InventoryGUI} to set the {@link ItemStack}s in.
+     * @param inventory The {@link AbstractInventoryGUI} to set the {@link ItemStack}s in.
      * @return This {@link GUIClickable} instance.
      */
-    public GUIClickable applyCachedItem(InventoryGUI inventory) {
+    public GUIClickable applyCachedItem(AbstractInventoryGUI inventory) {
         if (this.hasCachedItem()) {
             this.getSlots().stream().filter(slot -> slot < inventory.getSize())
                 .forEach(slot -> inventory.setItem(slot, this.getCachedItem(inventory, slot)));
@@ -189,7 +189,7 @@ public class GUIClickable {
      * @param cachedItem The {@link ItemStack} {@link BiFunction} to be used.
      * @return This {@link GUIClickable} instance.
      */
-    public GUIClickable setCachedItem(BiFunction<InventoryGUI, Integer, ItemStack> cachedItem) {
+    public GUIClickable setCachedItem(BiFunction<AbstractInventoryGUI, Integer, ItemStack> cachedItem) {
         this.cachedItem = cachedItem;
         return this;
     }

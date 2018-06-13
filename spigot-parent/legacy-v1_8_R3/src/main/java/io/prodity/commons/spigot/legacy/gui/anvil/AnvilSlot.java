@@ -36,10 +36,10 @@ public class AnvilSlot extends Number {
      */
     public static final AnvilSlot INPUT = new AnvilSlot(0, AnvilGUI::getInputItem0, (gui, stack) -> {
         gui.getInventory().setItem(0, stack);
-        if (stack != null) {
+        if (stack != null && stack.hasItemMeta()) {
             final ItemMeta itemMeta = stack.getItemMeta();
             final String cur = gui.getCurrentText();
-            itemMeta.setDisplayName(((cur == null) || cur.isEmpty()) ? "§r" : cur);
+            itemMeta.setDisplayName(((cur == null) || cur.isEmpty()) ? " " : cur);
             stack.setItemMeta(itemMeta);
         }
         gui.getAnvilFactory().fakeSetItem(gui.getPlayer(), 0, stack);

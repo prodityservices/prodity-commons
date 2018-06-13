@@ -1,7 +1,7 @@
 
 package io.prodity.commons.spigot.legacy.gui.anvil.click;
 
-import io.prodity.commons.spigot.legacy.gui.anvil.InventoryGUI;
+import io.prodity.commons.spigot.legacy.gui.anvil.AbstractInventoryGUI;
 import lombok.Getter;
 import lombok.NonNull;
 import org.bukkit.Material;
@@ -32,9 +32,9 @@ public class GUIClickEvent {
     private final Player player;
 
     /**
-     * The {@link InventoryGUI} the event occurred in.
+     * The {@link AbstractInventoryGUI} the event occurred in.
      */
-    private final InventoryGUI gui;
+    private final AbstractInventoryGUI gui;
 
     /**
      * The {@link GUIClickable} that was clicked and is handling this {@link GUIClickEvent}.
@@ -42,11 +42,11 @@ public class GUIClickEvent {
     private final GUIClickable clickable;
 
     /**
-     * @param gui The {@link InventoryGUI} the event occurred in.
+     * @param gui The {@link AbstractInventoryGUI} the event occurred in.
      * @param clickable The {@link GUIClickable} that was clicked and is handling this {@link GUIClickEvent}.
      * @param event The {@link InventoryClickEvent} being wrapped.
      */
-    public GUIClickEvent(@NonNull InventoryGUI gui, @NonNull GUIClickable clickable, @NonNull InventoryClickEvent event) {
+    public GUIClickEvent(@NonNull AbstractInventoryGUI gui, @NonNull GUIClickable clickable, @NonNull InventoryClickEvent event) {
         this.gui = gui;
         this.clickable = clickable;
         this.wrappedEvent = event;

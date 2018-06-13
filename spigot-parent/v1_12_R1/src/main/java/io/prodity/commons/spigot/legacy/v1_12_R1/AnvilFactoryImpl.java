@@ -70,7 +70,7 @@ public class AnvilFactoryImpl implements AnvilFactory, Listener, Eager {
 
     @PreDestroy
     private void cleanup() {
-        Lists.newArrayList(this.anvilGuis).forEach(AnvilGUI::terminate);
+        Lists.newArrayList(this.anvilGuis).forEach(AnvilGUI::close);
         this.anvilGuis.clear();
     }
 

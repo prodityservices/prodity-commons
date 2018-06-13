@@ -3,7 +3,7 @@ package io.prodity.commons.spigot.legacy.gui.anvil.input;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import io.prodity.commons.spigot.legacy.gui.anvil.InventoryGUI.CloseReason;
+import io.prodity.commons.spigot.legacy.gui.close.GuiCloseReason;
 import io.prodity.commons.spigot.legacy.message.replace.Replacer;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -20,7 +20,7 @@ public class AnvilInputData<T> {
         private BiConsumer<Replacer, AnvilInputResult<T>> replacerModifier;
         private String inputItemKey;
         private String outputValidItemKey;
-        private final ImmutableMultimap.Builder<CloseReason, Runnable> closeCallbacks = ImmutableMultimap.builder();
+        private final ImmutableMultimap.Builder<GuiCloseReason, Runnable> closeCallbacks = ImmutableMultimap.builder();
 
         private Builder() {
 
@@ -61,7 +61,7 @@ public class AnvilInputData<T> {
             return this;
         }
 
-        public Builder<T> addCloseCallback(CloseReason closeReason, Runnable runnable) {
+        public Builder<T> addCloseCallback(GuiCloseReason closeReason, Runnable runnable) {
             Preconditions.checkNotNull(runnable, "runnable");
             this.closeCallbacks.put(closeReason, runnable);
             return this;
@@ -69,7 +69,7 @@ public class AnvilInputData<T> {
 
         public Builder<T> addCloseCallback(Runnable runnable) {
             Preconditions.checkNotNull(runnable, "runnable");
-            for (CloseReason closeReason : CloseReason.values()) {
+            for (GuiCloseReason closeReason : GuiCloseReason.values()) {
                 this.closeCallbacks.put(closeReason, runnable);
             }
             return this;
@@ -100,7 +100,7 @@ public class AnvilInputData<T> {
     private final BiConsumer<Replacer, AnvilInputResult<T>> replacerModifier;
     private final String inputItemKey;
     private final String outputValidItemKey;
-    private final Multimap<CloseReason, Runnable> closeCallbacks;
+    private final Multimap<GuiCloseReason, Runnable> closeCallbacks;
 
     public AnvilInputData(
         @Nullable BiConsumer<AnvilInputGui<T>, String> failureCallback,
@@ -110,7 +110,7 @@ public class AnvilInputData<T> {
         @Nullable BiConsumer<Replacer, AnvilInputResult<T>> replacerModifier,
         String inputItemKey,
         String outputValidItemKey,
-        ImmutableMultimap<CloseReason, Runnable> closeCallbacks
+        ImmutableMultimap<GuiCloseReason, Runnable> closeCallbacks
     ) {
         Preconditions.checkNotNull(resultParser, "resultParser");
         Preconditions.checkNotNull(inputItemKey, "inputItemKey");
@@ -148,7 +148,7 @@ public class AnvilInputData<T> {
         }
     }
 
-    void callCloseCallbacks(CloseReason closeReason) {
+    void callCloseCallbacks(GuiCloseReason closeReason) {
         this.closeCallbacks.get(closeReason).forEach(Runnable::run);
     }
 

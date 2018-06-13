@@ -5,10 +5,12 @@ import io.prodity.commons.spigot.legacy.gui.anvil.AnvilFactory;
 import io.prodity.commons.spigot.legacy.gui.anvil.AnvilGUI;
 import io.prodity.commons.spigot.legacy.gui.anvil.AnvilSlot;
 import io.prodity.commons.spigot.legacy.gui.anvil.click.GUIClickable;
+import io.prodity.commons.spigot.legacy.gui.close.GuiCloseReason;
 import io.prodity.commons.spigot.legacy.item.builder.ItemBuilder;
 import io.prodity.commons.spigot.legacy.item.repo.ItemRepository;
 import io.prodity.commons.spigot.legacy.message.replace.Replacer;
 import java.util.UUID;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -55,7 +57,7 @@ public class AnvilInputGui<T> extends AnvilGUI {
     }
 
     @Override
-    public void onClose(CloseReason closeReason) {
+    public void onClose(GuiCloseReason closeReason) {
         this.data.callCloseCallbacks(closeReason);
     }
 

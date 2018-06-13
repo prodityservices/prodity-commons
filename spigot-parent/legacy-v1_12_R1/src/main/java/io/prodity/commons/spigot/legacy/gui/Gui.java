@@ -33,9 +33,22 @@ import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
+@SuppressWarnings("Duplicates")
 public abstract class Gui<SELF extends Gui<SELF>> {
 
     public static final String METADATA_KEY = "active-gui";
+
+    public static Object getPlayerMetadataValue(Player player) {
+        Preconditions.checkNotNull(player, "player");
+        final JavaPlugin providingPlugin = PluginUtil.getProvidingPlugin();
+        final List<MetadataValue> metadata = player.getMetadata(Gui.METADATA_KEY);
+        for (MetadataValue value : metadata) {
+            if (Objects.equals(providingPlugin, value.getOwningPlugin())) {
+                return value.value();
+            }
+        }
+        return null;
+    }
 
     private final UUID uniqueId;
 
@@ -45,7 +58,7 @@ public abstract class Gui<SELF extends Gui<SELF>> {
     private final List<GuiCloseHandler> closeHandlers;
     private final List<Listener> listeners;
     private final Listener listener;
-    private final Inventory inventory;
+    private Inventory inventory;
 
     private String title;
 
@@ -54,8 +67,8 @@ public abstract class Gui<SELF extends Gui<SELF>> {
     private boolean valid;
     private GuiCloseReason closeReason;
 
-    protected Gui(UUID uniqueId, Plugin plugin, Player player, int lines, String initialTitle) {
-        this(uniqueId, plugin, player, Bukkit.createInventory(player, lines * 9, initialTitle));
+    protected Gui(UUID uniqueId, Plugin plugin, Player player, int lines, @Nullable String initialTitle) {
+        this(uniqueId, plugin, player, Bukkit.createInventory(player, lines * 9, initialTitle == null ? "" : initialTitle));
     }
 
     protected Gui(UUID uniqueId, Plugin plugin, Player player, Inventory inventory) {
@@ -70,10 +83,10 @@ public abstract class Gui<SELF extends Gui<SELF>> {
         this.closeHandlers = Lists.newLinkedList();
         this.listeners = Lists.newArrayList();
         this.listener = new GuiListener();
-        this.title = inventory.getTitle();
-        this.inventory = inventory;
         this.firstDraw = true;
         this.valid = false;
+        this.inventory = inventory;
+        this.title = inventory.getTitle();
     }
 
     public void redraw() {
@@ -106,7 +119,7 @@ public abstract class Gui<SELF extends Gui<SELF>> {
     public SELF setTitle(String title) {
         this.title = title;
         if (this.isValid()) {
-            GuiProvider.getInstance().updateInventoryTitle(this.player, this.inventory, this.title);
+            GuiProvider.getInstance().updateInventoryTitle(this.player, this.inventory, this.title == null ? "" : this.title);
         }
         return this.getSelf();
     }
@@ -129,6 +142,7 @@ public abstract class Gui<SELF extends Gui<SELF>> {
         return this.valid;
     }
 
+    @Nullable
     public Function<Player, Gui<?>> getFallbackGui() {
         return this.fallbackGui;
     }
@@ -281,23 +295,9 @@ public abstract class Gui<SELF extends Gui<SELF>> {
         return new FixedMetadataValue(providingPlugin, this.uniqueId);
     }
 
-    private Object getPlayerMetadataValue() {
-        final JavaPlugin providingPlugin = PluginUtil.getProvidingPlugin();
-        final List<MetadataValue> metadata = this.player.getMetadata(Gui.METADATA_KEY);
-        for (MetadataValue value : metadata) {
-            if (Objects.equals(providingPlugin, value.getOwningPlugin())) {
-                return value.value();
-            }
-        }
-        return null;
-    }
-
     public void open() throws IllegalStateException {
         if (this.valid) {
             throw new IllegalStateException("gui is already open");
-        }
-        if (this.title == null) {
-            throw new IllegalStateException("no title was set");
         }
 
         try {
@@ -405,12 +405,12 @@ public abstract class Gui<SELF extends Gui<SELF>> {
                 return;
             }
             final Inventory inventory = event.getInventory();
-            if (!Objects.equals(inventory, Gui.this.getHandle())) {
+            if (!Objects.equals(inventory, Gui.this.inventory)) {
                 return;
             }
 
             if (Gui.this.closeReason == null) {
-                final Object metadataValue = Gui.this.getPlayerMetadataValue();
+                final Object metadataValue = Gui.getPlayerMetadataValue(player);
                 if (!Objects.equals(Gui.this.uniqueId, metadataValue)) {
                     Gui.this.closeReason = GuiCloseReason.INVENTORY_OVERRIDE;
                 } else {

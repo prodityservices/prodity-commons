@@ -3,14 +3,15 @@ package io.prodity.commons.spigot.legacy.gui.anvil;
 
 import io.prodity.commons.spigot.legacy.gui.Gui;
 import io.prodity.commons.spigot.legacy.gui.anvil.click.GUIClickable;
+import io.prodity.commons.spigot.legacy.gui.close.GuiCloseReason;
 import io.prodity.commons.spigot.legacy.plugin.PluginUtil;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -21,6 +22,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
@@ -65,10 +67,9 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
     @Getter(AccessLevel.NONE)
     private boolean isDisposing = false;
 
-    @Setter(AccessLevel.NONE)
-    private String defaultText = "";
+    private GuiCloseReason closeReason;
 
-    private CloseReason closeReason = CloseReason.PLAYER;
+    private boolean valid;
 
     public AnvilGUI(UUID uniqueId, AnvilFactory anvilFactory, JavaPlugin plugin) {
         this.uniqueId = uniqueId;
@@ -83,7 +84,10 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
      * @param defaultText The default text for the anvil.
      */
     public final void open(@NonNull Player player, @Nullable String defaultText) {
-        this.defaultText = defaultText;
+        if (this.valid) {
+            throw new IllegalStateException("AnvilGUI is already open");
+        }
+
         this.player = player;
 
         final MetadataValue metadataValue = this.createMetadataValue();
@@ -104,6 +108,7 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
         this.setClickableItems();
 
         this.inventory.open();
+        this.valid = true;
 
         this.onOpen();
 
@@ -126,6 +131,9 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
         this.inventory.setCurrentText((defaultText == null) ? " " : defaultText);
     }
 
+    protected void onOpen() {
+    }
+
     private MetadataValue createMetadataValue() {
         final JavaPlugin providingPlugin = PluginUtil.getProvidingPlugin();
         return new FixedMetadataValue(providingPlugin, this.uniqueId);
@@ -136,45 +144,31 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
         return text == null ? "" : text;
     }
 
-    public void terminate() {
-        if (this.isDisposing) {
-            return;
-        }
-        this.isDisposing = true;
+    public void close() {
+        this.setCloseReason(GuiCloseReason.FORCEFUL);
+        this.player.closeInventory();
+    }
 
+    private void invalidate() {
+        this.valid = false;
+        this.inventory.clear();
+        HandlerList.unregisterAll(this.listener);
         this.anvilFactory.unregisterGui(this);
+        Bukkit.getScheduler().runTaskLater(this.plugin, () -> this.onClose(this.closeReason), 1L);
+    }
 
-        if (this.inventory != null) {
-            this.onClose(this.closeReason);
-            this.close();
-            this.inventory = null;
-        }
+    protected void onClose(GuiCloseReason closeReason) {
+    }
 
-        if (this.listener != null) {
-            HandlerList.unregisterAll(this.listener);
-            this.listener = null;
+    private void setCloseReason(@Nullable GuiCloseReason closeReason) {
+        if (this.closeReason == null) {
+            this.closeReason = closeReason;
         }
-        this.player = null;
-        this.isDisposing = false;
     }
 
     @Override
     public int getSize() {
         return 3;
-    }
-
-    /**
-     * Closes this {@link AnvilGUI}.
-     *
-     * @return This instance of {@link AnvilGUI}.
-     */
-    public final AnvilGUI close() {
-        this.closeReason = CloseReason.FORCED;
-        if ((this.inventory != null) && (this.player != null)) {
-            this.inventory.clear();
-            this.player.closeInventory();
-        }
-        return this;
     }
 
     @Override
@@ -323,8 +317,6 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
         return null;
     }
 
-    //
-
     /**
      * The {@link Listener} for {@link AnvilGUI}.
      * <p>
@@ -351,14 +343,39 @@ public abstract class AnvilGUI extends AbstractInventoryGUI<AnvilGUI> {
             }
         }
 
-        @EventHandler(priority = EventPriority.MONITOR)
-        public void invClose(InventoryCloseEvent event) {
-            if (!event.getInventory().equals(AnvilGUI.this.inventory)) {
+        @EventHandler
+        public void on(PlayerQuitEvent event) {
+            final Player player = event.getPlayer();
+            if (!Objects.equals(player, AnvilGUI.this.getPlayer())) {
                 return;
             }
-            AnvilGUI.this.terminate();
+
+            AnvilGUI.this.closeReason = GuiCloseReason.PLAYER_QUIT;
+            AnvilGUI.this.invalidate();
         }
 
+        @EventHandler
+        public void on(InventoryCloseEvent event) {
+            final Player player = (Player) event.getPlayer();
+            if (!Objects.equals(player, AnvilGUI.this.getPlayer())) {
+                return;
+            }
+            final Inventory inventory = event.getInventory();
+            if (!Objects.equals(inventory, AnvilGUI.this.inventory)) {
+                return;
+            }
+
+            if (AnvilGUI.this.closeReason == null) {
+                final Object metadataValue = Gui.getPlayerMetadataValue(player);
+                if (!Objects.equals(AnvilGUI.this.uniqueId, metadataValue)) {
+                    AnvilGUI.this.closeReason = GuiCloseReason.INVENTORY_OVERRIDE;
+                } else {
+                    AnvilGUI.this.closeReason = GuiCloseReason.PLAYER_CLOSED;
+                }
+            }
+
+            AnvilGUI.this.invalidate();
+        }
     }
 
 }

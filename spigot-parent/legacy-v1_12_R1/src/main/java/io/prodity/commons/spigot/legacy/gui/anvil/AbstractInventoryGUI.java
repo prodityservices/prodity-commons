@@ -25,7 +25,7 @@ import org.bukkit.inventory.ItemStack;
  * @author FakeNeth
  */
 @Accessors(chain = true)
-public abstract class AbstractInventoryGUI<T extends AbstractInventoryGUI<T>> implements InventoryGUI {
+public abstract class AbstractInventoryGUI<T extends AbstractInventoryGUI<T>> {
 
     private final T instance = (T) this;
 
@@ -44,7 +44,6 @@ public abstract class AbstractInventoryGUI<T extends AbstractInventoryGUI<T>> im
     @Getter
     private boolean clickingEnabled = true;
 
-    @Override
     public T addClickable(GUIClickable... clickables) {
         Stream.of(clickables).forEach(clickable -> {
             clickable.getSlots().forEach(slot -> this.clickables.put(slot, clickable));
@@ -55,7 +54,7 @@ public abstract class AbstractInventoryGUI<T extends AbstractInventoryGUI<T>> im
         return this.instance;
     }
 
-    @Override
+
     public T addClickable(Collection<GUIClickable> clickables) {
         clickables.forEach(clickable -> {
             clickable.getSlots().forEach(slot -> this.clickables.put(slot, clickable));
@@ -66,7 +65,7 @@ public abstract class AbstractInventoryGUI<T extends AbstractInventoryGUI<T>> im
         return this.instance;
     }
 
-    @Override
+
     public T removeClickable(Collection<GUIClickable> clickables) {
         clickables.forEach(clickable -> {
             clickable.getSlots().forEach(this.clickables::remove);
@@ -75,7 +74,7 @@ public abstract class AbstractInventoryGUI<T extends AbstractInventoryGUI<T>> im
         return this.instance;
     }
 
-    @Override
+
     public T removeClickable(GUIClickable... clickables) {
         Stream.of(clickables).forEach(clickable -> {
             clickable.getSlots().forEach(this.clickables::remove);
@@ -84,7 +83,7 @@ public abstract class AbstractInventoryGUI<T extends AbstractInventoryGUI<T>> im
         return this.instance;
     }
 
-    @Override
+
     public T removeClickableSlot(Collection<? extends Number> slots) {
         slots.stream().mapToInt(Number::intValue).forEach(i -> {
             final GUIClickable click = this.clickables.remove(i);
@@ -95,23 +94,23 @@ public abstract class AbstractInventoryGUI<T extends AbstractInventoryGUI<T>> im
         return this.instance;
     }
 
-    @Override
+
     public T removeClickableSlot(Number... slots) {
         Stream.of(slots).mapToInt(Number::intValue).forEach(this.clickables::remove);
         return this.instance;
     }
 
-    @Override
+
     public GUIClickable getClickable(Number slot) {
         return this.clickables.get(slot.intValue());
     }
 
-    @Override
+
     public List<GUIClickable> getClickables() {
         return new ArrayList<>(this.allClickables);
     }
 
-    @Override
+
     public void handleClickEvent(InventoryClickEvent event) {
         if (!this.isClickingEnabled() || (this.clickCooldown != null && !this.clickCooldown.test())) {
             event.setCancelled(true);
@@ -128,7 +127,7 @@ public abstract class AbstractInventoryGUI<T extends AbstractInventoryGUI<T>> im
         this.unhandledClick(event);
     }
 
-    @Override
+
     public final void handleDragEvent(InventoryDragEvent event) {
         if (!this.isDraggingEnabled()) {
             event.setCancelled(true);
@@ -160,7 +159,7 @@ public abstract class AbstractInventoryGUI<T extends AbstractInventoryGUI<T>> im
         event.setCancelled(true);
     }
 
-    @Override
+
     public boolean hasClickCooldown() {
         return this.clickCooldown != null;
     }
@@ -172,19 +171,19 @@ public abstract class AbstractInventoryGUI<T extends AbstractInventoryGUI<T>> im
      */
     protected abstract Inventory getInventory();
 
-    @Override
+
     public boolean isOpen() {
         return this.getInventory() != null;
     }
 
-    @Override
+
     public void setItem(int slot, ItemStack item) throws IndexOutOfBoundsException {
         if (this.isOpen()) {
             this.getInventory().setItem(slot, item);
         }
     }
 
-    @Override
+
     public int getSize() {
         return this.isOpen() ? this.getInventory().getSize() : 0;
     }
@@ -199,7 +198,7 @@ public abstract class AbstractInventoryGUI<T extends AbstractInventoryGUI<T>> im
         return this.instance;
     }
 
-    @Override
+
     public void updateClickables(@NonNull Number... slots) {
         Stream.of(slots).forEach(slot -> {
             final GUIClickable clickable = this.getClickable(slot);
@@ -209,7 +208,7 @@ public abstract class AbstractInventoryGUI<T extends AbstractInventoryGUI<T>> im
         });
     }
 
-    @Override
+
     public void updateClickables(@NonNull Collection<? extends Number> slots) {
         slots.forEach(slot -> {
             final GUIClickable clickable = this.getClickable(slot);
