@@ -75,7 +75,7 @@ public class ValueMapper<T> extends ElementMapper<T, ValueMapper<T>> {
         /**
          * Completes the value mapping process byWithType setting the {@link Function} used to convert values
          * of the <i>type to map from</i> to the <i>type to map to</i>.<br>
-         * Registers a new {@link io.prodity.commons.config.inject.deserialize.ElementDeserializer} that does the above.
+         * Registers a new {@link ElementDeserializer} that does the above.
          *
          * @param valueConverter the {@link Function} to convert the values
          */
@@ -86,7 +86,7 @@ public class ValueMapper<T> extends ElementMapper<T, ValueMapper<T>> {
         /**
          * Completes the value mapping process byWithType setting the {@link Function} used to convert values
          * of the <i>type to map from</i> to the <i>type to map to</i>.<br>
-         * Registers a new {@link io.prodity.commons.config.inject.deserialize.ElementDeserializer} that does the above.
+         * Registers a new {@link ElementDeserializer} that does the above.
          *
          * @param valueConverter the {@link BiFunction} to convert the values, with the specified {@link TypeToken} argument always being
          * the type that is being deserialized.

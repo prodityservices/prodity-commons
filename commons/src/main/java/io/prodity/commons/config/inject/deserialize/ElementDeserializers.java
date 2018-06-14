@@ -134,11 +134,6 @@ public enum ElementDeserializers {
                 }
             }
 
-            if (enumValue == null) {
-                throw new IllegalStateException(
-                    "invalid enum constant=" + enumValueName + " specified when deserializing enum type=" + enumClass.getName());
-            }
-
             return enumValue;
         }
 

@@ -3,6 +3,7 @@ package io.prodity.commons.config.inject.deserialize.registry;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Preconditions;
 import com.google.common.reflect.TypeToken;
+import io.prodity.commons.config.inject.deserialize.ElementDeserializer;
 import io.prodity.commons.config.inject.deserialize.ElementDeserializers;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -54,7 +55,7 @@ public abstract class ElementMapper<T, SELF extends ElementMapper<T, SELF>> {
     }
 
     /**
-     * Specifies the comparison strategy that is used in the generated {@link io.prodity.commons.config.inject.deserialize.ElementDeserializer}.<br>
+     * Specifies the comparison strategy that is used in the generated {@link ElementDeserializer}.<br>
      * Defaults to {@link MapperStrategy#EQUALS} if not specified.
      *
      * @param strategy the {@link BiPredicate} parameter the first argument should be assumed as {@link ElementMapper#getTypeToMap()}

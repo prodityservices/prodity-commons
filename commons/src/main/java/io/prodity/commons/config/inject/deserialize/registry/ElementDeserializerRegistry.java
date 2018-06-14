@@ -33,7 +33,9 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.glassfish.hk2.api.IterableProvider;
 import org.jvnet.hk2.annotations.Service;
 
 /***
@@ -44,6 +46,9 @@ import org.jvnet.hk2.annotations.Service;
 public class ElementDeserializerRegistry {
 
     private final List<ElementDeserializer<?>> deserializers = Lists.newCopyOnWriteArrayList();
+
+    @Inject
+    private IterableProvider<ElementDeserializerModifier> modifiers;
 
     @PostConstruct
     private void registerDefaults() {
@@ -103,6 +108,8 @@ public class ElementDeserializerRegistry {
             .by(ConcurrentHashMap::new);
 
         this.mapValueOf(LevenshteinDistance.class).from(Integer.class).by(LevenshteinDistance::new);
+
+        this.modifiers.forEach((modifier) -> modifier.modify(this));
     }
 
     public ElementDeserializerRegistry registerAll(ElementDeserializerRegistry registry) {

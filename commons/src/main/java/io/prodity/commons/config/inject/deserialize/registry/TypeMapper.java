@@ -8,7 +8,7 @@ import javax.annotation.Nullable;
 import ninja.leaping.configurate.ConfigurationNode;
 
 /**
- * Maps a type's {@link io.prodity.commons.config.inject.deserialize.ElementDeserializer} to another type's.
+ * Maps a type's {@link ElementDeserializer} to another type's.
  *
  * @param <T> type to map
  */
