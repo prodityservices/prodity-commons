@@ -10,6 +10,7 @@ import java.util.function.BiConsumer;
 import java.util.logging.Level;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.api.ServiceLocatorFactory;
 import org.glassfish.hk2.utilities.ClasspathDescriptorFileFinder;
 
 public class InjectionContainer {
@@ -49,7 +50,7 @@ public class InjectionContainer {
         if (this.serviceLocator != null) {
             this.callEvent(InjectionFeature::preDisable);
             PluginBridge.unbridge(this.plugin);
-            this.serviceLocator.shutdown();
+            ServiceLocatorFactory.getInstance().destroy(this.serviceLocator);
             this.serviceLocator = null;
         }
     }
