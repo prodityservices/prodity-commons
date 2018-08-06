@@ -21,9 +21,9 @@ public enum TitleSender {
     }
 
     public static void send(Player player, TitleTimes times, String title, String subTitle) {
-        TitleSender.sendTitle(TitleSender.getMessage(title), player);
-        TitleSender.sendSubTitle(TitleSender.getMessage(subTitle), player);
         TitleSender.sendTitleTimes(times.show(), times.stay(), times.fade(), player);
+        TitleSender.sendSubTitle(TitleSender.getMessage(subTitle), player);
+        TitleSender.sendTitle(TitleSender.getMessage(title), player);
     }
 
     private static void sendTitleTimes(int fadeInTicks, int stayTicks, int fadeOutTicks, Player player) {
