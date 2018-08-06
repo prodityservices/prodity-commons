@@ -1,7 +1,6 @@
 package io.prodity.commons.spigot.legacy.message.send;
 
 import com.google.gson.JsonObject;
-import net.minecraft.server.v1_8_R3.ChatMessage;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent;
 import net.minecraft.server.v1_8_R3.IChatBaseComponent.ChatSerializer;
 import net.minecraft.server.v1_8_R3.PacketPlayOutTitle;
@@ -27,7 +26,7 @@ public enum TitleSender {
     }
 
     private static void sendTitleTimes(int fadeInTicks, int stayTicks, int fadeOutTicks, Player player) {
-        final PacketPlayOutTitle timesPacket = new PacketPlayOutTitle(EnumTitleAction.TIMES, new ChatMessage(""), fadeInTicks, stayTicks,
+        final PacketPlayOutTitle timesPacket = new PacketPlayOutTitle(fadeInTicks, stayTicks,
             fadeOutTicks);
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(timesPacket);
     }

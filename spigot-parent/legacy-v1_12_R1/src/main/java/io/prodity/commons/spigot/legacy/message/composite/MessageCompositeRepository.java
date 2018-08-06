@@ -43,13 +43,13 @@ public class MessageCompositeRepository extends YamlRepository<MessageComposite>
             final TitleTimes times = TitleTimes.of();
             final ConfigurationSection timesSection = compositeSection.getConfigurationSection(Keys.TITLE_TIMES);
             if (timesSection.isInt(Keys.TITLE_TIMES_SHOW)) {
-                times.stay(timesSection.getInt(Keys.TITLE_TIMES_SHOW));
+                times.show(timesSection.getInt(Keys.TITLE_TIMES_SHOW));
             }
             if (timesSection.isInt(Keys.TITLE_TIMES_STAY)) {
                 times.stay(timesSection.getInt(Keys.TITLE_TIMES_STAY));
             }
             if (timesSection.isInt(Keys.TITLE_TIMES_FADE)) {
-                times.stay(timesSection.getInt(Keys.TITLE_TIMES_FADE));
+                times.fade(timesSection.getInt(Keys.TITLE_TIMES_FADE));
             }
             builder.titleTimes(times);
         }
