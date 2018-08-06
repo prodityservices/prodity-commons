@@ -21,8 +21,9 @@ public enum TitleSender {
     }
 
     public static void send(Player player, TitleTimes times, String title, String subTitle) {
-        TitleSender.sendTitleTimes(times.show(), times.stay(), times.fade(), player);
         TitleSender.sendTitle(TitleSender.getMessage(title), player);
+        TitleSender.sendSubTitle(TitleSender.getMessage(subTitle), player);
+        TitleSender.sendTitleTimes(times.show(), times.stay(), times.fade(), player);
     }
 
     private static void sendTitleTimes(int fadeInTicks, int stayTicks, int fadeOutTicks, Player player) {
@@ -33,6 +34,11 @@ public enum TitleSender {
 
     private static void sendTitle(String title, Player player) {
         final PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(EnumTitleAction.TITLE, TitleSender.createRawComponent(title));
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(titlePacket);
+    }
+
+    private static void sendSubTitle(String title, Player player) {
+        final PacketPlayOutTitle titlePacket = new PacketPlayOutTitle(EnumTitleAction.SUBTITLE, TitleSender.createRawComponent(title));
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(titlePacket);
     }
 
