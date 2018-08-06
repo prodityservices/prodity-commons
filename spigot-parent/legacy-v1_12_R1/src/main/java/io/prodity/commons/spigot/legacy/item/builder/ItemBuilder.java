@@ -64,13 +64,9 @@ public interface ItemBuilder<SELF extends ItemBuilder<SELF>> extends Builder<Ite
     default ItemStack papiBuild(Player player, Replacer replacer) {
         final MetaModifierMap<ItemConstruction> metaModifiers = MetaModifierMap.<ItemConstruction>create()
             .builderPut(DisplayNameMeta.KEY, ItemBuilder.nameModifier(player, replacer))
-            .builderPut(LoreMeta.KEY, ItemBuilder.loreModifier(player, replacer));
-
-        if (replacer.isPapi()) {
-            metaModifiers
-                .builderPut(DisplayNameMeta.KEY, ItemBuilder.nameModifierPapi(player))
-                .builderPut(LoreMeta.KEY, ItemBuilder.loreModifierPapi(player));
-        }
+            .builderPut(DisplayNameMeta.KEY, ItemBuilder.nameModifierPapi(player))
+            .builderPut(LoreMeta.KEY, ItemBuilder.loreModifier(player, replacer))
+            .builderPut(LoreMeta.KEY, ItemBuilder.loreModifierPapi(player));
 
         return this.construct((builder) -> ItemConstruction.start(builder), metaModifiers);
     }
