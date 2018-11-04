@@ -8,10 +8,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-public abstract class SkullOwnerMeta extends AbstractItemBuilderMeta<OfflinePlayer> {
+public abstract class SkullOwnerMeta extends AbstractItemBuilderMeta<String> {
 
-    public static final BuilderMetaKey<OfflinePlayer, ItemConstruction, MutableSkullOwnerMeta, ImmutableSkullOwnerMeta> KEY =
-        BuilderMetaKey.<OfflinePlayer, ItemConstruction, MutableSkullOwnerMeta, ImmutableSkullOwnerMeta>builder()
+    public static final BuilderMetaKey<String, ItemConstruction, MutableSkullOwnerMeta, ImmutableSkullOwnerMeta> KEY =
+        BuilderMetaKey.<String, ItemConstruction, MutableSkullOwnerMeta, ImmutableSkullOwnerMeta>builder()
             .mutableInstanceClass(MutableSkullOwnerMeta.class)
             .immutableInstanceClass(ImmutableSkullOwnerMeta.class)
             .immutableSupplier(SkullOwnerMeta::immutable)
@@ -28,7 +28,7 @@ public abstract class SkullOwnerMeta extends AbstractItemBuilderMeta<OfflinePlay
         return new ImmutableSkullOwnerMeta(null);
     }
 
-    public static ImmutableSkullOwnerMeta immutable(OfflinePlayer value) {
+    public static ImmutableSkullOwnerMeta immutable(String value) {
         return new ImmutableSkullOwnerMeta(value);
     }
 
@@ -41,7 +41,7 @@ public abstract class SkullOwnerMeta extends AbstractItemBuilderMeta<OfflinePlay
         return new MutableSkullOwnerMeta(null);
     }
 
-    public static MutableSkullOwnerMeta mutable(OfflinePlayer value) {
+    public static MutableSkullOwnerMeta mutable(String value) {
         return new MutableSkullOwnerMeta(value);
     }
 
@@ -50,12 +50,12 @@ public abstract class SkullOwnerMeta extends AbstractItemBuilderMeta<OfflinePlay
             .fromItemStack(itemStack, SkullOwnerMeta::mutable);
     }
 
-    private static SkullOwnerMeta fromItemStack(ItemStack itemStack, Function<OfflinePlayer, SkullOwnerMeta> instanceCreator) {
+    private static SkullOwnerMeta fromItemStack(ItemStack itemStack, Function<String, SkullOwnerMeta> instanceCreator) {
         if (!SkullOwnerMeta.isApplicable(itemStack)) {
             throw new IllegalArgumentException("specified ItemStack is not applicable");
         }
-        final OfflinePlayer owner = ((SkullMeta) itemStack.getItemMeta()).getOwningPlayer();
-        return instanceCreator.apply(owner);
+        //final OfflinePlayer owner = ((SkullMeta) itemStack.getItemMeta()).getOwningPlayer();
+        return instanceCreator.apply(((SkullMeta) itemStack.getItemMeta()).getOwner());
     }
 
     protected SkullOwnerMeta() {
@@ -68,9 +68,9 @@ public abstract class SkullOwnerMeta extends AbstractItemBuilderMeta<OfflinePlay
     }
 
     @Override
-    protected void applyInternally(ItemConstruction construction, OfflinePlayer value) {
+    protected void applyInternally(ItemConstruction construction, String value) {
         final SkullMeta skullMeta = (SkullMeta) construction.getItemMeta();
-        skullMeta.setOwningPlayer(value);
+        skullMeta.setOwner(value);
     }
 
     @Override

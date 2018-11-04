@@ -6,14 +6,14 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.OfflinePlayer;
 
-public class MutableSkullOwnerMeta extends SkullOwnerMeta implements MutableItemBuilderMeta<OfflinePlayer> {
+public class MutableSkullOwnerMeta extends SkullOwnerMeta implements MutableItemBuilderMeta<String> {
 
     @Getter
     @Setter
     @Accessors(chain = true)
-    private OfflinePlayer value;
+    private String value;
 
-    public MutableSkullOwnerMeta(OfflinePlayer value) {
+    public MutableSkullOwnerMeta(String value) {
         this.value = value;
     }
 

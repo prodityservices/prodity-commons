@@ -4,12 +4,12 @@ import io.prodity.commons.spigot.legacy.item.builder.meta.ImmutableItemBuilderMe
 import lombok.Getter;
 import org.bukkit.OfflinePlayer;
 
-public class ImmutableSkullOwnerMeta extends SkullOwnerMeta implements ImmutableItemBuilderMeta<OfflinePlayer> {
+public class ImmutableSkullOwnerMeta extends SkullOwnerMeta implements ImmutableItemBuilderMeta<String> {
 
     @Getter
-    private final OfflinePlayer value;
+    private final String value;
 
-    protected ImmutableSkullOwnerMeta(OfflinePlayer value) {
+    protected ImmutableSkullOwnerMeta(String value) {
         this.value = value;
     }
 

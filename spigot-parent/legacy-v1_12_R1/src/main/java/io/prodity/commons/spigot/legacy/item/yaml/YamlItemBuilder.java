@@ -108,8 +108,7 @@ public abstract class YamlItemBuilder<T extends ItemBuilder> extends AbstractYam
         //SkullOwner
         if (section.contains("skull-owner")) {
             final String ownerName = YamlString.get().load(section, "skull-owner");
-            final OfflinePlayer owner = Bukkit.getOfflinePlayer(ownerName);
-            metaList.add(SkullOwnerMeta.immutable(owner));
+            metaList.add(SkullOwnerMeta.immutable(ownerName));
         }
 
         //SpawnType
