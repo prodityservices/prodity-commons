@@ -12,6 +12,7 @@ public class InternalBinder extends CoreBinder {
 	@Override
 	protected void configure() {
 		super.configure();
+		this.addCoreFeatures(CommandFeature.class);
 	}
 
 }
