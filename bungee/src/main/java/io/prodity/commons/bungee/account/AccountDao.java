@@ -13,15 +13,15 @@ import java.util.UUID;
 public interface AccountDao {
 
     @SqlUpdate(
-        "INSERT INTO name_cache(player_id, player_name, player_last_seen) VALUES(:id, :name, :lastSeen) " +
+        "INSERT INTO bungee_name_cache(player_id, player_name, player_last_seen) VALUES(:id, :name, :lastSeen) " +
             "ON DUPLICATE KEY UPDATE player_name=:name, player_last_seen=:lastSeen"
     )
     void updateCache(@BindBean PlayerReference reference);
 
-    @SqlQuery("SELECT * FROM name_cache WHERE player_id = :id")
+    @SqlQuery("SELECT * FROM bungee_name_cache WHERE player_id = :id")
     Optional<PlayerReference> getPlayer(UUID id);
 
-    @SqlQuery("SELECT * FROM name_cache WHERE player_name = :name ORDER BY player_last_seen DESC LIMIT 1")
+    @SqlQuery("SELECT * FROM bungee_name_cache WHERE player_name = :name ORDER BY player_last_seen DESC LIMIT 1")
     Optional<PlayerReference> getPlayer(String name);
 
     /**
@@ -32,7 +32,7 @@ public interface AccountDao {
      * @param name the name to look up
      * @return possible empty list of all duplicates
      */
-    @SqlQuery("SELECT * FROM name_cache WHERE player_name = :name ORDER BY player_last_seen DESC LIMIT 1,10000")
+    @SqlQuery("SELECT * FROM bungee_name_cache WHERE player_name = :name ORDER BY player_last_seen DESC LIMIT 1,10000")
     List<PlayerReference> getDuplicates(String name);
 
 }

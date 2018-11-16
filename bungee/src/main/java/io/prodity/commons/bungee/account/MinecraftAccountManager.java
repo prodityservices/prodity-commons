@@ -126,17 +126,19 @@ public class MinecraftAccountManager implements Eager, Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onPlayerPreLogin(ServerConnectedEvent event) {
 		if (event.getPlayer().getServer() == null) {
-			// Block to ensure all later handlers see the right value in the database
-			this.async.run(dao -> dao.updateCache(new PlayerReference(event.getPlayer().getUniqueId(), event.getPlayer().getName()))).join();
-			// Now asynchronously fetch new names for all duplicates.  There technically can't ever be more than one
-			// duplicate.  This happens very rarely, if at all
-			this.async.run(dao -> {
-				List<PlayerReference> duplicates = dao.getDuplicates(event.getPlayer().getName());
-				for (PlayerReference duplicate : duplicates) {
-					// If we fail to get a new name, I guess we'll take care of it next time
-					Optional<String> newName = this.fetchNewName(duplicate.getId());
-					newName.ifPresent(s -> dao.updateCache(new PlayerReference(duplicate.getId(), s, duplicate.getLastSeen())));
-				}
+			this.async(() -> {
+				// Block to ensure all later handlers see the right value in the database
+				this.async.run(dao -> dao.updateCache(new PlayerReference(event.getPlayer().getUniqueId(), event.getPlayer().getName()))).join();
+				// Now asynchronously fetch new names for all duplicates.  There technically can't ever be more than one
+				// duplicate.  This happens very rarely, if at all
+				this.async.run(dao -> {
+					List<PlayerReference> duplicates = dao.getDuplicates(event.getPlayer().getName());
+					for (PlayerReference duplicate : duplicates) {
+						// If we fail to get a new name, I guess we'll take care of it next time
+						Optional<String> newName = this.fetchNewName(duplicate.getId());
+						newName.ifPresent(s -> dao.updateCache(new PlayerReference(duplicate.getId(), s, duplicate.getLastSeen())));
+					}
+				});
 			});
 		}
 	}
