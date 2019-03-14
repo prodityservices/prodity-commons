@@ -53,6 +53,12 @@ public class MinecraftAccountManager implements Eager, Listener {
 				;
 	}
 
+	public CompletableFuture<Optional<PlayerReference>> getPlayerWithoutFetching(UUID id) {
+		return this.checkOnline(id)
+				.thenCompose(opt -> this.fallback(opt, id, this::checkCache))
+				;
+	}
+
 	private CompletableFuture<Optional<PlayerReference>> checkOnline(UUID id) {
 		return CompletableFuture.supplyAsync(() -> {
 			ProxiedPlayer player = ProxyServer.getInstance().getPlayer(id);
@@ -81,6 +87,12 @@ public class MinecraftAccountManager implements Eager, Listener {
 		return this.checkOnline(name)
 				.thenCompose(opt -> this.fallback(opt, name, this::checkCache))
 				.thenCompose(opt -> this.fallback(opt, name, this::fetchUUID))
+				;
+	}
+
+	public CompletableFuture<Optional<PlayerReference>> getPlayerWithoutFetching(String name) {
+		return this.checkOnline(name)
+				.thenCompose(opt -> this.fallback(opt, name, this::checkCache))
 				;
 	}
 
