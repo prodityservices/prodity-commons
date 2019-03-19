@@ -10,11 +10,11 @@ public class LocationReference {
 	}
 
 	private final String world;
-	private final int x;
-	private final int y;
-	private final int z;
+	private final double x;
+	private final double y;
+	private final double z;
 
-	public LocationReference(String world, int x, int y, int z) {
+	public LocationReference(String world, double x, double y, double z) {
 		this.world = world;
 		this.x = x;
 		this.y = y;
@@ -25,15 +25,15 @@ public class LocationReference {
 		return this.world;
 	}
 
-	public int getX() {
+	public double getX() {
 		return this.x;
 	}
 
-	public int getY() {
+	public double getY() {
 		return this.y;
 	}
 
-	public int getZ() {
+	public double getZ() {
 		return this.z;
 	}
 
