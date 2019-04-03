@@ -1,6 +1,10 @@
 package io.prodity.commons.spigot.event;
 
 import io.prodity.commons.spigot.model.RegionReference;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -17,8 +21,7 @@ public class IntersectCheckEvent extends Event {
     private final RegionReference region;
     private final String regionName;
 
-    private RegionReference intersectRegion;
-    private String intersectName;
+    private final Map<String, RegionReference> intersectRegions = new HashMap<>();
 
     public IntersectCheckEvent(RegionReference region, String regionName) {
         this.region = region;
@@ -34,20 +37,19 @@ public class IntersectCheckEvent extends Event {
     }
 
     public boolean intersects() {
-        return this.intersectRegion != null;
+        return !this.intersectRegions.isEmpty();
     }
 
-    public void setIntersectRegion(RegionReference region, String regionName) {
-        this.intersectRegion = region;
-        this.intersectName = regionName;
+    public void addIntersectRegion(RegionReference region, String regionName) {
+        this.intersectRegions.put(regionName, region);
     }
 
-    public RegionReference getIntersectRegion() {
-        return this.intersectRegion;
+    public Map<String, RegionReference> getIntersectRegions() {
+        return this.intersectRegions;
     }
 
-    public String getIntersectName() {
-        return this.intersectName;
+    public List<String> getIntersectNames() {
+        return new ArrayList<>(this.intersectRegions.keySet());
     }
 
     @Override
