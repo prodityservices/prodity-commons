@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        xmlns="http://maven.apache.org/POM/4.0.0"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.prodity</groupId>
@@ -19,7 +19,7 @@
     <properties>
         <acf.version>0.5.0-SNAPSHOT</acf.version>
         <hk2.version>2.5.0-b36</hk2.version>
-        <jdbi.version>3.2.1</jdbi.version>
+        <jdbi.version>3.6.0</jdbi.version>
         <taskchain.version>3.6.0</taskchain.version>
     </properties>
 
@@ -220,6 +220,17 @@
                 <version>${jdbi.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.jdbi</groupId>
+                <artifactId>jdbi3-gson2</artifactId>
+                <version>${jdbi.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.google.code.gson</groupId>
+                        <artifactId>gson</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
                 <version>1.21</version>
@@ -258,10 +269,12 @@
                     <version>3.1.1</version>
                     <configuration>
                         <transformers>
-                            <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                 <resource>META-INF/hk2-locator/default</resource>
                             </transformer>
-                            <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                         </transformers>
                         <relocations>
                             <relocation>

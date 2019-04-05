@@ -14,6 +14,7 @@ import org.glassfish.hk2.api.DescriptorVisibility;
 import org.glassfish.hk2.api.Factory;
 import org.glassfish.hk2.api.Visibility;
 import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.gson2.Gson2Plugin;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 
 
@@ -39,6 +40,7 @@ public class JdbiFactory implements Factory<Jdbi> {
 
         Jdbi jdbi = Jdbi.create(source);
         jdbi.installPlugin(new SqlObjectPlugin());
+        jdbi.installPlugin(new Gson2Plugin());
         // Now install from the ServiceLocator
         for (JdbiCustomizer feature : InjectUtils.getDependentServices(this.plugin, JdbiCustomizer.class)) {
             jdbi.installPlugin(feature);
