@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://maven.apache.org/POM/4.0.0"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.prodity</groupId>
@@ -23,7 +23,7 @@
         <taskchain.version>3.6.0</taskchain.version>
     </properties>
 
-    <distributionManagement>
+    <!--<distributionManagement>
         <repository>
             <id>prodity-releases</id>
             <name>Prodity Releases</name>
@@ -34,17 +34,17 @@
             <name>Prodity Snapshots</name>
             <url>https://nexus.prodity.io/repository/maven-snapshots/</url>
         </snapshotRepository>
-    </distributionManagement>
+    </distributionManagement>-->
 
     <repositories>
-        <repository>
+        <!--<repository>
             <id>prodity-snapshots</id>
             <url>https://nexus.prodity.io/repository/maven-snapshots/</url>
         </repository>
         <repository>
             <id>prodity-releases</id>
             <url>https://nexus.prodity.io/repository/maven-releases/</url>
-        </repository>
+        </repository>-->
         <repository>
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
