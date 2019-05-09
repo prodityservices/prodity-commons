@@ -5,8 +5,8 @@ import org.bukkit.inventory.ItemStack;
 
 public interface ItemProvider extends VersionProvider {
 
-    ItemStack toCraftItemStack(ItemStack itemStack);
+	Object toCraftItemStack(ItemStack itemStack);
 
-    ItemStack toBukkitItemStack(ItemStack itemStack);
+	ItemStack toBukkitItemStack(Object itemStack);
 
 }
