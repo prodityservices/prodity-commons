@@ -53,7 +53,7 @@
     </dependencies>
 
     <build>
-        <finalName>prodity-commons-bungee</finalName>
+        <finalName>ProdityCommons-Bungee</finalName>
         <sourceDirectory>src/main/java</sourceDirectory>
 
         <resources>
