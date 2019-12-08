@@ -7,7 +7,7 @@ import io.prodity.commons.plugin.annotate.Plugin;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 
 @Plugin(name = "ProdityCommonsBungee", description = "Core utilities for Prodity bungee plugins", version = "%plugin.version%")
-@PluginAuthor("FakeNeth, Nate Mortensen")
+@PluginAuthor("FakeNeth, Nate Mortensen, TehNeon")
 public class ProdityCommonsBungee extends ProdityBungeePlugin {
 
 	@Override
