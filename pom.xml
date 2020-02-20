@@ -58,12 +58,20 @@
             <url>http://repo.dmulloy2.net/nexus/repository/public/</url>
         </repository>
         <repository>
+            <id>moep-repo</id>
+            <url>https://repo.moep.tv/</url>
+        </repository>
+        <repository>
             <id>papi-repo</id>
             <url>http://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
         <repository>
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
+        </repository>
+        <repository>
+            <id>mojang</id>
+            <url>https://libraries.minecraft.net/</url>
         </repository>
     </repositories>
 
