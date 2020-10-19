@@ -1,9 +1,10 @@
 package io.prodity.commons.spigot.legacy.utils;
 
+import io.prodity.commons.pair.ImmutablePair;
+import io.prodity.commons.pair.Pair;
 import io.prodity.commons.spigot.legacy.placeholder.PlaceholderHelper;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.util.Pair;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import org.bukkit.ChatColor;
@@ -98,13 +99,13 @@ public class ItemUtil {
         @NonNull ItemCallback callback) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         if (itemMeta.hasDisplayName()) {
-            itemMeta.setDisplayName(callback.call(player, new Pair<>("name", itemMeta.getDisplayName())));
+            itemMeta.setDisplayName(callback.call(player, ImmutablePair.with("name", itemMeta.getDisplayName())));
         }
 
         if (itemMeta.hasLore()) {
             List<String> newLore = new ArrayList<>();
             for (String lore : itemMeta.getLore()) {
-                newLore.add(callback.call(player, new Pair<>("lore", lore)));
+                newLore.add(callback.call(player, ImmutablePair.with("lore", lore)));
             }
 
             itemMeta.setLore(newLore);
@@ -113,7 +114,7 @@ public class ItemUtil {
         if (itemMeta instanceof SkullMeta) {
             SkullMeta skullMeta = (SkullMeta) itemMeta;
             if (skullMeta.hasOwner()) {
-                skullMeta.setOwner(callback.call(player, new Pair<>("owner", skullMeta.getOwner())));
+                skullMeta.setOwner(callback.call(player, ImmutablePair.with("owner", skullMeta.getOwner())));
             }
         }
 
