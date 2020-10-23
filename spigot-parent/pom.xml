@@ -21,8 +21,8 @@
         <module>legacy-v1_8_R3</module>
         <module>legacy-v1_12_R1</module>
         <module>legacy-v1_15_R1</module>
-        <module>plugin-v1_8_R3</module>
-        <module>plugin-v1_12_R1</module>
+        <!--<module>plugin-v1_8_R3</module>
+        <module>plugin-v1_12_R1</module>-->
         <module>plugin-v1_15_R1</module>
     </modules>
 
